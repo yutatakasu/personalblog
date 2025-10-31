@@ -1,0 +1,451 @@
+---
+alwaysApply: true
+---
+
+# Clean Code コーディング規約
+
+このプロジェクトでは、Clean Code の原則に従ったコーディングスタイルを守ります。
+
+## 1. 命名規則
+
+### 意図を明確にする命名
+
+- **変数名・関数名は目的を明確に表現する**
+  - ❌ `d` （経過日数）
+  - ✅ `elapsedDays` または `daysSinceCreation`
+- **省略形を避け、検索可能な名前を使う**
+  - ❌ `usr`, `acc`, `tmp`
+  - ✅ `user`, `account`, `temporaryStorage`
+- **クラス名は名詞、関数名は動詞で始める**
+  - クラス: `User`, `OrderProcessor`, `EmailValidator`
+  - 関数: `getUserById`, `processOrder`, `validateEmail`
+
+### 命名の一貫性
+
+- **boolean 値は is/has/can などの接頭辞を使う**
+  - `isActive`, `hasPermission`, `canEdit`
+- **配列やリストは複数形を使う**
+  - `users`, `orders`, `items`
+- **定数は UPPER_SNAKE_CASE を使う**
+  - `MAX_RETRY_COUNT`, `API_BASE_URL`
+
+## 2. 関数（メソッド）の原則
+
+### 小さく保つ
+
+- **1 つの関数は 1 つのことだけを行う（単一責任の原則）**
+- **関数の長さは 20 行以内を目指す**
+- **引数は 3 個以下に抑える**（それ以上ならオブジェクトにまとめる）
+
+### 副作用を避ける
+
+- **関数の名前から予想される以上のことをしない**
+- **可能な限り純粋関数を目指す**
+
+```typescript
+// ❌ Bad: 関数名から予想できない副作用がある
+function checkPassword(password: string): boolean {
+  if (isValid(password)) {
+    Session.initialize(); // 副作用！
+    return true;
+  }
+  return false;
+}
+
+// ✅ Good: 単一責任で副作用なし
+function isValidPassword(password: string): boolean {
+  return password.length >= 8 && /[A-Z]/.test(password);
+}
+```
+
+## 3. コメント
+
+### コードで表現できることはコメントで書かない
+
+- **コードを書き直すことでコメントを不要にする**
+
+```typescript
+// ❌ Bad: コメントで説明
+// ユーザーがアクティブで権限を持っているかチェック
+if (user.status === 'active' && user.role === 'admin') { ... }
+
+// ✅ Good: 関数名で説明
+if (isActiveAdmin(user)) { ... }
+```
+
+### 必要なコメントのみ書く
+
+- **なぜそうしたのか（Why）を説明する**（何をしているか（What）ではない）
+- **法的コメント、警告、TODO コメントは OK**
+- **公開 API のドキュメントコメントは必須**
+
+## 4. フォーマットとスタイル
+
+### 一貫性のあるフォーマット
+
+- **垂直方向の整理**: 関連するコードは近くに、異なる概念は空行で区切る
+- **水平方向の整理**: インデントを適切に使用し、行の長さは 80〜120 文字以内
+- **1 つのファイルは 1 つの責任を持つクラス/モジュール**
+
+### インポート文の整理
+
+```typescript
+// 1. 外部ライブラリ
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+
+// 2. 内部の共通モジュール
+import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
+
+// 3. 相対パスのインポート
+import { UserProfile } from "./UserProfile";
+```
+
+## 5. エラーハンドリング
+
+### エラーを隠さない
+
+- **try-catch は具体的な例外処理を行う場所でのみ使う**
+- **エラーメッセージは意味のある情報を含める**
+- **null を返すのではなく、例外を投げるか Optional を使う**
+
+```typescript
+// ❌ Bad: エラーを無視
+try {
+  riskyOperation();
+} catch (e) {
+  // 何もしない
+}
+
+// ✅ Good: 適切なエラーハンドリング
+try {
+  riskyOperation();
+} catch (error) {
+  logger.error("Failed to execute risky operation", { error });
+  throw new OperationError("Operation failed", { cause: error });
+}
+```
+
+## 6. DRY 原則（Don't Repeat Yourself）
+
+- **同じコードを 3 回書いたら抽象化を検討する**
+- **ただし、過度な抽象化は避ける**（重複と抽象化のバランスを取る）
+
+## 7. クラスの原則
+
+### 単一責任の原則（SRP）
+
+- **クラスは 1 つの責任のみを持つ**
+- **クラスを変更する理由は 1 つだけであるべき**
+
+### 小さく保つ
+
+- **クラスの行数は 200〜500 行以内を目指す**
+- **public メソッドの数は 10 個以内を目指す**
+
+## 8. データ構造とオブジェクト
+
+### データ構造 vs オブジェクト
+
+- **データ構造**: データを公開し、振る舞いを持たない
+- **オブジェクト**: データを隠蔽し、振る舞いを公開する
+
+### 適切に使い分ける
+
+```typescript
+// データ構造（TypeScript の型）
+type Point = {
+  x: number;
+  y: number;
+};
+
+// オブジェクト（クラス）
+class Circle {
+  private radius: number;
+
+  constructor(radius: number) {
+    this.radius = radius;
+  }
+
+  getArea(): number {
+    return Math.PI * this.radius ** 2;
+  }
+}
+```
+
+## 9. React/Next.js 固有のルール
+
+### コンポーネント設計
+
+- **コンポーネントは小さく、再利用可能に**
+- **Props は明示的に型定義する**
+- **カスタムフックで状態ロジックを分離する**
+
+```typescript
+// ✅ Good: 小さくて単一責任
+interface ButtonProps {
+  onClick: () => void;
+  label: string;
+  variant?: "primary" | "secondary";
+  disabled?: boolean;
+}
+
+export function Button({
+  onClick,
+  label,
+  variant = "primary",
+  disabled = false,
+}: ButtonProps) {
+  return (
+    <button onClick={onClick} disabled={disabled} className={`btn-${variant}`}>
+      {label}
+    </button>
+  );
+}
+```
+
+### ファイル構造
+
+- **1 ファイル 1 コンポーネント**（例外: 小さなヘルパーコンポーネント）
+- **コンポーネント名とファイル名を一致させる**
+
+## 10. TypeScript 固有のルール
+
+### 型の活用
+
+- **any は原則使用禁止**（どうしても必要な場合は unknown を検討）
+- **型推論を活用するが、public API は明示的に型定義する**
+- **Union Types や Type Guards を活用する**
+
+```typescript
+// ✅ Good: 明示的な型定義
+function processUser(user: User): ProcessedUser {
+  // ...
+}
+
+// ✅ Good: Type Guard の活用
+function isError(response: ApiResponse): response is ErrorResponse {
+  return "error" in response;
+}
+```
+
+## 11. Python 固有のルール
+
+### PEP 8 スタイルガイドに従う
+
+- **インデントは 4 スペース**を使用
+- **行の長さは 79 文字以内**（docstring やコメントは 72 文字以内）
+- **関数・変数は snake_case、クラスは PascalCase、定数は UPPER_SNAKE_CASE**
+
+```python
+# ✅ Good: PEP 8 に準拠
+class UserProfile:
+    MAX_USERNAME_LENGTH = 50
+
+    def __init__(self, user_id: int, username: str):
+        self.user_id = user_id
+        self.username = username
+
+    def get_display_name(self) -> str:
+        return f"@{self.username}"
+```
+
+### 型ヒントの活用
+
+- **関数の引数と戻り値には型ヒントを必ず付ける**
+- **typing モジュールを活用する**（Optional, Union, List, Dict など）
+- **Python 3.10+ では新しい型構文を優先**（list[str], dict[str, int] など）
+
+```python
+from typing import Optional
+
+# ✅ Good: 明示的な型ヒント
+def find_user_by_id(user_id: int) -> Optional[dict[str, Any]]:
+    """IDでユーザーを検索する"""
+    user = db.query(User).filter_by(id=user_id).first()
+    return user.to_dict() if user else None
+
+# ✅ Good: Python 3.10+ の型構文
+def process_items(items: list[str], config: dict[str, int]) -> list[int]:
+    return [config.get(item, 0) for item in items]
+```
+
+### Docstring の記述
+
+- **すべての public 関数・クラスには docstring を書く**
+- **Google スタイルまたは NumPy スタイルを使用**
+- **引数、戻り値、例外を明記する**
+
+```python
+def calculate_discount(
+    price: float,
+    discount_rate: float,
+    max_discount: float = 100.0
+) -> float:
+    """
+    割引額を計算する。
+
+    Args:
+        price: 商品の元の価格
+        discount_rate: 割引率（0.0〜1.0）
+        max_discount: 最大割引額（デフォルト: 100.0）
+
+    Returns:
+        割引後の価格
+
+    Raises:
+        ValueError: discount_rate が 0.0〜1.0 の範囲外の場合
+    """
+    if not 0.0 <= discount_rate <= 1.0:
+        raise ValueError("discount_rate must be between 0.0 and 1.0")
+
+    discount = min(price * discount_rate, max_discount)
+    return price - discount
+```
+
+### Pythonic なコードを書く
+
+- **リスト内包表記を活用する**（ただし読みやすさを優先）
+- **コンテキストマネージャ（with 文）を使う**
+- **enumerate や zip を適切に使う**
+
+```python
+# ✅ Good: Pythonic
+active_users = [user for user in users if user.is_active]
+
+# ✅ Good: コンテキストマネージャ
+with open("data.txt", "r") as f:
+    data = f.read()
+
+# ✅ Good: enumerate の使用
+for index, item in enumerate(items):
+    print(f"{index}: {item}")
+
+# ❌ Bad: 非 Pythonic
+active_users = []
+for user in users:
+    if user.is_active:
+        active_users.append(user)
+```
+
+### 例外処理
+
+- **具体的な例外をキャッチする**（bare except は避ける）
+- **カスタム例外クラスを定義する**
+- **例外チェイニングを活用する**
+
+```python
+# ✅ Good: 具体的な例外処理
+try:
+    result = api.fetch_data(endpoint)
+except requests.ConnectionError as e:
+    logger.error(f"Connection failed: {e}")
+    raise APIConnectionError("Failed to connect to API") from e
+except requests.Timeout as e:
+    logger.error(f"Request timed out: {e}")
+    raise APITimeoutError("API request timed out") from e
+
+# ❌ Bad: bare except
+try:
+    result = api.fetch_data(endpoint)
+except:
+    pass
+```
+
+### データクラスの活用
+
+- **単純なデータ保持にはデータクラスを使う**
+- **frozen=True で不変オブジェクトを作る**
+- **型ヒントと組み合わせる**
+
+```python
+from dataclasses import dataclass
+from datetime import datetime
+
+# ✅ Good: データクラスの活用
+@dataclass(frozen=True)
+class User:
+    id: int
+    username: str
+    email: str
+    created_at: datetime
+    is_active: bool = True
+
+user = User(
+    id=1,
+    username="john_doe",
+    email="john@example.com",
+    created_at=datetime.now()
+)
+```
+
+### import 文の整理
+
+- **標準ライブラリ、サードパーティ、ローカルの順に整理**
+- **各グループ内はアルファベット順**
+- **from import は絶対パスを優先**
+
+```python
+# 1. 標準ライブラリ
+import os
+import sys
+from datetime import datetime
+from typing import Optional
+
+# 2. サードパーティライブラリ
+import numpy as np
+import pandas as pd
+from fastapi import FastAPI, HTTPException
+
+# 3. ローカルモジュール
+from app.models import User
+from app.services.auth import authenticate_user
+```
+
+### 関数のデフォルト引数
+
+- **ミュータブルなデフォルト引数は使わない**
+- **None を使ってガード句で初期化する**
+
+```python
+# ❌ Bad: ミュータブルなデフォルト引数
+def add_item(item: str, items: list[str] = []) -> list[str]:
+    items.append(item)
+    return items
+
+# ✅ Good: None を使って初期化
+def add_item(item: str, items: list[str] | None = None) -> list[str]:
+    if items is None:
+        items = []
+    items.append(item)
+    return items
+```
+
+### ジェネレータの活用
+
+- **大きなデータセットにはジェネレータを使う**
+- **メモリ効率を意識する**
+
+```python
+# ✅ Good: ジェネレータを使用
+def read_large_file(file_path: str) -> Iterator[str]:
+    """大きなファイルを行ごとに読み込む"""
+    with open(file_path, "r") as f:
+        for line in f:
+            yield line.strip()
+
+# 使用例
+for line in read_large_file("huge_file.txt"):
+    process_line(line)
+```
+
+## まとめ
+
+- **コードは読まれることを前提に書く**
+- **シンプルさを追求する**（KISS: Keep It Simple, Stupid）
+- **早すぎる最適化を避ける**
+- **リファクタリングを恐れない**
+- **コードレビューで互いに学ぶ**
+
+これらのルールは絶対的なものではなく、チームで議論し、プロジェクトに合わせて調整していくものです。

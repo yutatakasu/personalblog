@@ -1,0 +1,22 @@
+export function AboutSection() {
+  return (
+    <section
+      id="about"
+      className="min-h-screen snap-start flex flex-col justify-center px-6 py-24 bg-black text-white scroll-mt-[72px]"
+    >
+      <div className="max-w-3xl mx-auto text-center">
+        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-white/50">
+          About
+        </p>
+        <h2 className="mt-6 font-serif text-3xl md:text-5xl">
+          Atlas は、AI
+          と人の協働を前提としたオペレーティングモデルを提供します。
+        </h2>
+        <p className="mt-8 text-sm md:text-base text-white/70 leading-relaxed">
+          分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas
+          は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
+        </p>
+      </div>
+    </section>
+  );
+}
