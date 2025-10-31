@@ -2,9 +2,9 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      className="min-h-screen snap-start flex flex-col justify-center px-6 py-24 bg-black text-white scroll-mt-[72px]"
+      className="bg-black text-white min-h-screen flex flex-col items-center justify-center snap-start snap-always"
     >
-      <div className="max-w-3xl mx-auto text-center">
+      <div className="max-w-3xl mx-auto text-center py-20 md:py-32">
         <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-white/50">
           About
         </p>

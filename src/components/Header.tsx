@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const sectionIds = [
@@ -130,7 +130,7 @@ export function Header() {
           {/* タイムスタンプ（右側に絶対配置） */}
           {currentTime && (
             <div
-              className={`hidden lg:block absolute right-0 pr-4 top-1/2 -translate-y-1/2 text-base font-mono ${
+              className={`hidden lg:block absolute right-3 pr-5 top-1/2 -translate-y-1/2 text-base font-mono ${
                 isDarkBackground ? "text-neutral-200" : "text-neutral-500"
               }`}
             >
@@ -164,51 +164,65 @@ export function Header() {
       {/* モバイルメニューオーバーレイ */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50">
-          {/* 背景（ぼかし効果付き） */}
           <div
-            className="absolute inset-0 bg-white/90 backdrop-blur-sm"
+            className="absolute inset-0 bg-white/35 backdrop-blur-xl"
             onClick={() => setIsMenuOpen(false)}
             aria-hidden="true"
           />
 
-          {/* メニューパネル */}
-          <div className="relative h-full w-full flex flex-col items-center justify-center p-8">
-            <div className="w-full max-w-sm bg-white border border-black rounded-lg p-8 flex flex-col items-center">
-              {/* タイムスタンプ（上部中央） */}
-              {currentTime && (
-                <div className="text-xs text-gray-500 font-sans mb-8">
-                  {currentTime}
-                </div>
-              )}
+          <div className="relative flex h-full w-full flex-col items-center justify-between py-16">
+            {currentTime && (
+              <div className="text-xs font-sans uppercase tracking-[0.4em] text-neutral-500">
+                {currentTime}
+              </div>
+            )}
 
-              {/* メニュー項目 */}
-              <ul className="flex flex-col gap-6 mb-12">
-                {navItems.map((item) => {
-                  const isActive = activeSection === item.id;
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={`font-sans text-sm transition-colors ${
-                          isActive
-                            ? "text-black font-semibold"
-                            : "text-gray-500 hover:text-black"
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                        aria-current={isActive ? "page" : undefined}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+            <div className="relative flex w-full flex-1 flex-col items-center justify-center">
+              <div
+                className="absolute top-14 h-24 w-24 rounded-full bg-black/5 blur-[60px]"
+                aria-hidden
+              />
+              <div className="relative flex flex-col items-center gap-8 text-2xl font-serif text-neutral-900">
+                <div
+                  className="absolute -inset-x-28 -top-20 -bottom-20 rounded-[200px] bg-black/5 blur-[70px]"
+                  aria-hidden
+                />
+                <ul className="relative flex flex-col items-center gap-6">
+                  {navItems.map((item) => {
+                    if (item.id === "atlas") {
+                      return null;
+                    }
+                    const isActive = activeSection === item.id;
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={`transition-colors ${
+                            isActive
+                              ? "text-neutral-900"
+                              : "text-neutral-500 hover:text-neutral-800"
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                          aria-current={isActive ? "page" : undefined}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
 
-              {/* Close ボタン（下部中央） */}
+            <div className="relative flex w-full flex-col items-center gap-6">
+              <div
+                className="absolute inset-x-8 bottom-0 h-24 rounded-full bg-black/10 blur-[60px]"
+                aria-hidden
+              />
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-sm font-sans text-black underline"
+                className="relative text-sm font-sans text-neutral-800 underline"
                 aria-label="メニューを閉じる"
               >
                 Close

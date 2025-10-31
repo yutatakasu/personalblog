@@ -2,7 +2,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="min-h-screen snap-start flex flex-col justify-center px-6 py-24 scroll-mt-[72px]"
+      className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
     >
       <div className="max-w-3xl mx-auto w-full text-center">
         <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400">
