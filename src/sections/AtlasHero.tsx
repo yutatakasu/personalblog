@@ -86,9 +86,9 @@ export function AtlasHero() {
   return (
     <section
       id="atlas"
-      className="min-h-screen snap-start snap-always flex flex-col items-center justify-center px-6 py-24 text-center"
+      className="snap-start snap-always flex h-screen items-center justify-center text-center"
     >
-      <div className="flex flex-col items-center gap-4 font-mono text-black mb-40">
+      <div className="flex flex-col items-center gap-4 font-mono text-black mb-40 px-6 py-24">
         <span className="uppercase tracking-[0.4em] text-sm md:text-base text-black/50">
           We are Atlas
         </span>

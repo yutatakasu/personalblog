@@ -2,9 +2,9 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
+      className="snap-start snap-always flex h-screen items-center justify-center"
     >
-      <div className="max-w-3xl mx-auto w-full text-center">
+      <div className="max-w-3xl mx-auto w-full text-center px-6 py-24">
         <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-14">
           Contact
         </p>

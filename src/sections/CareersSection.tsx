@@ -17,9 +17,9 @@ export function CareersSection() {
   return (
     <section
       id="careers"
-      className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
+      className="snap-start snap-always flex h-screen items-center justify-center"
     >
-      <div className="max-w-4xl mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full px-6 py-24">
         <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-black/40 mb-14">
           Careers
         </p>
