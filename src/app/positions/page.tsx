@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { SmoothScrollLink } from "@/components/SmoothScrollLink";
 import { positions } from "@/models/positions";
 
 export const metadata: Metadata = {
@@ -16,56 +17,71 @@ const workStyleLabel = {
 } as const;
 
 export default function PositionsPage() {
+  const firstPositionId = positions[0]?.id ?? "ai-systems-engineer";
+
   return (
     <div className="min-h-screen bg-white text-black">
       <main className="mx-auto flex w-full max-w-5xl flex-col px-6 pb-24 pt-28 sm:px-10 sm:pt-36">
-        <section
-          id="open-roles"
-          className="rounded-[36px] border border-black/10 bg-white/90 p-8 shadow-[0_32px_120px_-60px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-12"
-        >
-          <p className="font-mono uppercase tracking-[0.35em] text-[0.65rem] text-black/45 sm:text-xs">
-            Atlas Careers
-          </p>
-          <div className="mt-8 flex flex-col gap-6 sm:gap-8">
-            <div className="space-y-4">
-              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl">
-                Open Positions at Atlas
-              </h1>
-              <p className="max-w-3xl text-sm leading-relaxed text-black/70 sm:text-base">
-                私たちは記憶レイヤーの未来を共に描く仲間を募集しています。Atlas
-                のミッションに共感し、自律的に課題へ向き合える方とぜひ対話させてください。
-              </p>
-            </div>
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-              <Link
-                href={`#${positions[0]?.id ?? "ai-systems-engineer"}`}
-                className="inline-flex items-center justify-center rounded-full border border-black bg-black px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-black"
+        <div className="mb-10">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-mono uppercase tracking-[0.35em] text-black/45 transition hover:text-black/80"
+          >
+            <span aria-hidden>←</span>
+            Back to Main
+          </Link>
+        </div>
+        <section id="open-roles" className="space-y-10">
+          <div className="space-y-5">
+            <p className="font-mono uppercase tracking-[0.35em] text-[0.65rem] text-black/45 sm:text-xs">
+              Atlas Careers
+            </p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-[2.75rem]">
+              Open Positions at Atlas
+            </h1>
+            <p className="max-w-3xl text-sm text-black/65 sm:text-base">
+              余白のあるチームに、次の視点を迎えたい。肩書きよりも、 Atlas
+              にどんな温度を足してくれるかを聞かせてください。
+            </p>
+            <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
+              <SmoothScrollLink
+                targetId={firstPositionId}
+                className="inline-flex items-center gap-2 text-black/80 underline underline-offset-4 transition hover:text-black"
               >
-                Explore Roles
-              </Link>
+                Explore roles
+                <span aria-hidden>→</span>
+              </SmoothScrollLink>
               <Link
                 href="mailto:careers@atlas.inc"
-                className="text-sm text-black/50 underline-offset-2 hover:text-black/80 hover:underline"
+                className="inline-flex items-center gap-2 text-black/50 transition hover:text-black/80"
               >
-                careers@atlas.inc へ連絡する
+                careers@atlas.inc
+                <span aria-hidden>→</span>
               </Link>
             </div>
           </div>
-          <nav className="mt-10 grid gap-3 sm:grid-cols-2">
-            {positions.map((position) => (
-              <Link
-                key={position.id}
-                href={`#${position.id}`}
-                className="group flex items-center justify-between rounded-2xl border border-black/10 bg-black/2 px-5 py-4 text-sm text-black/60 transition hover:border-black/80 hover:text-black"
-              >
-                <span className="font-medium text-black/80 group-hover:text-black">
-                  {position.title}
-                </span>
-                <span className="text-[0.65rem] uppercase tracking-[0.35em] text-black/40 group-hover:text-black/70">
-                  Jump
-                </span>
-              </Link>
-            ))}
+
+          <nav className="border-t border-black/10">
+            <ul className="divide-y divide-black/10">
+              {positions.map((position) => (
+                <li key={position.id}>
+                  <SmoothScrollLink
+                    targetId={position.id}
+                    className="group flex w-full items-center justify-between py-4 text-sm text-black/60 transition hover:text-black"
+                  >
+                    <span className="font-serif text-lg text-black/80 group-hover:text-black">
+                      {position.title}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="text-base text-black/30 transition group-hover:translate-x-1 group-hover:text-black/60"
+                    >
+                      →
+                    </span>
+                  </SmoothScrollLink>
+                </li>
+              ))}
+            </ul>
           </nav>
         </section>
 
@@ -74,7 +90,7 @@ export default function PositionsPage() {
             <article
               key={position.id}
               id={position.id}
-              className="scroll-mt-32 rounded-[30px] border border-black/10 bg-white/95 p-8 shadow-[0_28px_80px_-60px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-10"
+              className="scroll-mt-32 border-t border-black/10 pt-12"
             >
               <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="space-y-2">
@@ -90,9 +106,10 @@ export default function PositionsPage() {
                 </div>
                 <Link
                   href={`mailto:${position.applyEmail ?? "careers@atlas.inc"}`}
-                  className="inline-flex items-center justify-center rounded-full border border-black px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-black transition hover:-translate-y-0.5 hover:bg-black hover:text-white"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-black/70 underline underline-offset-4 transition hover:text-black"
                 >
-                  Apply
+                  Apply / Talk
+                  <span aria-hidden>→</span>
                 </Link>
               </header>
 
@@ -129,18 +146,16 @@ export default function PositionsPage() {
                 </div>
               </div>
 
-              <div className="mt-8 rounded-2xl border border-black/10 bg-black/2 px-5 py-4 text-sm text-black/60">
-                <p>
-                  質問やカジュアル面談の希望があれば、
-                  <Link
-                    href="mailto:careers@atlas.inc"
-                    className="ml-1 inline-flex items-center gap-1 font-medium text-black underline-offset-2 hover:text-black/80 hover:underline"
-                  >
-                    careers@atlas.inc
-                  </Link>
-                  までお気軽にご連絡ください。
-                </p>
-              </div>
+              <p className="mt-8 text-sm text-black/55">
+                質問やカジュアル面談の希望があれば、
+                <Link
+                  href="mailto:careers@atlas.inc"
+                  className="ml-1 inline-flex items-center gap-1 text-black/70 underline underline-offset-4 transition hover:text-black"
+                >
+                  careers@atlas.inc
+                </Link>
+                までお気軽にご連絡ください。
+              </p>
             </article>
           ))}
         </section>

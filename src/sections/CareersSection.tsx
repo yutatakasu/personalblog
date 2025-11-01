@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { positions } from "@/models/positions";
 
-const featuredPositions = positions.slice(0, 3);
+const highlightedPositions = positions.slice(0, 3);
 
 export function CareersSection() {
   return (
@@ -11,75 +11,69 @@ export function CareersSection() {
       className="snap-start snap-always flex min-h-svh items-center justify-center bg-white"
     >
       <div className="mx-auto w-full max-w-5xl px-6 py-20 sm:px-10 sm:py-24 md:py-28">
-        <div className="rounded-[32px] border border-black/10 bg-white/80 p-8 shadow-[0_32px_120px_-60px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-12">
-          <p className="font-mono uppercase tracking-[0.4em] text-[0.65rem] text-black/40 sm:text-xs">
-            Careers
-          </p>
-          <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:items-start">
-            <div className="flex flex-col gap-8">
-              <div className="space-y-4">
-                <h2 className="font-serif text-3xl text-black sm:text-4xl md:text-5xl">
-                  Join us. Atlasと共に記憶レイヤーの未来をつくる。
-                </h2>
-                <p className="text-sm leading-relaxed text-black/70 sm:text-base">
-                  Atlasでは、人とエージェントが協働する社会を前提にプロダクトを設計しています。
-                  ミッションとバリューに共鳴し、自律的に挑戦できる仲間を歓迎します。
-                </p>
-              </div>
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-                <Link
-                  href="/positions#open-roles"
-                  className="inline-flex items-center justify-center rounded-full border border-black bg-black px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-black"
-                >
-                  Open Positions
-                </Link>
-                <Link
-                  href="mailto:careers@atlas.inc"
-                  className="text-sm text-black/50 underline-offset-2 hover:text-black/80 hover:underline"
-                >
-                  careers@atlas.inc へ直接連絡する
-                </Link>
-              </div>
+        <div className="grid gap-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start">
+          <div className="flex flex-col gap-8">
+            <div className="space-y-5">
+              <p className="font-mono uppercase tracking-[0.4em] text-[0.65rem] text-black/40 sm:text-xs">
+                Careers
+              </p>
+              <h2 className="font-serif text-3xl text-black sm:text-4xl md:text-5xl">
+                Atlasに、温度のある視点を持ち込んでください。
+              </h2>
+              <p className="text-sm text-black/65 sm:text-base">
+                仕組みを研ぎ澄ましながらも、人が安心して挑戦できる余白を残したい——
+                そんな想いを大切にしています。
+              </p>
             </div>
-            <div className="flex flex-col gap-5 rounded-3xl border border-black/10 bg-black/2 p-6 sm:p-7">
-              <div className="flex items-center justify-between">
-                <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-black/45">
-                  Open Roles
-                </p>
-                <Link
-                  href="/positions#open-roles"
-                  className="text-xs font-medium text-black/60 underline-offset-4 hover:text-black"
-                >
-                  View all
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {featuredPositions.map((role) => (
+            <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
+              <Link
+                href="/positions#open-roles"
+                className="inline-flex items-center gap-2 text-black/80 underline underline-offset-4 transition hover:text-black"
+              >
+                Open positions
+                <span aria-hidden>→</span>
+              </Link>
+              <Link
+                href="mailto:careers@atlas.inc"
+                className="inline-flex items-center gap-2 text-black/50 transition hover:text-black/80"
+              >
+                careers@atlas.inc
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-black/45">
+              <span className="font-mono">Open roles</span>
+              <Link
+                href="/positions#open-roles"
+                className="text-[0.7rem] lowercase tracking-[0.2em] text-black/40 transition hover:text-black/80"
+              >
+                view all
+              </Link>
+            </div>
+            <div className="border-t border-black/10" />
+            <ul className="space-y-0 divide-y divide-black/10">
+              {highlightedPositions.map((role) => (
+                <li key={role.id} className="py-5">
                   <Link
-                    key={role.id}
                     href={`/positions#${role.id}`}
-                    className="group block rounded-2xl border border-black/10 bg-white px-5 py-5 transition duration-200 hover:-translate-y-1 hover:border-black/80 hover:shadow-[0_20px_45px_-30px_rgba(0,0,0,0.55)]"
+                    className="group flex flex-col gap-1 text-black/70 transition hover:text-black"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="font-serif text-lg text-black sm:text-xl">
-                          {role.title}
-                        </h3>
-                        <p className="mt-1 text-sm text-black/60">
-                          {role.location} ・ {role.department}
-                        </p>
-                      </div>
-                      <span className="mt-1 inline-flex items-center rounded-full border border-black/20 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-black/50 transition group-hover:border-black group-hover:bg-black group-hover:text-white">
-                        詳細
-                      </span>
-                    </div>
-                    <p className="mt-3 text-sm leading-relaxed text-black/65">
-                      {role.summary}
-                    </p>
+                    <span className="font-serif text-lg text-black group-hover:translate-x-0.5 group-hover:text-black">
+                      {role.title}
+                    </span>
+                    <span className="text-xs uppercase tracking-[0.35em] text-black/40">
+                      {role.department}
+                    </span>
+                    <span className="text-sm text-black/55">{role.teaser}</span>
+                    <span className="text-xs text-black/35 group-hover:text-black/60">
+                      {role.location}
+                    </span>
                   </Link>
-                ))}
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
