@@ -18,8 +18,8 @@ export function ContactSection() {
         />
       </div>
       <div className="relative z-10 flex h-full w-full items-center px-6 py-24 md:py-32">
-        <div className="mx-auto w-full max-w-4xl space-y-12 text-white">
-          <div className="text-center">
+        <div className="mx-auto w-full max-w-5xl text-white">
+          <div className="text-center md:text-left">
             <p className="font-mono uppercase tracking-[0.3em] text-xs font-medium text-white/70 md:text-sm">
               Contact
             </p>
@@ -27,56 +27,64 @@ export function ContactSection() {
               Company Information
             </h2>
           </div>
-          <dl className="grid gap-8 border-y border-white/30 py-12 text-sm font-medium tracking-wide md:text-base">
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+          <dl className="mt-16 border-t border-white/20 text-sm font-medium md:text-base">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 会社名
               </dt>
-              <dd className="text-left md:flex-1">
+              <dd className="leading-relaxed">
                 Atlas株式会社（英字表記：Atlas Inc. / 読み：アトラス）
               </dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 創業
               </dt>
-              <dd className="text-left md:flex-1">2023年12月</dd>
+              <dd className="leading-relaxed">2023年12月</dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 代表
               </dt>
-              <dd className="text-left md:flex-1">宮崎悠生</dd>
+              <dd className="leading-relaxed">宮崎悠生</dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 事業内容
               </dt>
-              <dd className="text-left md:flex-1">AI技術を用いた事業開発</dd>
+              <dd className="leading-relaxed">AI技術を用いた事業開発</dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 従業員数
               </dt>
-              <dd className="text-left md:flex-1">約15名</dd>
+              <dd className="leading-relaxed">約15名</dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 資本金
               </dt>
-              <dd className="text-left md:flex-1">1,000,000円</dd>
+              <dd className="leading-relaxed">1,000,000円</dd>
             </div>
-            <div className="flex flex-col gap-3 border-t border-white/20 pt-8 first:border-t-0 first:pt-0 md:flex-row md:items-start md:justify-between">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/70 md:w-48">
+            <div className="grid gap-4 py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 所在地
               </dt>
-              <dd className="text-left md:flex-1">
+              <dd className="leading-relaxed">
                 〒1500043 東京都渋谷区道玄坂 1丁目10番8号渋谷道玄坂東急ビル2F-C
               </dd>
             </div>
           </dl>
-          <div className="space-y-3 text-center text-sm font-medium text-white/85 md:text-base">
-            <p>メール: contact@atlas.inc</p>
+          <div className="mt-16 space-y-3 text-sm font-medium text-white/85 md:text-base">
+            <p>
+              メール:
+              <a
+                href="mailto:contact@atlas.inc"
+                className="underline decoration-white/60 decoration-dotted underline-offset-4 hover:decoration-white"
+              >
+                contact@atlas.inc
+              </a>
+            </p>
             <p>営業時間: 平日 10:00 - 18:00</p>
           </div>
         </div>

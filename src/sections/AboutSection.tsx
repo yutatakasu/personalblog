@@ -14,24 +14,25 @@ type TeamCardProps = {
 function TeamCard({ member, style }: TeamCardProps) {
   return (
     <article
-      className="flex w-full max-w-[280px] flex-col items-center gap-4 rounded-[24px] border border-neutral-200 bg-white px-5 pb-5 pt-6 text-center shadow-[0_18px_60px_-40px_rgba(15,23,42,0.35)] transition-transform sm:max-w-[240px] sm:px-6 sm:pb-6 sm:pt-7 md:w-[190px]"
+      className="group flex w-full max-w-[180px] flex-col items-center gap-3 text-center sm:max-w-[160px]"
       style={style}
     >
-      <div className="mx-auto h-28 w-28 overflow-hidden rounded-[24px] border border-neutral-100 bg-neutral-100 object-cover sm:h-32 sm:w-32 md:h-36 md:w-36">
+      <div className="h-20 w-20 overflow-hidden rounded-[18px] border border-neutral-200 bg-neutral-100 object-cover sm:h-24 sm:w-24">
         <img
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="space-y-2">
-        <p className="font-serif text-lg text-neutral-900 sm:text-xl">
-          {member.name}
-        </p>
-        <p className="font-mono text-[0.6rem] uppercase tracking-[0.32em] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.35em]">
-          {member.title}
-        </p>
-      </div>
+      <p className="mt-1 font-serif text-sm text-neutral-900 sm:text-base">
+        {member.name}
+      </p>
+      <p className="font-mono text-[0.5rem] uppercase tracking-[0.3em] text-neutral-500 sm:text-[0.55rem]">
+        {member.title}
+      </p>
+      <p className="mt-3 max-w-[220px] text-xs leading-relaxed text-neutral-500 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100">
+        {member.focus}
+      </p>
     </article>
   );
 }
@@ -89,25 +90,22 @@ export function AboutSection() {
             </h2>
             <div className="mt-10 grid place-items-center gap-6 sm:grid-cols-2 md:hidden">
               {teamMembers.map((member) => (
-                <TeamCard key={member.name} member={member} />
+                <TeamCard key={member.id} member={member} />
               ))}
             </div>
 
-            <div className="mt-16 hidden md:block">
-              <div className="relative mx-auto h-[540px] w-full max-w-5xl">
-                {teamMembers.map((member) => (
-                  <TeamCard
-                    key={member.name}
-                    member={member}
-                    style={{
-                      position: "absolute",
-                      top: member.position.top,
-                      left: member.position.left,
-                      transform: "translate(-50%, -50%)",
-                    }}
-                  />
-                ))}
-              </div>
+            <div className="mt-16 hidden md:grid mx-auto max-w-6xl grid-cols-5 grid-rows-3 gap-x-10 gap-y-12 justify-items-center">
+              {teamMembers.map((member) => (
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  style={{
+                    gridColumnStart: member.position.column,
+                    gridRowStart: member.position.row,
+                    marginTop: member.position.offsetY,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
