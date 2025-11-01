@@ -6,8 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useState } from "react";
+
 import { investorGroups, type TeamMember, teamMembers } from "@/models/about";
-import { newsItems, type NewsItem } from "@/models/news";
+import { type NewsItem, newsItems } from "@/models/news";
 
 type TeamCardProps = {
   member: TeamMember;
@@ -144,11 +145,7 @@ export function AboutSection() {
               {hasAdditionalMembers ? (
                 <button
                   type="button"
-                  onClick={() =>
-                    setIsTeamExpanded((previous) =>
-                      hasAdditionalMembers ? !previous : previous
-                    )
-                  }
+                  onClick={() => setIsTeamExpanded((previous) => !previous)}
                   aria-expanded={isTeamExpanded}
                   className="flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-xl text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >

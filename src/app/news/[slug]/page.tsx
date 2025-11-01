@@ -4,18 +4,21 @@ import { notFound } from "next/navigation";
 
 import { getNewsItemById, newsItems } from "@/models/news";
 
-type NewsDetailPageProps = {
-  params: {
-    slug: string;
-  };
+type NewsDetailPageParams = {
+  slug: string;
 };
 
 export function generateStaticParams() {
   return newsItems.map((item) => ({ slug: item.id }));
 }
 
-export function generateMetadata({ params }: NewsDetailPageProps) {
-  const item = getNewsItemById(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<NewsDetailPageParams>;
+}) {
+  const { slug } = await params;
+  const item = getNewsItemById(slug);
 
   if (!item) {
     return {};
@@ -27,8 +30,13 @@ export function generateMetadata({ params }: NewsDetailPageProps) {
   };
 }
 
-export default function NewsDetailPage({ params }: NewsDetailPageProps) {
-  const item = getNewsItemById(params.slug);
+export default async function NewsDetailPage({
+  params,
+}: {
+  params: Promise<NewsDetailPageParams>;
+}) {
+  const { slug } = await params;
+  const item = getNewsItemById(slug);
 
   if (!item) {
     notFound();
@@ -39,10 +47,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
       <section className="px-6 py-16 sm:px-8 sm:py-20 md:px-12 md:py-24 lg:px-0 lg:py-28">
         <div className="mx-auto w-full max-w-3xl px-0 lg:px-12">
           <nav aria-label="パンくずリスト" className="text-sm text-neutral-500">
-            <Link
-              href="/news"
-              className="underline-offset-4 hover:underline"
-            >
+            <Link href="/news" className="underline-offset-4 hover:underline">
               News
             </Link>
             <span className="mx-2">/</span>
@@ -77,12 +82,14 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
           </div>
           <article className="mt-12 space-y-6 text-neutral-700">
             {item.summary ? (
-              <p className="text-base leading-relaxed">
-                {item.summary}
-              </p>
+              <p className="text-base leading-relaxed">{item.summary}</p>
             ) : null}
             <p className="text-base leading-relaxed">
-              Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。本記事の詳細は現在準備中ですが、最新情報は順次更新してまいります。
+              Atlas は Memory as a Service
+              の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。
+              {
+                " 本記事の詳細は現在準備中ですが、最新情報は順次更新してまいります。"
+              }
             </p>
             <p className="text-base leading-relaxed">
               詳細については、お問い合わせフォームまたはパートナーチームまでご連絡ください。
@@ -101,4 +108,3 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
     </main>
   );
 }
-

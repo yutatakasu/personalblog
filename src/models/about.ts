@@ -189,4 +189,3 @@ export const investorGroups: InvestorGroup[] = [
     supporters: ["Mitsuba Holdings", "Pacific Systems", "Global Insight Group"],
   },
 ];
-

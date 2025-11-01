@@ -48,4 +48,3 @@ export const newsItems: NewsItem[] = [
 export function getNewsItemById(id: string) {
   return newsItems.find((item) => item.id === id);
 }
-
