@@ -1,9 +1,15 @@
+export type TeamMemberPosition = {
+  top: string;
+  left: string;
+};
+
 export type TeamMember = {
   name: string;
   title: string;
   focus: string;
   imageSrc: string;
   imageAlt?: string;
+  position: TeamMemberPosition;
 };
 
 export type InvestorGroup = {
@@ -25,6 +31,8 @@ export const teamMembers: TeamMember[] = [
     focus:
       "記憶レイヤーと業務オペレーションを結びつける長期ロードマップを設計し、Atlas のビジョンを牽引します。",
     imageSrc: "/favicon.svg",
+    imageAlt: "Koki Aoyagi",
+    position: { top: "18%", left: "20%" },
   },
   {
     name: "Mina Sato",
@@ -32,6 +40,8 @@ export const teamMembers: TeamMember[] = [
     focus:
       "エージェントと人のコラボレーション体験をデザインし、ユースケースごとの記憶テンプレートを整備しています。",
     imageSrc: "/favicon.svg",
+    imageAlt: "Mina Sato",
+    position: { top: "26%", left: "72%" },
   },
   {
     name: "Ren Ishikawa",
@@ -39,6 +49,8 @@ export const teamMembers: TeamMember[] = [
     focus:
       "分散メモリ基盤と推論パイプラインを統合し、セキュアでスケーラブルな Memory as a Service を提供します。",
     imageSrc: "/favicon.svg",
+    imageAlt: "Ren Ishikawa",
+    position: { top: "70%", left: "30%" },
   },
   {
     name: "Sara Kobayashi",
@@ -46,6 +58,8 @@ export const teamMembers: TeamMember[] = [
     focus:
       "導入企業のワークフロー再設計を支援し、記憶を活用した意思決定の定着を支えるエキスパートです。",
     imageSrc: "/favicon.svg",
+    imageAlt: "Sara Kobayashi",
+    position: { top: "76%", left: "74%" },
   },
 ];
 

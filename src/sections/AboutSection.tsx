@@ -1,4 +1,38 @@
-import { investorGroups, newsItems, teamMembers } from "@/models/about";
+import {
+  investorGroups,
+  newsItems,
+  teamMembers,
+  type TeamMember,
+} from "@/models/about";
+import { type CSSProperties } from "react";
+
+type TeamCardProps = {
+  member: TeamMember;
+  style?: CSSProperties;
+};
+
+function TeamCard({ member, style }: TeamCardProps) {
+  return (
+    <article
+      className="flex w-full flex-col items-center gap-4 rounded-[26px] border border-neutral-200 bg-white px-5 pb-5 pt-6 text-center shadow-[0_18px_60px_-40px_rgba(15,23,42,0.35)] transition-transform md:w-[180px]"
+      style={style}
+    >
+      <div className="mx-auto h-36 w-36 overflow-hidden rounded-[24px] border border-neutral-100 bg-neutral-100 object-cover">
+        <img
+          src={member.imageSrc}
+          alt={member.imageAlt ?? `${member.name} portrait`}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="space-y-2">
+        <p className="font-serif text-xl text-neutral-900">{member.name}</p>
+        <p className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-neutral-400">
+          {member.title}
+        </p>
+      </div>
+    </article>
+  );
+}
 
 export function AboutSection() {
   return (
@@ -51,32 +85,27 @@ export function AboutSection() {
             <h2 className="font-serif text-3xl md:text-5xl leading-tight text-neutral-900">
               記憶レイヤーの実装と運用を専門とするクロスファンクショナルなチームです。
             </h2>
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="mt-12 grid gap-6 md:hidden">
               {teamMembers.map((member) => (
-                <div
-                  key={member.name}
-                  className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6"
-                >
-                  <div className="flex items-start gap-4">
-                    <img
-                      src={member.imageSrc}
-                      alt={member.imageAlt ?? `${member.name} portrait`}
-                      className="h-14 w-14 flex-shrink-0 rounded-full border border-neutral-200 bg-white object-cover"
-                    />
-                    <div>
-                      <p className="font-serif text-xl md:text-2xl text-neutral-900">
-                        {member.name}
-                      </p>
-                      <p className="mt-2 font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">
-                        {member.title}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm text-neutral-600 leading-relaxed">
-                    {member.focus}
-                  </p>
-                </div>
+                <TeamCard key={member.name} member={member} />
               ))}
+            </div>
+
+            <div className="mt-12 hidden md:block">
+              <div className="relative mx-auto h-[560px] w-full max-w-5xl">
+                {teamMembers.map((member) => (
+                  <TeamCard
+                    key={member.name}
+                    member={member}
+                    style={{
+                      position: "absolute",
+                      top: member.position.top,
+                      left: member.position.left,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
