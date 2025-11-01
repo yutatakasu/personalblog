@@ -23,7 +23,7 @@ export function ProductsSection() {
       className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
     >
       <div className="max-w-4xl mx-auto w-full">
-        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-black/40">
+        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-black/40 mb-14">
           Products
         </p>
         <h2 className="mt-6 font-serif text-3xl md:text-5xl text-black">

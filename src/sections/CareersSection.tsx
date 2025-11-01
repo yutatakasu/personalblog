@@ -20,7 +20,7 @@ export function CareersSection() {
       className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
     >
       <div className="max-w-4xl mx-auto w-full">
-        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-black/40">
+        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-black/40 mb-14">
           Careers
         </p>
         <div className="mt-6 flex flex-col gap-10 md:flex-row md:items-center md:justify-between">

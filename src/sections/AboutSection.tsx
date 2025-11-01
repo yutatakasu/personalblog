@@ -5,7 +5,7 @@ export function AboutSection() {
       className="bg-black text-white min-h-screen flex flex-col items-center justify-center snap-start snap-always"
     >
       <div className="max-w-3xl mx-auto text-center py-20 md:py-32">
-        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-white/50">
+        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-white/50 mb-14">
           About
         </p>
         <h2 className="mt-6 font-serif text-3xl md:text-5xl">

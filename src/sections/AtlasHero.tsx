@@ -88,19 +88,21 @@ export function AtlasHero() {
       id="atlas"
       className="min-h-screen snap-start snap-always flex flex-col items-center justify-center px-6 py-24 text-center"
     >
-      <div className="flex flex-col items-center gap-4 font-mono text-black">
+      <div className="flex flex-col items-center gap-4 font-mono text-black mb-40">
         <span className="uppercase tracking-[0.4em] text-sm md:text-base text-black/50">
           We are Atlas
         </span>
-        <Typewriter
-          text="人類のためになる"
-          className="text-2xl md:text-4xl tracking-wide"
-        />
-        <Typewriter
-          text="For the benefit of humanity"
-          startDelay={1800}
-          className="text-xl md:text-3xl tracking-[0.25em] text-black/80"
-        />
+        <div className="flex flex-col items-center gap-4 mt-40">
+          <Typewriter
+            text="人類のためになる"
+            className="text-2xl md:text-4xl tracking-wide"
+          />
+          <Typewriter
+            text="For the benefit of humanity"
+            startDelay={1800}
+            className="text-xl md:text-3xl tracking-[0.25em] text-black/80"
+          />
+        </div>
       </div>
     </section>
   );

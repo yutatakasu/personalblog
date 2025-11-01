@@ -5,7 +5,7 @@ export function ContactSection() {
       className="min-h-screen snap-start snap-always flex flex-col justify-center px-6 py-24"
     >
       <div className="max-w-3xl mx-auto w-full text-center">
-        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400">
+        <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-14">
           Contact
         </p>
         <h2 className="mt-6 font-serif text-3xl md:text-5xl text-neutral-900">
