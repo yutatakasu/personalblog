@@ -14,10 +14,10 @@ type TeamCardProps = {
 function TeamCard({ member, style }: TeamCardProps) {
   return (
     <article
-      className="flex w-full flex-col items-center gap-4 rounded-[26px] border border-neutral-200 bg-white px-5 pb-5 pt-6 text-center shadow-[0_18px_60px_-40px_rgba(15,23,42,0.35)] transition-transform md:w-[180px]"
+      className="flex w-full max-w-[280px] flex-col items-center gap-4 rounded-[24px] border border-neutral-200 bg-white px-5 pb-5 pt-6 text-center shadow-[0_18px_60px_-40px_rgba(15,23,42,0.35)] transition-transform sm:max-w-[240px] sm:px-6 sm:pb-6 sm:pt-7 md:w-[190px]"
       style={style}
     >
-      <div className="mx-auto h-36 w-36 overflow-hidden rounded-[24px] border border-neutral-100 bg-neutral-100 object-cover">
+      <div className="mx-auto h-28 w-28 overflow-hidden rounded-[24px] border border-neutral-100 bg-neutral-100 object-cover sm:h-32 sm:w-32 md:h-36 md:w-36">
         <img
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
@@ -25,8 +25,10 @@ function TeamCard({ member, style }: TeamCardProps) {
         />
       </div>
       <div className="space-y-2">
-        <p className="font-serif text-xl text-neutral-900">{member.name}</p>
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-neutral-400">
+        <p className="font-serif text-lg text-neutral-900 sm:text-xl">
+          {member.name}
+        </p>
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.32em] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.35em]">
           {member.title}
         </p>
       </div>
@@ -39,7 +41,7 @@ export function AboutSection() {
     <>
       <section
         id="about"
-        className="relative snap-start snap-always flex h-screen items-center justify-center text-white"
+        className="relative snap-start snap-always flex min-h-svh items-start justify-center text-white md:items-center"
       >
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -52,9 +54,9 @@ export function AboutSection() {
             aria-hidden
           />
         </div>
-        <div className="relative z-10 w-full px-6 py-24 md:py-32">
-          <div className="max-w-3xl text-center mx-auto">
-            <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-white/60 mb-14">
+        <div className="relative z-10 w-full px-6 py-20 md:py-32">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-white/60 md:mb-14 md:text-sm">
               About
             </p>
             <h2 className="font-serif text-3xl md:text-5xl leading-tight space-y-4">
@@ -75,24 +77,24 @@ export function AboutSection() {
 
       <section
         id="about-team"
-        className="snap-start snap-always flex h-screen items-center justify-center bg-white text-neutral-900"
+        className="snap-start snap-always flex min-h-svh items-start justify-center bg-white text-neutral-900 md:items-center"
       >
-        <div className="w-full px-6 py-24 md:py-32">
-          <div className="max-w-5xl mx-auto">
-            <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-14">
+        <div className="w-full px-6 py-20 md:py-32">
+          <div className="mx-auto max-w-5xl">
+            <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
               Team
             </p>
             <h2 className="font-serif text-3xl md:text-5xl leading-tight text-neutral-900">
               記憶レイヤーの実装と運用を専門とするクロスファンクショナルなチームです。
             </h2>
-            <div className="mt-12 grid gap-6 md:hidden">
+            <div className="mt-10 grid place-items-center gap-6 sm:grid-cols-2 md:hidden">
               {teamMembers.map((member) => (
                 <TeamCard key={member.name} member={member} />
               ))}
             </div>
 
-            <div className="mt-12 hidden md:block">
-              <div className="relative mx-auto h-[560px] w-full max-w-5xl">
+            <div className="mt-16 hidden md:block">
+              <div className="relative mx-auto h-[540px] w-full max-w-5xl">
                 {teamMembers.map((member) => (
                   <TeamCard
                     key={member.name}
@@ -113,17 +115,17 @@ export function AboutSection() {
 
       <section
         id="about-backed"
-        className="snap-start snap-always flex h-screen items-center justify-center text-neutral-900"
+        className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="max-w-5xl mx-auto w-full px-6 py-24 md:py-32">
-          <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-14">
+        <div className="mx-auto w-full max-w-5xl px-6 py-20 md:py-32">
+          <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
             We Are Backed By
           </p>
           <h2 className="font-serif text-3xl md:text-5xl leading-tight text-neutral-900">
             信頼できるパートナーとともに、Atlas
             の記憶レイヤーは産業全体へと浸透します。
           </h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
             {investorGroups.map((group) => (
               <div
                 key={group.category}
@@ -147,16 +149,16 @@ export function AboutSection() {
 
       <section
         id="about-news"
-        className="snap-start snap-always flex h-screen items-center justify-center text-neutral-900"
+        className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="max-w-4xl mx-auto w-full px-6 py-24 md:py-32">
-          <p className="font-mono uppercase tracking-[0.3em] text-xs md:text-sm text-neutral-400 mb-14">
+        <div className="mx-auto w-full max-w-4xl px-6 py-20 md:py-32">
+          <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
             Current News
           </p>
           <h2 className="font-serif text-3xl md:text-5xl leading-tight text-neutral-900">
             プロダクトの進化とパートナーシップの最新情報をお届けします。
           </h2>
-          <div className="mt-12 space-y-8">
+          <div className="mt-10 space-y-8 md:mt-12">
             {newsItems.map((news) => (
               <article
                 key={news.headline}
