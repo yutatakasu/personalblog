@@ -25,8 +25,9 @@ export function CareersSection() {
         </p>
         <div className="mt-6 flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
           <h2 className="font-serif text-3xl md:text-5xl text-black max-w-xl">
-            AI
-            時代のオペレーティングシステムを、ともに創る仲間を募集しています。
+            Atlasが目指すのは誰もがその人らしく働ける社会。
+            ミッション・バリューへの共感を何よりも大切に考え、
+            一緒に働くメンバーを探しています。
           </h2>
           <a
             href="#contact"

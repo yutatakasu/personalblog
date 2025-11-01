@@ -7,14 +7,26 @@ const sectionIds = [
   "atlas",
   "products",
   "about",
+  "about-team",
+  "about-backed",
+  "about-news",
   "careers",
   "contact",
 ] as const;
-const darkSections = new Set(["about"]);
+
+const darkSurfaceSections = new Set(["about", "contact"]);
+
+const normalizeSectionId = (sectionId: string) => {
+  if (sectionId.startsWith("about-")) {
+    return "about";
+  }
+  return sectionId;
+};
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>("");
+  const [surfaceSection, setSurfaceSection] = useState<string>("atlas");
   const [activeSection, setActiveSection] = useState<string>("atlas");
 
   useEffect(() => {
@@ -59,7 +71,8 @@ export function Header() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) {
           const next = visible[0].target.id || "atlas";
-          setActiveSection(next);
+          setSurfaceSection(next);
+          setActiveSection(normalizeSectionId(next));
         }
       },
       {
@@ -87,11 +100,12 @@ export function Header() {
     { id: "careers", label: "Careers", href: "#careers" },
     { id: "contact", label: "Contact", href: "#contact" },
   ];
+  const navDarkSections = new Set(["about", "contact"]);
 
-  const isDarkBackground = darkSections.has(activeSection);
+  const isDarkBackground = darkSurfaceSections.has(surfaceSection);
   const inactiveLinkClass = isDarkBackground
-    ? "text-neutral-400 hover:text-neutral-200"
-    : "text-neutral-400 hover:text-neutral-600";
+    ? "text-neutral-400 hover:text-neutral-200 font-medium"
+    : "text-neutral-400 hover:text-neutral-600 font-medium";
   const overlayActiveColor = isDarkBackground
     ? "text-white"
     : "text-neutral-900";
@@ -109,7 +123,7 @@ export function Header() {
 
   return (
     <>
-      <header className="w-full snap-none fixed top-0 left-0 right-0 z-[100]">
+      <header className="w-full snap-none fixed top-0 left-0 right-0 z-100">
         {/* ナビゲーションバー */}
         <nav className="relative w-full px-4 py-4">
           {/* デスクトップナビゲーション */}
@@ -117,7 +131,7 @@ export function Header() {
             <ul className="flex items-center gap-10 text-base font-sans">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
-                const isActiveOnDark = darkSections.has(item.id);
+                const isActiveOnDark = navDarkSections.has(item.id);
                 const activeColor = isActiveOnDark
                   ? "text-white"
                   : "text-neutral-950";
@@ -157,7 +171,7 @@ export function Header() {
           )}
 
           {/* モバイル: Atlas と menu */}
-          <div className="flex items-center justify-center gap-4 md:hidden text-base font-sans">
+          <div className="flex items-center justify-center gap-4 md:hidden text-base font-sans font-medium">
             <button
               type="button"
               onClick={() => setIsMenuOpen(true)}
@@ -172,9 +186,9 @@ export function Header() {
         </nav>
       </header>
 
-      {/* モバイルメニューオーバーレイ */}
+      {/* メニューオーバーレイ */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50">
           <div
             className={`absolute inset-0 backdrop-blur-xl ${overlayBackdropColor}`}
             onClick={() => setIsMenuOpen(false)}
@@ -195,12 +209,12 @@ export function Header() {
                 className={`absolute top-14 h-24 w-24 rounded-full ${overlayGlowColor} blur-[60px]`}
                 aria-hidden
               />
-              <div className="relative flex flex-col items-center gap-8 text-2xl font-serif">
+              <div className="relative flex flex-col items-center gap-8 text-2xl font-serif md:text-3xl">
                 <div
                   className={`absolute -inset-x-28 -top-20 -bottom-20 rounded-[200px] ${overlayGlowColor} blur-[70px]`}
                   aria-hidden
                 />
-                <ul className="relative flex flex-col items-center gap-6">
+                <ul className="relative flex flex-col items-center gap-6 text-center">
                   {navItems.map((item) => {
                     if (item.id === "atlas") {
                       return null;
@@ -211,7 +225,9 @@ export function Header() {
                         <Link
                           href={item.href}
                           className={`transition-colors ${
-                            isActive ? overlayActiveColor : overlayInactiveColor
+                            isActive
+                              ? `font-semibold ${overlayActiveColor}`
+                              : `font-medium ${overlayInactiveColor}`
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                           aria-current={isActive ? "page" : undefined}
@@ -233,7 +249,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
-                className={`relative text-sm font-sans underline ${overlayCloseColor}`}
+                className={`relative text-sm font-sans font-medium underline ${overlayCloseColor}`}
                 aria-label="メニューを閉じる"
               >
                 Close

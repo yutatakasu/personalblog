@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export function ScrollToAtlas() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
@@ -11,17 +11,24 @@ export function ScrollToAtlas() {
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
 
-    requestAnimationFrame(() => {
-      const main = document.querySelector("main");
-      if (main instanceof HTMLElement) {
-        main.scrollTo({ top: 0, behavior: "auto" });
-      }
+    const { hash, pathname, search } = window.location;
+    if (hash && hash !== "#atlas") {
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${pathname}${search}#atlas`
+      );
+    }
 
-      const atlasSection = document.getElementById("atlas");
-      if (atlasSection) {
-        atlasSection.scrollIntoView({ behavior: "auto", block: "start" });
-      }
-    });
+    const main = document.querySelector("main");
+    if (main instanceof HTMLElement) {
+      main.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    const atlasSection = document.getElementById("atlas");
+    if (atlasSection instanceof HTMLElement) {
+      atlasSection.scrollIntoView({ behavior: "auto", block: "start" });
+    }
 
     return () => {
       window.history.scrollRestoration = previousRestoration || "auto";
@@ -30,4 +37,3 @@ export function ScrollToAtlas() {
 
   return null;
 }
-

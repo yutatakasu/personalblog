@@ -6,9 +6,15 @@ type TypewriterProps = {
   text: string;
   startDelay?: number;
   className?: string;
+  delayProfile?: "natural" | "uniform";
 };
 
-function Typewriter({ text, startDelay = 0, className }: TypewriterProps) {
+function Typewriter({
+  text,
+  startDelay = 0,
+  className,
+  delayProfile = "natural",
+}: TypewriterProps) {
   const [displayed, setDisplayed] = useState("");
   const [isCursorVisible, setIsCursorVisible] = useState(true);
 
@@ -22,15 +28,18 @@ function Typewriter({ text, startDelay = 0, className }: TypewriterProps) {
     let blinkInterval: ReturnType<typeof setInterval> | null = null;
 
     const getDelay = (char: string) => {
-      const base = 55 + Math.random() * 65;
+      const base = 110 + Math.random() * 120;
+      if (delayProfile === "uniform") {
+        return base;
+      }
       if (",。,.!?".includes(char)) {
-        return base + 220;
+        return base + 260;
       }
       if (char === " ") {
-        return base + 140;
+        return base + 180;
       }
       if (/[A-Z]/.test(char)) {
-        return base + 40;
+        return base + 80;
       }
       return base;
     };
@@ -89,18 +98,20 @@ export function AtlasHero() {
       className="snap-start snap-always flex h-screen items-center justify-center text-center"
     >
       <div className="flex flex-col items-center gap-4 font-mono text-black mb-40 px-6 py-24">
-        <span className="uppercase tracking-[0.4em] text-sm md:text-base text-black/50">
+        <h2 className="uppercase tracking-[0.4em] text-3xl md:text-5xl text-black/50">
           We are Atlas
-        </span>
+        </h2>
         <div className="flex flex-col items-center gap-4 mt-40">
           <Typewriter
             text="人類のためになる"
             className="text-2xl md:text-4xl tracking-wide"
+            delayProfile="uniform"
           />
           <Typewriter
             text="For the benefit of humanity"
             startDelay={1800}
             className="text-xl md:text-3xl tracking-[0.25em] text-black/80"
+            delayProfile="uniform"
           />
         </div>
       </div>
