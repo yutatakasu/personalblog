@@ -100,9 +100,9 @@ export function Header() {
     { id: "careers", label: "Careers", href: "#careers" },
     { id: "contact", label: "Contact", href: "#contact" },
   ];
-  const navDarkSections = new Set(["about", "contact"]);
+  const isSectionDark = (section: string) => darkSurfaceSections.has(section);
 
-  const isDarkBackground = darkSurfaceSections.has(surfaceSection);
+  const isDarkBackground = isSectionDark(surfaceSection);
   const inactiveLinkClass = isDarkBackground
     ? "text-neutral-400 hover:text-neutral-200 font-medium"
     : "text-neutral-400 hover:text-neutral-600 font-medium";
@@ -131,7 +131,8 @@ export function Header() {
             <ul className="flex items-center gap-10 text-base font-sans">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
-                const isActiveOnDark = navDarkSections.has(item.id);
+                const activeSurfaceId = isActive ? surfaceSection : item.id;
+                const isActiveOnDark = isSectionDark(activeSurfaceId);
                 const activeColor = isActiveOnDark
                   ? "text-white"
                   : "text-neutral-950";

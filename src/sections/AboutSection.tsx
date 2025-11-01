@@ -80,8 +80,8 @@ export function AboutSection() {
         id="about-team"
         className="snap-start snap-always flex min-h-svh items-start justify-center bg-white text-neutral-900 md:items-center"
       >
-        <div className="w-full px-6 py-20 md:py-32">
-          <div className="mx-auto max-w-5xl">
+        <div className="w-full px-6 py-20 md:px-10 md:py-32">
+          <div className="mx-auto max-w-6xl">
             <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
               Team
             </p>
@@ -94,7 +94,7 @@ export function AboutSection() {
               ))}
             </div>
 
-            <div className="mt-16 hidden md:grid mx-auto max-w-6xl grid-cols-5 grid-rows-3 gap-x-10 gap-y-12 justify-items-center">
+            <div className="mt-16 hidden md:grid mx-auto max-w-7xl grid-cols-5 grid-rows-3 gap-x-12 gap-y-14 justify-items-center">
               {teamMembers.map((member) => (
                 <TeamCard
                   key={member.id}
@@ -115,7 +115,7 @@ export function AboutSection() {
         id="about-backed"
         className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="mx-auto w-full max-w-5xl px-6 py-20 md:py-32">
+        <div className="mx-auto w-full max-w-6xl px-6 py-20 md:px-10 md:py-32">
           <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
             We Are Backed By
           </p>
@@ -123,7 +123,7 @@ export function AboutSection() {
             信頼できるパートナーとともに、Atlas
             の記憶レイヤーは産業全体へと浸透します。
           </h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {investorGroups.map((group) => (
               <div
                 key={group.category}
@@ -149,7 +149,7 @@ export function AboutSection() {
         id="about-news"
         className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="mx-auto w-full max-w-4xl px-6 py-20 md:py-32">
+        <div className="mx-auto w-full max-w-5xl px-6 py-20 md:px-10 md:py-32">
           <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
             Current News
           </p>

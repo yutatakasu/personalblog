@@ -38,8 +38,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 1, column: 1, offsetY: "0px" },
   },
   {
-    id: "rina-kato",
-    name: "Rina Kato",
+    id: "lyuki-kumagai",
+    name: "Lyuki Kumagai",
     title: "COO",
     focus:
       "各プロダクトラインのオペレーション設計と品質基準の統一を推進します。",
@@ -48,8 +48,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 1, column: 2, offsetY: "-24px" },
   },
   {
-    id: "sota-hayashi",
-    name: "Sota Hayashi",
+    id: "ryoga-hashimoto",
+    name: "Ryoga Hashimoto",
     title: "CTO",
     focus:
       "分散メモリ基盤と推論パイプラインのスケールを支えるアーキテクチャを監督します。",
@@ -58,8 +58,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 1, column: 3, offsetY: "12px" },
   },
   {
-    id: "mei-fujita",
-    name: "Mei Fujita",
+    id: "yuta-takasu",
+    name: "Yuta Takasu",
     title: "Chief Scientist",
     focus:
       "長期記憶のセマンティクス解析と適応アルゴリズムの研究開発をリードします。",
@@ -68,8 +68,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 1, column: 4, offsetY: "-18px" },
   },
   {
-    id: "haru-yamamoto",
-    name: "Haru Yamamoto",
+    id: "theo-jang",
+    name: "Theo Jang",
     title: "VP Product",
     focus:
       "顧客ワークフローから逆算した記憶テンプレートの設計とUX指針を策定します。",
@@ -78,8 +78,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 1, column: 5, offsetY: "10px" },
   },
   {
-    id: "kenji-nakamura",
-    name: "Kenji Nakamura",
+    id: "issa-tada",
+    name: "Issa Tada",
     title: "Head of Platform",
     focus: "API と開発者エコシステムを整備し、Atlas OS の拡張性を担保します。",
     imageSrc: "/favicon.svg",
@@ -87,8 +87,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 2, column: 1, offsetY: "18px" },
   },
   {
-    id: "aya-suzuki",
-    name: "Aya Suzuki",
+    id: "kazuki-miyazaki",
+    name: "Kazuki Miyazaki",
     title: "Design Director",
     focus:
       "人とエージェントの協働を成立させるコミュニケーションデザインを統括します。",
@@ -97,8 +97,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 2, column: 2, offsetY: "-10px" },
   },
   {
-    id: "taro-nishimura",
-    name: "Taro Nishimura",
+    id: "shuichiro-ono",
+    name: "Shuichiro Ono",
     title: "Head of Security",
     focus: "記憶レイヤーのゼロトラスト設計と監査フレームワークを構築します。",
     imageSrc: "/favicon.svg",
@@ -106,8 +106,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 2, column: 3, offsetY: "22px" },
   },
   {
-    id: "emi-watanabe",
-    name: "Emi Watanabe",
+    id: "hinako-tsutsumi",
+    name: "Hinako Tsutsumi",
     title: "VP Customer Success",
     focus: "導入企業のワークフロー定着と継続的な成果指標の運用を支援します。",
     imageSrc: "/favicon.svg",
@@ -115,8 +115,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 2, column: 4, offsetY: "-6px" },
   },
   {
-    id: "sho-tanaka",
-    name: "Sho Tanaka",
+    id: "tsubasa-ogasawara",
+    name: "Tsubasa Ogasawara",
     title: "Head of Partnerships",
     focus: "戦略提携先との共同ソリューション開発と GTM を推進します。",
     imageSrc: "/favicon.svg",
@@ -124,8 +124,8 @@ export const teamMembers: TeamMember[] = [
     position: { row: 2, column: 5, offsetY: "24px" },
   },
   {
-    id: "nao-kimura",
-    name: "Nao Kimura",
+    id: "koki-aoyagi",
+    name: "Koki Aoyagi",
     title: "Data Steward Lead",
     focus:
       "企業データの分類体系とアクセスコントロールを記憶レイヤー上で標準化します。",
