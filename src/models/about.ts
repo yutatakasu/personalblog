@@ -19,13 +19,6 @@ export type InvestorGroup = {
   supporters: string[];
 };
 
-export type NewsItem = {
-  date: string;
-  headline: string;
-  summary: string;
-  tag: string;
-};
-
 export const teamMembers: TeamMember[] = [
   {
     id: "yuki-miyazaki",
@@ -197,26 +190,3 @@ export const investorGroups: InvestorGroup[] = [
   },
 ];
 
-export const newsItems: NewsItem[] = [
-  {
-    date: "2025.09.12",
-    headline: "Atlas OS v2 を正式リリース",
-    summary:
-      "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
-    tag: "Product Update",
-  },
-  {
-    date: "2025.08.02",
-    headline: "三井物産と記憶連携ソリューションを共同開発",
-    summary:
-      "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
-    tag: "Partnership",
-  },
-  {
-    date: "2025.06.18",
-    headline: "Series A ラウンドで 18 億円を調達",
-    summary:
-      "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
-    tag: "Funding",
-  },
-];

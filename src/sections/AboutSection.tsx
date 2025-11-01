@@ -1,11 +1,13 @@
+"use client";
+
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties } from "react";
-import {
-  investorGroups,
-  newsItems,
-  type TeamMember,
-  teamMembers,
-} from "@/models/about";
+import { useState } from "react";
+import { investorGroups, type TeamMember, teamMembers } from "@/models/about";
+import { newsItems, type NewsItem } from "@/models/news";
 
 type TeamCardProps = {
   member: TeamMember;
@@ -43,7 +45,50 @@ function TeamCard({ member, className, style }: TeamCardProps) {
   );
 }
 
+const MOBILE_TEAM_VISIBLE_COUNT = 5;
+const NEWS_PREVIEW_COUNT = 5;
+
+type NewsPreviewCardProps = {
+  item: NewsItem;
+};
+
+function NewsPreviewCard({ item }: NewsPreviewCardProps) {
+  return (
+    <Link
+      href={item.link}
+      prefetch={false}
+      className="group flex items-center gap-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-3 transition hover:border-neutral-300 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50"
+    >
+      <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-200">
+        <Image
+          src={item.thumbnailSrc}
+          alt={item.thumbnailAlt}
+          fill
+          sizes="96px"
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="flex min-w-0 flex-col">
+        <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-neutral-400 sm:text-xs">
+          {item.date}
+        </span>
+        <span className="mt-1 font-serif text-base leading-snug text-neutral-900 sm:text-lg">
+          {item.title}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export function AboutSection() {
+  const [isTeamExpanded, setIsTeamExpanded] = useState(false);
+  const mobileVisibleMembers = isTeamExpanded
+    ? teamMembers
+    : teamMembers.slice(0, MOBILE_TEAM_VISIBLE_COUNT);
+  const hasAdditionalMembers = teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
+  const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
+  const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
+
   return (
     <>
       <section
@@ -93,9 +138,28 @@ export function AboutSection() {
               Team
             </p>
             <div className="mt-8 grid w-full place-items-center gap-8 md:hidden">
-              {teamMembers.map((member) => (
+              {mobileVisibleMembers.map((member) => (
                 <TeamCard key={member.id} member={member} />
               ))}
+              {hasAdditionalMembers ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsTeamExpanded((previous) =>
+                      hasAdditionalMembers ? !previous : previous
+                    )
+                  }
+                  aria-expanded={isTeamExpanded}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-xl text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                >
+                  <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
+                  <span className="sr-only">
+                    {isTeamExpanded
+                      ? "チームメンバーを折りたたむ"
+                      : "すべてのチームメンバーを表示"}
+                  </span>
+                </button>
+              ) : null}
             </div>
 
             <div className="mt-12 hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-12 md:gap-y-12">
@@ -103,7 +167,7 @@ export function AboutSection() {
                 <TeamCard
                   key={member.id}
                   member={member}
-                  className="!max-w-none"
+                  className="max-w-none!"
                 />
               ))}
             </div>
@@ -170,29 +234,23 @@ export function AboutSection() {
           <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl md:text-5xl md:leading-[1.1]">
             プロダクトの進化とパートナーシップの最新情報をお届けします。
           </h2>
-          <div className="mt-8 space-y-8 md:mt-12">
-            {newsItems.map((news) => (
-              <article
-                key={news.headline}
-                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6"
-              >
-                <div className="flex flex-col gap-3 md:flex-row md:items-baseline md:justify-between">
-                  <span className="font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">
-                    {news.date}
-                  </span>
-                  <h3 className="font-serif text-2xl text-neutral-900 md:max-w-xl">
-                    {news.headline}
-                  </h3>
-                </div>
-                <p className="mt-4 text-sm text-neutral-600 leading-relaxed">
-                  {news.summary}
-                </p>
-                <span className="mt-5 inline-block font-mono text-[0.7rem] uppercase tracking-[0.4em] text-neutral-400">
-                  {news.tag}
-                </span>
-              </article>
+          <div className="mt-8 space-y-4 md:mt-12">
+            {previewNewsItems.map((news) => (
+              <NewsPreviewCard key={news.id} item={news} />
             ))}
           </div>
+          {hasAdditionalNews ? (
+            <div className="mt-6">
+              <Link
+                href="/news"
+                prefetch={false}
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-2 text-sm font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                ニュース一覧へ
+                <span aria-hidden>&gt;</span>
+              </Link>
+            </div>
+          ) : null}
         </div>
       </section>
     </>

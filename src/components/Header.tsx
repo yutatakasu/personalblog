@@ -131,6 +131,49 @@ export function Header() {
     ? "text-neutral-100"
     : "text-neutral-900";
 
+  const resolveCurrentSection = () => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    const viewportHeight =
+      window.innerHeight || document.documentElement.clientHeight;
+    let maxIntersection = 0;
+    let bestSectionId: string = surfaceSection;
+
+    sectionIds.forEach((sectionId) => {
+      const element = document.getElementById(sectionId);
+      if (!element) {
+        return;
+      }
+      const rect = element.getBoundingClientRect();
+      const intersectionTop = Math.max(rect.top, 0);
+      const intersectionBottom = Math.min(rect.bottom, viewportHeight);
+      const intersectionHeight = intersectionBottom - intersectionTop;
+      if (intersectionHeight <= 0) {
+        return;
+      }
+      if (intersectionHeight > maxIntersection) {
+        maxIntersection = intersectionHeight;
+        bestSectionId = sectionId;
+      }
+    });
+
+    return {
+      surface: bestSectionId,
+      active: normalizeSectionId(bestSectionId),
+    };
+  };
+
+  const handleOpenMenu = () => {
+    const current = resolveCurrentSection();
+    if (current) {
+      setSurfaceSection(current.surface);
+      setActiveSection(current.active);
+    }
+    setIsMenuOpen(true);
+  };
+
   const handleScrollToAtlas = () => {
     if (typeof window === "undefined") {
       return;
@@ -148,6 +191,8 @@ export function Header() {
       window.location.hash = "#atlas";
     }
 
+    setSurfaceSection("atlas");
+    setActiveSection("atlas");
     setIsMenuOpen(false);
   };
 
@@ -218,7 +263,7 @@ export function Header() {
             </button>
             <button
               type="button"
-              onClick={() => setIsMenuOpen(true)}
+              onClick={handleOpenMenu}
               className={`${mobileNavTextClass} transition-colors duration-300`}
               aria-label="メニューを開く"
             >
