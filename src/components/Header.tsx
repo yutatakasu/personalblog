@@ -78,7 +78,7 @@ export function Header() {
       {
         threshold: 0.55,
         rootMargin: "-72px 0px -25% 0px",
-      }
+      },
     );
 
     const elements = sectionIds

@@ -19,17 +19,17 @@ type TeamCardProps = {
 function TeamCard({ member, className, style }: TeamCardProps) {
   return (
     <article
-      className={`group flex w-full max-w-[180px] flex-col items-center gap-3 text-center sm:max-w-[160px] ${
+      className={`group flex w-full max-w-[140px] flex-col items-center gap-3 text-center sm:max-w-[160px] md:max-w-[180px] ${
         className ?? ""
       }`}
       style={style}
     >
-      <div className="relative h-20 w-20 overflow-hidden rounded-[18px] border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24">
+      <div className="relative h-16 w-16 overflow-hidden rounded-[16px] border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
         <Image
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
           fill
-          sizes="96px"
+          sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 64px"
           className="h-full w-full object-cover"
         />
       </div>
@@ -46,7 +46,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
   );
 }
 
-const MOBILE_TEAM_VISIBLE_COUNT = 5;
+const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 5;
 
 type NewsPreviewCardProps = {
@@ -138,7 +138,7 @@ export function AboutSection() {
             <p className="mb-8 font-mono uppercase tracking-[0.3em] text-[0.65rem] text-neutral-400 sm:mb-10 sm:text-xs md:mb-14 md:text-sm">
               Team
             </p>
-            <div className="mt-8 grid w-full place-items-center gap-8 md:hidden">
+            <div className="mt-8 grid w-full grid-cols-2 justify-items-center gap-x-6 gap-y-8 md:hidden">
               {mobileVisibleMembers.map((member) => (
                 <TeamCard key={member.id} member={member} />
               ))}
@@ -147,7 +147,7 @@ export function AboutSection() {
                   type="button"
                   onClick={() => setIsTeamExpanded((previous) => !previous)}
                   aria-expanded={isTeamExpanded}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-xl text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="col-span-2 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-lg text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:h-12 sm:w-12 sm:text-xl"
                 >
                   <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
                   <span className="sr-only">
@@ -164,7 +164,7 @@ export function AboutSection() {
                 <TeamCard
                   key={member.id}
                   member={member}
-                  className="max-w-none!"
+                  className="!max-w-none"
                 />
               ))}
             </div>
@@ -198,11 +198,11 @@ export function AboutSection() {
             信頼できるパートナーとともに、Atlas
             の記憶レイヤーは産業全体へと浸透します。
           </h2>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 md:gap-10 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 xl:grid-cols-4">
             {investorGroups.map((group) => (
               <div
                 key={group.category}
-                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6"
+                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 sm:p-6"
               >
                 <h3 className="font-serif text-lg text-neutral-900">
                   {group.category}
