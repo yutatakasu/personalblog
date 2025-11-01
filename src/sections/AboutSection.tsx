@@ -55,17 +55,15 @@ export function AboutSection() {
             aria-hidden
           />
         </div>
-        <div className="relative z-10 w-full px-6 py-20 md:py-32">
-          <div className="mx-auto max-w-3xl text-center">
+        <div className="relative z-10 w-full px-7 py-20 md:py-32">
+          <div className="mx-auto w-full max-w-5xl text-center">
             <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-white/60 md:mb-14 md:text-sm">
               About
             </p>
-            <h2 className="font-serif text-3xl md:text-5xl leading-tight space-y-4">
-              <span className="block">
-                誰もが長期記憶を保持したAIサービスを作れるような、記憶レイヤーを普及させよう。
-              </span>
-              <span className="block">
-                Atlasは Memory as a Service の会社になります。
+            <h2 className="font-serif text-3xl leading-tight md:text-[3.1rem] md:leading-[1.05] md:whitespace-nowrap">
+              <span className="md:mr-6">心躍る、ワクワクするAIを作ろう</span>
+              <span className="block md:inline md:ml-6">
+                Atlasは Memory as a Service の会社です
               </span>
             </h2>
             <p className="mt-10 text-sm md:text-base text-white/75 leading-relaxed">

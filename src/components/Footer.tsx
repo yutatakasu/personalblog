@@ -53,7 +53,7 @@ export function Footer({ className = "" }: FooterProps) {
 
   return (
     <footer className={`w-full z-120 ${className}`}>
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify- px-6 py-4 font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]">
         <button
           type="button"
           onClick={() => setIsPrivacyOpen(true)}
@@ -94,8 +94,8 @@ export function Footer({ className = "" }: FooterProps) {
             aria-hidden="true"
           />
 
-          <div className="relative mx-auto flex h-full max-w-xl flex-col items-center justify-center gap-10 px-6 py-12 text-center text-white">
-            <div className="relative w-full min-h-128 overflow-hidden rounded-3xl border border-white/15 bg-white/5 px-8 py-14 shadow-[0_30px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
+          <div className="relative mx-auto flex h-full max-w-3xl flex-col items-center justify-center gap-10 px-6 py-12 text-center text-white">
+            <div className="relative w-full overflow-hidden rounded-3xl border border-white/15 bg-white/5 px-8 py-12 shadow-[0_30px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
               <div
                 className="absolute inset-x-24 -top-36 h-48 rounded-full bg-white/10 blur-3xl"
                 aria-hidden
@@ -104,25 +104,24 @@ export function Footer({ className = "" }: FooterProps) {
                 Privacy &amp; Policy
               </p>
               <h2 className="mt-6 font-serif text-3xl md:text-4xl">
-                We keep our data practices transparent so you can trust every
-                Atlas product you choose.
+                私たちは、Atlas のプロダクトを安心して利用いただくために、
+                データの取り扱いを徹底して透明化します。
               </h2>
-              <div className="mt-10 space-y-6 text-left font-sans text-sm leading-relaxed text-white/85 md:text-base">
+              <div className="mt-8 space-y-5 text-left font-sans text-sm leading-relaxed text-white/85 md:text-base">
                 <p>
-                  - We use personal information solely to deliver our services
-                  and communications, and never share it with third parties
-                  without explicit consent.
+                  -
+                  個人情報は、サービス提供とコミュニケーションの目的のみに利用し、第三者へは適切な同意なく提供しません。
                 </p>
                 <p>
-                  - Collected data is encrypted at rest and access is limited to
-                  the minimum necessary personnel.
+                  -
+                  取得したデータは暗号化して保存し、アクセス権限を最小限に制限します。
                 </p>
                 <p>
-                  - Logs and analytics are anonymized before use so we can
-                  improve the experience without identifying individual users.
+                  -
+                  ログや分析情報は匿名化した上で活用し、ユーザー体験の改善に役立てます。
                 </p>
                 <p>
-                  - If you have any questions, contact us at{" "}
+                  - ご不明点があれば{" "}
                   <a
                     href="mailto:privacy@atlas.inc"
                     className="underline decoration-white/40 underline-offset-4 hover:text-white"
