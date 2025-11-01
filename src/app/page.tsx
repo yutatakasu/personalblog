@@ -1,10 +1,10 @@
 import { Header } from "@/components/Header";
 import { ScrollToAtlas } from "@/components/ScrollToAtlas";
-import { AtlasHero } from "@/sections/AtlasHero";
-import { ProductsSection } from "@/sections/ProductsSection";
 import { AboutSection } from "@/sections/AboutSection";
+import { AtlasHero } from "@/sections/AtlasHero";
 import { CareersSection } from "@/sections/CareersSection";
 import { ContactSection } from "@/sections/ContactSection";
+import { ProductsSection } from "@/sections/ProductsSection";
 
 export default function Home() {
   return (

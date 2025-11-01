@@ -76,7 +76,7 @@ function Typewriter({
         clearInterval(blinkInterval);
       }
     };
-  }, [text, startDelay]);
+  }, [delayProfile, startDelay, text]);
 
   return (
     <span className={`inline-flex items-center ${className ?? ""}`}>
@@ -95,22 +95,22 @@ export function AtlasHero() {
   return (
     <section
       id="atlas"
-      className="snap-start snap-always flex h-screen items-center justify-center text-center"
+      className="snap-start snap-always flex min-h-svh items-center justify-center text-center"
     >
-      <div className="flex flex-col items-center gap-4 font-mono text-black mb-40 px-6 py-24">
-        <h2 className="uppercase tracking-[0.4em] text-3xl md:text-5xl text-black/50">
+      <div className="flex flex-col items-center gap-4 px-6 py-16 font-mono text-black sm:py-20 lg:py-24">
+        <h2 className="text-2xl uppercase tracking-[0.3em] text-black/50 sm:text-3xl md:text-5xl md:tracking-[0.4em]">
           We are Atlas
         </h2>
-        <div className="flex flex-col items-center gap-4 mt-40">
+        <div className="mt-20 flex flex-col items-center gap-5 sm:mt-28 md:mt-40">
           <Typewriter
             text="人類のためになる"
-            className="text-2xl md:text-4xl tracking-wide"
+            className="text-xl tracking-wide sm:text-2xl md:text-4xl"
             delayProfile="uniform"
           />
           <Typewriter
             text="For the benefit of humanity"
             startDelay={1800}
-            className="text-xl md:text-3xl tracking-[0.25em] text-black/80"
+            className="text-base tracking-[0.2em] text-black/80 sm:text-lg sm:tracking-[0.25em] md:text-3xl"
             delayProfile="uniform"
           />
         </div>

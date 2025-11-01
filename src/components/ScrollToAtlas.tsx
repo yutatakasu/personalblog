@@ -16,7 +16,7 @@ export function ScrollToAtlas() {
       window.history.replaceState(
         window.history.state,
         "",
-        `${pathname}${search}#atlas`
+        `${pathname}${search}#atlas`,
       );
     }
 

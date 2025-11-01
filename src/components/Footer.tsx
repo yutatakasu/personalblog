@@ -53,7 +53,7 @@ export function Footer({ className = "" }: FooterProps) {
 
   return (
     <footer className={`w-full z-120 ${className}`}>
-      <div className="mx-auto flex w-full max-w-5xl items-center justify- px-6 py-4 font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-start gap-3 px-6 py-4 font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={() => setIsPrivacyOpen(true)}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const sectionIds = [
   "atlas",
@@ -85,10 +85,14 @@ export function Header() {
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
-    elements.forEach((element) => observer.observe(element));
+    elements.forEach((element) => {
+      observer.observe(element);
+    });
 
     return () => {
-      elements.forEach((element) => observer.unobserve(element));
+      elements.forEach((element) => {
+        observer.unobserve(element);
+      });
       observer.disconnect();
     };
   }, []);
@@ -107,8 +111,8 @@ export function Header() {
     ? "text-white"
     : "text-neutral-900";
   const inactiveLinkClass = isDarkBackground
-    ? "text-neutral-400 hover:text-neutral-200 font-medium"
-    : "text-neutral-400 hover:text-neutral-600 font-medium";
+    ? "text-neutral-400 hover:text-neutral-200"
+    : "text-neutral-400 hover:text-neutral-600";
   const overlayActiveColor = isDarkBackground
     ? "text-white"
     : "text-neutral-900";
@@ -123,6 +127,29 @@ export function Header() {
     : "text-neutral-800";
   const overlayBackdropColor = isDarkBackground ? "bg-black/45" : "bg-white/35";
   const overlayGlowColor = isDarkBackground ? "bg-white/15" : "bg-black/5";
+  const mobileNavTextClass = isDarkBackground
+    ? "text-neutral-100"
+    : "text-neutral-900";
+
+  const handleScrollToAtlas = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const main = document.querySelector("main");
+    if (main instanceof HTMLElement) {
+      main.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    const atlasSection = document.getElementById("atlas");
+    if (atlasSection instanceof HTMLElement) {
+      atlasSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.location.hash = "#atlas";
+    }
+
+    setIsMenuOpen(false);
+  };
 
   return (
     <>
@@ -133,32 +160,35 @@ export function Header() {
         >
           {/* デスクトップナビゲーション */}
           <div className="hidden md:flex justify-center">
-            <ul className="flex items-center gap-10 text-base font-sans">
-              {navItems.map((item) => {
+            <ul className="flex items-center text-sm font-serif md:text-base">
+              {navItems.map((item, index) => {
                 const isActive = activeSection === item.id;
                 const activeSurfaceId = isActive ? surfaceSection : item.id;
                 const isActiveOnDark = isSectionDark(activeSurfaceId);
                 const activeColor = isActiveOnDark
                   ? "text-white"
                   : "text-neutral-950";
-                const underlineClass = isActive
-                  ? isActiveOnDark
-                    ? "after:bg-white"
-                    : "after:bg-neutral-950"
-                  : "after:bg-transparent";
+                const linkClass = isActive
+                  ? `${activeColor} font-semibold`
+                  : `${inactiveLinkClass}`;
+                const commaClass = isSectionDark(surfaceSection)
+                  ? "text-white/60"
+                  : "text-neutral-400";
+                const isLast = index === navItems.length - 1;
                 return (
-                  <li key={item.href}>
+                  <li key={item.href} className="flex items-center">
                     <Link
                       href={item.href}
-                      className={`relative inline-flex items-center transition-colors after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:w-full after:content-[''] ${
-                        isActive
-                          ? `${activeColor} font-semibold ${underlineClass}`
-                          : inactiveLinkClass
-                      }`}
+                      className={`px-2 transition-colors ${linkClass}`}
                       aria-current={isActive ? "page" : undefined}
                     >
                       {item.label}
                     </Link>
+                    {!isLast ? (
+                      <span className={`px-1 ${commaClass}`} aria-hidden>
+                        ,
+                      </span>
+                    ) : null}
                   </li>
                 );
               })}
@@ -177,16 +207,22 @@ export function Header() {
           )}
 
           {/* モバイル: Atlas と menu */}
-          <div className="flex items-center justify-center gap-4 md:hidden text-base font-sans font-medium">
+          <div className="flex items-center justify-center gap-5 md:hidden text-base font-serif font-medium">
+            <button
+              type="button"
+              onClick={handleScrollToAtlas}
+              className={`${mobileNavTextClass} transition-colors duration-300`}
+              aria-label="Atlasセクションへ移動"
+            >
+              (Atlas)
+            </button>
             <button
               type="button"
               onClick={() => setIsMenuOpen(true)}
-              className={`${
-                isDarkBackground ? "text-neutral-100" : "text-neutral-900"
-              } transition-colors duration-300`}
+              className={`${mobileNavTextClass} transition-colors duration-300`}
               aria-label="メニューを開く"
             >
-              (Atlas)&nbsp;&nbsp;&nbsp;menu
+              menu
             </button>
           </div>
         </nav>

@@ -20,25 +20,25 @@ export function ProductsSection() {
   return (
     <section
       id="products"
-      className="snap-start snap-always flex h-screen items-center justify-center"
+      className="snap-start snap-always flex min-h-svh items-center justify-center"
     >
-      <div className="max-w-4xl mx-auto w-full px-6 py-24">
-        <p className="font-mono font-medium capitalize tracking-[0.3em] text-xs md:text-sm text-black/40 mb-14 text-center">
+      <div className="mx-auto w-full max-w-4xl px-6 py-16 sm:px-8 sm:py-20 md:py-24">
+        <p className="mb-10 text-center font-mono font-medium capitalize tracking-[0.3em] text-[0.65rem] text-black/40 sm:mb-12 sm:text-xs md:mb-14 md:text-sm">
           Products
         </p>
-        <h2 className="mt-6 font-serif text-3xl md:text-5xl text-black text-center">
+        <h2 className="mt-4 text-center font-serif text-2xl text-black sm:mt-6 sm:text-3xl md:text-5xl">
           スケールする AI を支える、3 つのコアプロダクト
         </h2>
-        <div className="mt-12 grid gap-10 md:grid-cols-3">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 md:mt-12 md:grid-cols-3 md:gap-10">
           {products.map((product) => (
             <div
               key={product.title}
-              className="border border-black/15 p-6 font-sans"
+              className="border border-black/15 p-5 font-sans sm:p-6"
             >
-              <h3 className="font-serif text-xl font-semibold text-black">
+              <h3 className="font-serif text-lg font-semibold text-black sm:text-xl">
                 {product.title}
               </h3>
-              <p className="mt-4 text-sm font-medium text-black/70">
+              <p className="mt-3 text-sm font-medium leading-relaxed text-black/70 sm:mt-4">
                 {product.description}
               </p>
             </div>

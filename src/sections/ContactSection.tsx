@@ -1,33 +1,38 @@
+import Image from "next/image";
+
 import { Footer } from "@/components/Footer";
 
 export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative snap-start snap-always flex h-screen items-center justify-center text-white"
+      className="relative snap-start snap-always flex min-h-svh items-center justify-center text-white"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <img
+        <Image
           src="/trees_and_sky.jpg"
           alt="緑に囲まれた空"
-          className="h-full w-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
         <div
           className="absolute inset-0 bg-black/50 md:bg-black/60"
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex h-full w-full items-center px-6 py-24 md:py-32">
+      <div className="relative z-10 flex h-full w-full items-center px-6 py-16 sm:px-8 sm:py-20 md:py-32">
         <div className="mx-auto w-full max-w-5xl text-white">
           <div className="text-center md:text-left">
-            <p className="font-mono uppercase tracking-[0.3em] text-xs font-medium text-white/70 md:text-sm">
+            <p className="font-mono uppercase tracking-[0.3em] text-[0.65rem] font-medium text-white/70 sm:text-xs md:text-sm">
               Contact
             </p>
-            <h2 className="mt-6 font-serif text-3xl leading-tight md:text-5xl">
+            <h2 className="mt-4 font-serif text-2xl leading-tight sm:mt-6 sm:text-3xl md:text-5xl">
               Company Information
             </h2>
           </div>
-          <dl className="mt-16 border-t border-white/20 text-sm font-medium md:text-base">
+          <dl className="mt-12 border-t border-white/20 text-[0.9rem] font-medium sm:mt-14 sm:text-sm md:mt-16 md:text-base">
             <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
                 会社名
@@ -75,12 +80,12 @@ export function ContactSection() {
               </dd>
             </div>
           </dl>
-          <div className="mt-16 space-y-3 text-sm font-medium text-white/85 md:text-base">
+          <div className="mt-12 space-y-3 text-sm font-medium text-white/85 sm:mt-14 md:mt-16 md:text-base">
             <p>
-              メール:
+              メール：
               <a
                 href="mailto:contact@atlas.inc"
-                className="underline decoration-white/60 decoration-dotted underline-offset-4 hover:decoration-white"
+                className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-4 hover:decoration-white"
               >
                 contact@atlas.inc
               </a>
