@@ -85,9 +85,6 @@ export function AboutSection() {
             <p className="mb-10 font-mono uppercase tracking-[0.3em] text-xs text-neutral-400 md:mb-14 md:text-sm">
               Team
             </p>
-            <h2 className="font-serif text-3xl md:text-5xl leading-tight text-neutral-900">
-              記憶レイヤーの実装と運用を専門とするクロスファンクショナルなチームです。
-            </h2>
             <div className="mt-10 grid place-items-center gap-6 sm:grid-cols-2 md:hidden">
               {teamMembers.map((member) => (
                 <TeamCard key={member.id} member={member} />

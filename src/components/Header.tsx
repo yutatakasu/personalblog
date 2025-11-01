@@ -103,6 +103,9 @@ export function Header() {
   const isSectionDark = (section: string) => darkSurfaceSections.has(section);
 
   const isDarkBackground = isSectionDark(surfaceSection);
+  const baseHeaderTextClass = isDarkBackground
+    ? "text-white"
+    : "text-neutral-900";
   const inactiveLinkClass = isDarkBackground
     ? "text-neutral-400 hover:text-neutral-200 font-medium"
     : "text-neutral-400 hover:text-neutral-600 font-medium";
@@ -125,7 +128,9 @@ export function Header() {
     <>
       <header className="w-full snap-none fixed top-0 left-0 right-0 z-100">
         {/* ナビゲーションバー */}
-        <nav className="relative w-full px-4 py-4">
+        <nav
+          className={`relative w-full px-4 py-4 transition-colors duration-300 ${baseHeaderTextClass}`}
+        >
           {/* デスクトップナビゲーション */}
           <div className="hidden md:flex justify-center">
             <ul className="flex items-center gap-10 text-base font-sans">
@@ -177,8 +182,8 @@ export function Header() {
               type="button"
               onClick={() => setIsMenuOpen(true)}
               className={`${
-                isDarkBackground ? "text-neutral-100" : "text-neutral-500"
-              }`}
+                isDarkBackground ? "text-neutral-100" : "text-neutral-900"
+              } transition-colors duration-300`}
               aria-label="メニューを開く"
             >
               (Atlas)&nbsp;&nbsp;&nbsp;menu
