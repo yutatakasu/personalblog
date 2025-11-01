@@ -85,14 +85,14 @@ export function Header() {
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
-    elements.forEach((element) => {
+    for (const element of elements) {
       observer.observe(element);
-    });
+    }
 
     return () => {
-      elements.forEach((element) => {
+      for (const element of elements) {
         observer.unobserve(element);
-      });
+      }
       observer.disconnect();
     };
   }, []);
