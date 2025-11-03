@@ -19,27 +19,27 @@ type TeamCardProps = {
 function TeamCard({ member, className, style }: TeamCardProps) {
   return (
     <article
-      className={`group flex w-full max-w-[140px] flex-col items-center gap-3 text-center sm:max-w-[160px] md:max-w-[180px] ${
+      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
         className ?? ""
       }`}
       style={style}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-[16px] border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
+      <div className="relative h-14 w-14 overflow-hidden rounded-[14px] border border-neutral-200 bg-neutral-100 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24">
         <Image
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
           fill
-          sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 64px"
+          sizes="(min-width: 1024px) 96px, (min-width: 768px) 80px, (min-width: 640px) 64px, 56px"
           className="h-full w-full object-cover"
         />
       </div>
-      <p className="mt-1 font-serif text-sm text-neutral-900 sm:text-base">
+      <p className="mt-0.5 font-serif text-xs text-neutral-900 sm:text-sm md:text-base">
         {member.name}
       </p>
-      <p className="font-mono text-[0.5rem] uppercase tracking-[0.3em] text-neutral-500 sm:text-[0.55rem]">
+      <p className="font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-500 sm:text-[0.5rem] sm:tracking-[0.3em]">
         {member.title}
       </p>
-      <p className="mt-3 max-w-[220px] text-xs leading-relaxed text-neutral-500 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100">
+      <p className="mt-1.5 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 sm:mt-2 sm:max-w-[220px] sm:text-xs">
         {member.focus}
       </p>
     </article>
@@ -58,22 +58,22 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-3 transition hover:border-neutral-300 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50"
+      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 transition hover:border-neutral-300 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 sm:gap-4 sm:rounded-2xl sm:p-3"
     >
-      <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-200">
+      <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:h-16 sm:w-24 sm:rounded-xl">
         <Image
           src={item.thumbnailSrc}
           alt={item.thumbnailAlt}
           fill
-          sizes="96px"
+          sizes="(min-width: 640px) 96px, 80px"
           className="h-full w-full object-cover"
         />
       </div>
       <div className="flex min-w-0 flex-col">
-        <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-neutral-400 sm:text-xs">
+        <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
           {item.date}
         </span>
-        <span className="mt-1 font-serif text-base leading-snug text-neutral-900 sm:text-lg">
+        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg">
           {item.title}
         </span>
       </div>
@@ -94,7 +94,7 @@ export function AboutSection() {
     <>
       <section
         id="about"
-        className="relative snap-start snap-always flex min-h-svh items-start justify-center text-white md:items-center"
+        className="relative snap-start snap-always flex min-h-svh items-center justify-center text-white"
       >
         <div className="absolute inset-0 overflow-hidden">
           <Image
@@ -110,18 +110,18 @@ export function AboutSection() {
             aria-hidden
           />
         </div>
-        <div className="relative z-10 w-full px-6 py-16 sm:px-8 sm:py-20 md:py-28 lg:py-32">
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="mb-8 font-mono uppercase tracking-[0.3em] text-[0.65rem] text-white/60 sm:mb-10 sm:text-xs md:mb-14 md:text-sm">
+        <div className="relative z-10 w-full px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:py-20 xl:py-28 2xl:py-32">
+          <div className="mx-auto max-w-4xl text-left">
+            <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-white/60 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
               About
             </p>
-            <h2 className="font-serif text-2xl leading-snug sm:text-3xl md:text-[3rem] md:leading-[1.1]">
+            <h2 className="font-serif text-xl leading-snug sm:text-2xl md:text-3xl lg:text-[3rem] lg:leading-[1.1]">
               <span className="block">心躍る、ワクワクするAIを作ろう</span>
-              <span className="mt-2 block sm:whitespace-nowrap">
+              <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
                 Atlasは Memory as a Service の会社です
               </span>
             </h2>
-            <p className="mt-8 text-sm leading-relaxed text-white/75 md:mt-10 md:text-base">
+            <p className="mt-4 text-xs leading-relaxed text-white/75 sm:mt-6 sm:text-sm md:mt-8 md:text-base lg:mt-10">
               分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas
               は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
             </p>
@@ -133,12 +133,12 @@ export function AboutSection() {
         id="about-team"
         className="snap-start snap-always flex min-h-svh items-start justify-center bg-white text-neutral-900 md:items-center"
       >
-        <div className="w-full px-6 py-16 sm:px-8 sm:py-20 md:px-10 md:py-28 lg:py-32">
+        <div className="w-full px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <div className="mx-auto max-w-6xl">
-            <p className="mb-8 font-mono uppercase tracking-[0.3em] text-[0.65rem] text-neutral-400 sm:mb-10 sm:text-xs md:mb-14 md:text-sm">
+            <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
               Team
             </p>
-            <div className="mt-8 grid w-full grid-cols-2 justify-items-center gap-x-6 gap-y-8 md:hidden">
+            <div className="mt-4 grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:mt-6 sm:gap-x-4 sm:gap-y-5 md:mt-8 md:gap-x-6 md:gap-y-8 md:hidden">
               {mobileVisibleMembers.map((member) => (
                 <TeamCard key={member.id} member={member} />
               ))}
@@ -147,7 +147,7 @@ export function AboutSection() {
                   type="button"
                   onClick={() => setIsTeamExpanded((previous) => !previous)}
                   aria-expanded={isTeamExpanded}
-                  className="col-span-2 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-lg text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:h-12 sm:w-12 sm:text-xl"
+                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
                 >
                   <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
                   <span className="sr-only">
@@ -159,17 +159,17 @@ export function AboutSection() {
               ) : null}
             </div>
 
-            <div className="mt-12 hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-12 md:gap-y-12">
+            <div className="mt-10 hidden w-full md:grid lg:hidden md:mt-12 md:grid-cols-2 md:gap-x-10 md:gap-y-10">
               {teamMembers.map((member) => (
                 <TeamCard
                   key={member.id}
                   member={member}
-                  className="!max-w-none"
+                  className="max-w-none"
                 />
               ))}
             </div>
 
-            <div className="mt-14 hidden w-full lg:grid mx-auto max-w-7xl grid-cols-5 grid-rows-3 gap-x-12 gap-y-14 justify-items-center">
+            <div className="mt-10 hidden w-full lg:grid lg:mt-12 xl:mt-14 mx-auto max-w-7xl grid-cols-5 grid-rows-3 gap-x-10 gap-y-12 xl:gap-x-12 xl:gap-y-14 justify-items-center">
               {teamMembers.map((member) => (
                 <TeamCard
                   key={member.id}
@@ -190,24 +190,24 @@ export function AboutSection() {
         id="about-backed"
         className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20 md:px-10 md:py-28 lg:py-32">
-          <p className="mb-8 font-mono uppercase tracking-[0.3em] text-[0.65rem] text-neutral-400 sm:mb-10 sm:text-xs md:mb-14 md:text-sm">
+        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
+          <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
             We Are Backed By
           </p>
-          <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl md:text-5xl md:leading-[1.1]">
+          <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-5xl lg:leading-[1.1]">
             信頼できるパートナーとともに、Atlas
             の記憶レイヤーは産業全体へと浸透します。
           </h2>
-          <div className="mt-10 grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-4 md:mt-10 md:grid-cols-3 md:gap-6 lg:gap-8 xl:grid-cols-4">
             {investorGroups.map((group) => (
               <div
                 key={group.category}
-                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 sm:p-6"
+                className="rounded-xl border border-neutral-200 bg-neutral-50 p-3 sm:rounded-2xl sm:p-4 md:p-6"
               >
-                <h3 className="font-serif text-lg text-neutral-900">
+                <h3 className="font-serif text-base text-neutral-900 sm:text-lg">
                   {group.category}
                 </h3>
-                <ul className="mt-4 space-y-3 text-sm text-neutral-600">
+                <ul className="mt-3 space-y-2 text-xs text-neutral-600 sm:mt-4 sm:space-y-3 sm:text-sm">
                   {group.supporters.map((supporter) => (
                     <li key={supporter} className="leading-relaxed">
                       {supporter}
@@ -224,24 +224,24 @@ export function AboutSection() {
         id="about-news"
         className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
       >
-        <div className="mx-auto w-full max-w-5xl px-6 py-16 sm:px-8 sm:py-20 md:px-10 md:py-28 lg:py-32">
-          <p className="mb-8 font-mono uppercase tracking-[0.3em] text-[0.65rem] text-neutral-400 sm:mb-10 sm:text-xs md:mb-14 md:text-sm">
+        <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
+          <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
             Current News
           </p>
-          <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl md:text-5xl md:leading-[1.1]">
+          <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-5xl lg:leading-[1.1]">
             プロダクトの進化とパートナーシップの最新情報をお届けします。
           </h2>
-          <div className="mt-8 space-y-4 md:mt-12">
+          <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-3 md:mt-8 md:space-y-4 lg:mt-12">
             {previewNewsItems.map((news) => (
               <NewsPreviewCard key={news.id} item={news} />
             ))}
           </div>
           {hasAdditionalNews ? (
-            <div className="mt-6">
+            <div className="mt-5 sm:mt-6">
               <Link
                 href="/news"
                 prefetch={false}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-2 text-sm font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5 sm:py-2 sm:text-sm"
               >
                 ニュース一覧へ
                 <span aria-hidden>&gt;</span>

@@ -22,70 +22,70 @@ export function ContactSection() {
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex h-full w-full items-center px-6 py-16 sm:px-8 sm:py-20 md:py-32">
+      <div className="relative z-10 flex h-full w-full items-center px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-28 md:px-8 md:py-16 md:pb-32 lg:py-20 lg:pb-36 xl:py-28 xl:pb-40 2xl:py-32 2xl:pb-44">
         <div className="mx-auto w-full max-w-5xl text-white">
-          <div className="text-center md:text-left">
-            <p className="font-mono uppercase tracking-[0.3em] text-[0.65rem] font-medium text-white/70 sm:text-xs md:text-sm">
+          <div className="text-left">
+            <p className="font-mono uppercase tracking-[0.25em] text-[0.6rem] font-medium text-white/70 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
               Contact
             </p>
-            <h2 className="mt-4 font-serif text-2xl leading-tight sm:mt-6 sm:text-3xl md:text-5xl">
+            <h2 className="mt-2 font-serif text-lg leading-tight sm:mt-3 sm:text-xl md:mt-4 md:text-2xl lg:mt-6 lg:text-3xl">
               Company Information
             </h2>
           </div>
-          <dl className="mt-12 border-t border-white/20 text-[0.9rem] font-medium sm:mt-14 sm:text-sm md:mt-16 md:text-base">
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+          <dl className="mt-6 border-t border-white/20 text-xs font-medium sm:mt-8 sm:text-[0.9rem] md:mt-10 md:text-sm lg:mt-12 lg:text-base xl:mt-16">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 会社名
               </dt>
-              <dd className="leading-relaxed">
+              <dd className="leading-relaxed wrap-break-word">
                 Atlas株式会社（英字表記：Atlas Inc. / 読み：アトラス）
               </dd>
             </div>
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 創業
               </dt>
               <dd className="leading-relaxed">2023年12月</dd>
             </div>
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 代表
               </dt>
               <dd className="leading-relaxed">宮崎悠生</dd>
             </div>
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 事業内容
               </dt>
               <dd className="leading-relaxed">AI技術を用いた事業開発</dd>
             </div>
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 従業員数
               </dt>
               <dd className="leading-relaxed">約15名</dd>
             </div>
-            <div className="grid gap-4 border-b border-white/20 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 border-b border-white/20 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 資本金
               </dt>
               <dd className="leading-relaxed">1,000,000円</dd>
             </div>
-            <div className="grid gap-4 py-6 md:grid-cols-[180px_1fr]">
-              <dt className="font-semibold uppercase tracking-[0.25em] text-white/60">
+            <div className="grid gap-3 py-4 sm:gap-4 sm:py-5 md:gap-4 md:py-5 lg:py-6 md:grid-cols-[180px_1fr]">
+              <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 所在地
               </dt>
-              <dd className="leading-relaxed">
+              <dd className="leading-relaxed wrap-break-word">
                 〒1500043 東京都渋谷区道玄坂 1丁目10番8号渋谷道玄坂東急ビル2F-C
               </dd>
             </div>
           </dl>
-          <div className="mt-12 space-y-3 text-sm font-medium text-white/85 sm:mt-14 md:mt-16 md:text-base">
+          <div className="mt-8 space-y-3 text-xs font-medium text-white/85 sm:mt-10 sm:space-y-3 md:mt-12 md:space-y-4 md:text-sm lg:mt-14 lg:text-base xl:mt-16">
             <p>
               メール：
               <a
                 href="mailto:contact@atlas.inc"
-                className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-4 hover:decoration-white"
+                className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-3 hover:decoration-white sm:underline-offset-4"
               >
                 contact@atlas.inc
               </a>
