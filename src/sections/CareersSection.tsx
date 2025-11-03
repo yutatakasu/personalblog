@@ -66,7 +66,9 @@ export function CareersSection() {
                     <span className="text-[0.65rem] uppercase tracking-[0.3em] text-black/40 sm:text-xs sm:tracking-[0.35em]">
                       {role.department}
                     </span>
-                    <span className="text-xs text-black/55 sm:text-sm">{role.teaser}</span>
+                    <span className="text-xs text-black/55 sm:text-sm">
+                      {role.teaser}
+                    </span>
                     <span className="text-[0.65rem] text-black/35 group-hover:text-black/60 sm:text-xs">
                       {role.location}
                     </span>
