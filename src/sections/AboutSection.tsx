@@ -7,7 +7,8 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 
-import { investorGroups, type TeamMember, teamMembers } from "@/models/about";
+import { investorGroups } from "@/models/backed_by";
+import { type TeamMember, teamMembers } from "@/models/team";
 import { type NewsItem, newsItems } from "@/models/news";
 
 type TeamCardProps = {
@@ -94,7 +95,7 @@ export function AboutSection() {
     <>
       <section
         id="about"
-        className="relative snap-start snap-always flex min-h-svh items-center justify-center text-white"
+        className="relative snap-start snap-always flex h-screen items-center justify-center text-white"
       >
         <div className="absolute inset-0 overflow-hidden">
           <Image
@@ -131,7 +132,7 @@ export function AboutSection() {
 
       <section
         id="about-team"
-        className="snap-start snap-always flex min-h-svh items-start justify-center bg-white text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center bg-white text-neutral-900 md:items-center"
       >
         <div className="w-full px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <div className="mx-auto max-w-6xl">
@@ -188,7 +189,7 @@ export function AboutSection() {
 
       <section
         id="about-backed"
-        className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center text-neutral-900 md:items-center"
       >
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
@@ -222,7 +223,7 @@ export function AboutSection() {
 
       <section
         id="about-news"
-        className="snap-start snap-always flex min-h-svh items-start justify-center text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center text-neutral-900 md:items-center"
       >
         <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
