@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SmoothScrollLink } from "@/components/SmoothScrollLink";
-import { positions } from "@/models/positions";
+import { getPositions } from "@/models/positions";
 
 export const metadata: Metadata = {
   title: "Open Positions | Atlas, Inc",
@@ -16,7 +16,8 @@ const workStyleLabel = {
   Remote: "Remote",
 } as const;
 
-export default function PositionsPage() {
+export default async function PositionsPage() {
+  const positions = await getPositions();
   const firstPositionId = positions[0]?.id ?? "ai-systems-engineer";
 
   return (

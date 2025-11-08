@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getNewsItemById, newsItems } from "@/models/news";
+import { getNewsItemById, getNewsItems } from "@/models/news";
 
 type NewsDetailPageParams = {
   slug: string;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const newsItems = await getNewsItems();
   return newsItems.map((item) => ({ slug: item.id }));
 }
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params: Promise<NewsDetailPageParams>;
 }) {
   const { slug } = await params;
-  const item = getNewsItemById(slug);
+  const item = await getNewsItemById(slug);
 
   if (!item) {
     return {};
@@ -36,7 +37,7 @@ export default async function NewsDetailPage({
   params: Promise<NewsDetailPageParams>;
 }) {
   const { slug } = await params;
-  const item = getNewsItemById(slug);
+  const item = await getNewsItemById(slug);
 
   if (!item) {
     notFound();

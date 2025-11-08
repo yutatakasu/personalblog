@@ -5,8 +5,17 @@ import { AtlasHero } from "@/sections/AtlasHero";
 import { CareersSection } from "@/sections/CareersSection";
 import { ContactSection } from "@/sections/ContactSection";
 import { ProductsSection } from "@/sections/ProductsSection";
+import { getNewsItems } from "@/models/news";
+import { getTeamMembers } from "@/models/team";
+import { getInvestorGroups } from "@/models/backed_by";
 
-export default function Home() {
+export default async function Home() {
+  const [newsItems, teamMembers, investorGroups] = await Promise.all([
+    getNewsItems(),
+    getTeamMembers(),
+    getInvestorGroups(),
+  ]);
+
   return (
     <div className="min-h-screen">
       <ScrollToAtlas />
@@ -14,7 +23,11 @@ export default function Home() {
       <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
         <AtlasHero />
         <ProductsSection />
-        <AboutSection />
+        <AboutSection
+          newsItems={newsItems}
+          teamMembers={teamMembers}
+          investorGroups={investorGroups}
+        />
         <CareersSection />
         <ContactSection />
       </main>

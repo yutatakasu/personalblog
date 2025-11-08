@@ -7,9 +7,9 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 
-import { investorGroups } from "@/models/backed_by";
-import { type TeamMember, teamMembers } from "@/models/team";
-import { type NewsItem, newsItems } from "@/models/news";
+import type { InvestorGroup } from "@/models/backed_by";
+import type { TeamMember } from "@/models/team";
+import type { NewsItem } from "@/models/news";
 
 type TeamCardProps = {
   member: TeamMember;
@@ -50,6 +50,12 @@ function TeamCard({ member, className, style }: TeamCardProps) {
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 5;
 
+type AboutSectionProps = {
+  newsItems: NewsItem[];
+  teamMembers: TeamMember[];
+  investorGroups: InvestorGroup[];
+};
+
 type NewsPreviewCardProps = {
   item: NewsItem;
 };
@@ -82,7 +88,11 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
   );
 }
 
-export function AboutSection() {
+export function AboutSection({
+  newsItems,
+  teamMembers,
+  investorGroups,
+}: AboutSectionProps) {
   const [isTeamExpanded, setIsTeamExpanded] = useState(false);
   const mobileVisibleMembers = isTeamExpanded
     ? teamMembers

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { newsItems } from "@/models/news";
+import { getNewsItems } from "@/models/news";
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const newsItems = await getNewsItems();
   return (
     <main className="min-h-svh bg-white text-neutral-900">
       <section className="px-6 py-16 sm:px-8 sm:py-20 md:px-12 md:py-24 lg:px-0 lg:py-28">

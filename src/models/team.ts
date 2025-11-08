@@ -14,7 +14,11 @@ export type TeamMember = {
   position: TeamMemberPosition;
 };
 
-export const teamMembers: TeamMember[] = [
+/**
+ * フェイルセーフ用のデフォルトデータ
+ * Supabaseが利用できない場合や開発時のフォールバックとして使用
+ */
+export const defaultTeamMembers: TeamMember[] = [
   {
     id: "yuki-miyazaki",
     name: "Yuki Miyazaki",
@@ -161,4 +165,33 @@ export const teamMembers: TeamMember[] = [
     position: { row: 3, column: 5, offsetY: "20px" },
   },
 ];
+
+/**
+ * Supabaseからチームメンバー一覧を取得
+ * エラー時はデフォルトデータを返す
+ */
+export async function getTeamMembers(): Promise<TeamMember[]> {
+  // Supabaseが設定されていない場合はデフォルトデータを返す
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return defaultTeamMembers;
+  }
+
+  try {
+    const { getAllTeamMembers } = await import("@/lib/supabase/queries");
+    const items = await getAllTeamMembers();
+    // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
+    return items.length > 0 ? items : defaultTeamMembers;
+  } catch (error) {
+    console.error("Failed to fetch team members from Supabase, using default data:", error);
+    return defaultTeamMembers;
+  }
+}
+
+/**
+ * @deprecated 後方互換性のため残しています。getTeamMembers() を使用してください。
+ */
+export const teamMembers = defaultTeamMembers;
 

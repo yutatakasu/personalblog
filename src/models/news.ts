@@ -9,7 +9,11 @@ export type NewsItem = {
   tag?: string;
 };
 
-export const newsItems: NewsItem[] = [
+/**
+ * フェイルセーフ用のデフォルトデータ
+ * Supabaseが利用できない場合や開発時のフォールバックとして使用
+ */
+export const defaultNewsItems: NewsItem[] = [
   {
     id: "atlas-os-v2-release",
     title: "Atlas OS v2 を正式リリース",
@@ -78,6 +82,55 @@ export const newsItems: NewsItem[] = [
   },
 ];
 
-export function getNewsItemById(id: string) {
-  return newsItems.find((item) => item.id === id);
+/**
+ * Supabaseからニュース一覧を取得
+ * エラー時はデフォルトデータを返す
+ */
+export async function getNewsItems(): Promise<NewsItem[]> {
+  // Supabaseが設定されていない場合はデフォルトデータを返す
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return defaultNewsItems;
+  }
+
+  try {
+    const { getAllNews } = await import("@/lib/supabase/queries");
+    const items = await getAllNews();
+    // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
+    return items.length > 0 ? items : defaultNewsItems;
+  } catch (error) {
+    console.error("Failed to fetch news from Supabase, using default data:", error);
+    return defaultNewsItems;
+  }
 }
+
+/**
+ * Supabaseから指定IDのニュースを取得
+ * エラー時はデフォルトデータから検索
+ */
+export async function getNewsItemById(id: string): Promise<NewsItem | null> {
+  // Supabaseが設定されていない場合はデフォルトデータから検索
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return defaultNewsItems.find((item) => item.id === id) ?? null;
+  }
+
+  try {
+    const { getNewsById } = await import("@/lib/supabase/queries");
+    const item = await getNewsById(id);
+    // Supabaseからデータが取得できた場合はそれを使用、nullの場合はデフォルトデータから検索
+    return item ?? defaultNewsItems.find((item) => item.id === id) ?? null;
+  } catch (error) {
+    console.error("Failed to fetch news item from Supabase, using default data:", error);
+    return defaultNewsItems.find((item) => item.id === id) ?? null;
+  }
+}
+
+/**
+ * @deprecated 後方互換性のため残しています。getNewsItems() を使用してください。
+ */
+export const newsItems = defaultNewsItems;
