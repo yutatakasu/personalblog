@@ -1,6 +1,11 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { adminSupabase, isSupabaseConfigured } from "@/lib/supabase/admin";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [
   "admin@atlas.inc",
@@ -15,9 +20,16 @@ export default async function AdminProtectedLayout({
     redirect("/admin/setup");
   }
 
+  const supabase = createServerComponentClient({ cookies });
   const {
     data: { session },
-  } = await adminSupabase.auth.getSession();
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("Failed to get admin session:", error);
+    redirect("/admin/login");
+  }
 
   if (!session) {
     redirect("/admin/login");

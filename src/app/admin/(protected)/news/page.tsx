@@ -1,9 +1,11 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NewsList } from "@/components/admin/NewsList";
 
 export default async function AdminNewsPage() {
-  const { data: newsItems, error } = await adminSupabase
+  const supabase = createServerComponentClient({ cookies });
+  const { data: newsItems, error } = await supabase
     .from("news")
     .select("*")
     .order("date", { ascending: false });

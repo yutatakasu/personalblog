@@ -3,13 +3,17 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { adminSupabase, isSupabaseConfigured } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/admin";
+import { AdminSidebar } from "./AdminSidebar";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
+    const adminSupabase = getAdminSupabaseClient();
     const checkSession = async () => {
       // Supabase環境変数のチェック
       if (!isSupabaseConfigured()) {
@@ -38,6 +42,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      setUserEmail(userEmail);
       setLoading(false);
     };
 
@@ -58,9 +63,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   const handleLogout = async () => {
+    const adminSupabase = getAdminSupabaseClient();
     await adminSupabase.auth.signOut();
     router.push("/admin/login");
     router.refresh();
+    setIsMobileSidebarOpen(false);
   };
 
   if (loading) {
@@ -72,62 +79,76 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-neutral-50">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-neutral-200 bg-white">
-        <div className="sticky top-0 p-6">
-          <div className="mb-8">
-            <h1 className="font-serif text-xl text-neutral-900">Atlas Admin</h1>
-            <p className="mt-1 text-xs text-neutral-500">管理画面</p>
+    <>
+      <div className="min-h-screen bg-neutral-50 lg:flex">
+        <AdminSidebar onLogout={handleLogout} userEmail={userEmail} />
+        <div className="flex-1">
+          <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-4 lg:hidden">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 shadow-sm transition hover:border-neutral-900 hover:text-neutral-900"
+              >
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="14" y1="18" y2="18" />
+                </svg>
+              </button>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-neutral-500">Atlas</p>
+                <p className="font-serif text-lg text-neutral-900">Admin Hub</p>
+                {userEmail ? <p className="text-xs text-neutral-500">{userEmail}</p> : null}
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+              >
+                ホームへ
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+              >
+                ログアウト
+              </button>
+            </div>
           </div>
+          <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-10">
+            {children}
+          </main>
+        </div>
+      </div>
 
-          <nav className="space-y-2">
-            <Link
-              href="/admin/news"
-              className="block rounded-lg px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              ニュース
-            </Link>
-            <Link
-              href="/admin/positions"
-              className="block rounded-lg px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              募集情報
-            </Link>
-            <Link
-              href="/admin/team"
-              className="block rounded-lg px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              チームメンバー
-            </Link>
-            <Link
-              href="/admin/investors"
-              className="block rounded-lg px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              投資家グループ
-            </Link>
-          </nav>
-
-          <div className="mt-8 border-t border-neutral-200 pt-4">
-            <Link
-              href="/"
-              className="block rounded-lg px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              ← ホームページへ戻る
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="mt-2 w-full rounded-lg px-4 py-2 text-left text-sm text-neutral-700 transition hover:bg-neutral-100"
-            >
-              ログアウト
-            </button>
+      {isMobileSidebarOpen ? (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+          <div className="absolute inset-y-0 left-0 w-[20rem] max-w-full bg-white shadow-xl">
+            <AdminSidebar
+              variant="mobile"
+              className="h-full"
+              onLogout={handleLogout}
+              userEmail={userEmail}
+              onNavigate={() => setIsMobileSidebarOpen(false)}
+            />
           </div>
         </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-8">{children}</main>
-    </div>
+      ) : null}
+    </>
   );
 }
 

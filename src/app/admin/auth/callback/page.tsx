@@ -23,7 +23,7 @@ export default function AuthCallbackPage() {
           setError(
             errorDescription
               ? decodeURIComponent(errorDescription)
-              : "認証に失敗しました。",
+              : "認証に失敗しました。"
           );
           setLoading(false);
           return;
@@ -59,10 +59,9 @@ export default function AuthCallbackPage() {
         }
 
         // 管理者チェック（環境変数に設定されたメールアドレスのみ）
-        const adminEmails =
-          process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [
-            "admin@atlas.inc",
-          ];
+        const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(
+          ","
+        ).map((email) => email.trim()) || ["admin@atlas.inc"];
         const userEmail = session.user.email;
 
         if (!userEmail || !adminEmails.includes(userEmail)) {
@@ -76,7 +75,7 @@ export default function AuthCallbackPage() {
           method: "DELETE",
         });
 
-        router.push("/admin/news");
+        router.push("/admin/hub");
         router.refresh();
       } catch (err) {
         setError("認証処理中にエラーが発生しました。");
@@ -118,4 +117,3 @@ export default function AuthCallbackPage() {
 
   return null;
 }
-

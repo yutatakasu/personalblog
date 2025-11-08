@@ -1,5 +1,6 @@
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NewsForm } from "@/components/admin/NewsForm";
 
 export default async function AdminNewsEditPage({
@@ -9,7 +10,8 @@ export default async function AdminNewsEditPage({
 }) {
   const { id } = await params;
 
-  const { data: newsItem, error } = await adminSupabase
+  const supabase = createServerComponentClient({ cookies });
+  const { data: newsItem, error } = await supabase
     .from("news")
     .select("*")
     .eq("id", id)

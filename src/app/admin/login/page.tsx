@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { adminSupabase, isSupabaseConfigured } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -44,6 +44,7 @@ export default function AdminLoginPage() {
         return;
       }
 
+      const adminSupabase = getAdminSupabaseClient();
       const { data, error: signInError } = await adminSupabase.auth.signInWithOAuth({
         provider: "google",
         options: {
