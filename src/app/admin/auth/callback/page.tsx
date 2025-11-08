@@ -13,24 +13,49 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // URLからcodeを取得
+        // URLパラメータからcodeまたはerrorを取得
         const code = searchParams.get("code");
-        if (!code) {
-          setError("認証コードが取得できませんでした。");
+        const errorParam = searchParams.get("error");
+        const errorDescription = searchParams.get("error_description");
+
+        // エラーパラメータがある場合
+        if (errorParam) {
+          setError(
+            errorDescription
+              ? decodeURIComponent(errorDescription)
+              : "認証に失敗しました。",
+          );
           setLoading(false);
           return;
         }
 
-        // セッションを確認
-        const {
-          data: { session },
-          error: sessionError,
-        } = await adminSupabase.auth.getSession();
+        // codeがある場合は、セッションを交換
+        let session;
+        if (code) {
+          const {
+            data: { session: exchangedSession },
+            error: exchangeError,
+          } = await adminSupabase.auth.exchangeCodeForSession(code);
 
-        if (sessionError || !session) {
-          setError("認証に失敗しました。");
-          setLoading(false);
-          return;
+          if (exchangeError || !exchangedSession) {
+            setError("認証コードの交換に失敗しました。");
+            setLoading(false);
+            return;
+          }
+          session = exchangedSession;
+        } else {
+          // codeがない場合は、既存のセッションを確認
+          const {
+            data: { session: existingSession },
+            error: sessionError,
+          } = await adminSupabase.auth.getSession();
+
+          if (sessionError || !existingSession) {
+            setError("認証コードが取得できませんでした。");
+            setLoading(false);
+            return;
+          }
+          session = existingSession;
         }
 
         // 管理者チェック（環境変数に設定されたメールアドレスのみ）
