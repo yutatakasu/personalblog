@@ -49,7 +49,18 @@ export async function getInvestorGroups(): Promise<InvestorGroup[]> {
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
     return items.length > 0 ? items : defaultInvestorGroups;
   } catch (error) {
-    console.error("Failed to fetch investor groups from Supabase, using default data:", error);
+    const errorInfo =
+      error instanceof Error
+        ? {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+          }
+        : error;
+    console.error(
+      "Failed to fetch investor groups from Supabase, using default data:",
+      errorInfo,
+    );
     return defaultInvestorGroups;
   }
 }

@@ -185,7 +185,19 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
     return items.length > 0 ? items : defaultTeamMembers;
   } catch (error) {
-    console.error("Failed to fetch team members from Supabase, using default data:", error);
+    // より詳細なエラー情報をログ出力
+    const errorInfo =
+      error instanceof Error
+        ? {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+          }
+        : error;
+    console.error(
+      "Failed to fetch team members from Supabase, using default data:",
+      errorInfo,
+    );
     return defaultTeamMembers;
   }
 }

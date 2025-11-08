@@ -141,8 +141,14 @@ export async function getAllTeamMembers(): Promise<TeamMember[]> {
     .order("position_column", { ascending: true });
 
   if (error) {
-    console.error("Error fetching team members:", error);
-    throw error;
+    console.error("Error fetching team members:", {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code,
+      error,
+    });
+    return [];
   }
 
   return (
@@ -172,8 +178,14 @@ export async function getAllInvestorGroups(): Promise<InvestorGroup[]> {
     .order("id", { ascending: true });
 
   if (error) {
-    console.error("Error fetching investor groups:", error);
-    throw error;
+    console.error("Error fetching investor groups:", {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code,
+      error,
+    });
+    return [];
   }
 
   return (
