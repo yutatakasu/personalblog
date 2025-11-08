@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getAdminSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/admin";
+import {
+  getAdminSupabaseClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/admin";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -45,12 +48,13 @@ export default function AdminLoginPage() {
       }
 
       const adminSupabase = getAdminSupabaseClient();
-      const { data, error: signInError } = await adminSupabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/admin/auth/callback`,
-        },
-      });
+      const { data, error: signInError } =
+        await adminSupabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/admin/auth/callback`,
+          },
+        });
 
       if (signInError) {
         setError(signInError.message);
@@ -61,7 +65,6 @@ export default function AdminLoginPage() {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-neutral-50">
@@ -116,4 +119,3 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-
