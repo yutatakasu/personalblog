@@ -34,4 +34,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Environment Variables & Local Development
+
+- 本番・Preview 環境の環境変数は Vercel Project Settings → Environment Variables に登録してください。
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `ADMIN_EMAILS`
+  - `NEXT_PUBLIC_ADMIN_EMAILS`
+- ローカル開発では Vercel CLI を使って同じ値を同期できます。
+  ```bash
+  npm i -g vercel
+  vercel login
+  vercel env pull .env.local        # Production 環境の値を取得
+  # Preview や Development を取得したい場合は --environment フラグを使用:
+  # vercel env pull .env.local --environment=preview
+  pnpm dev
+  ```
+- `.env.local` は `.gitignore` によりコミットされません。必要な人が各自で `vercel env pull` を実行してください。
+- 詳細なセットアップ手順は `docs/supabase-setup.md` と `docs/admin-setup.md` を参照してください。
+
 # atlas-hp
