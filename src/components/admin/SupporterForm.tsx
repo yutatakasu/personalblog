@@ -101,13 +101,11 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
   });
 
   const [previews, setPreviews] = useState<string[]>(() =>
-    (initialData?.supporters ?? []).map(
-      (supporter) => supporter.image_src ?? "",
-    ),
+    normalizedSupporters.map((supporter) => supporter.image_src ?? ""),
   );
 
   const croppedFilesRef = useRef<(File | null)[]>(
-    (initialData?.supporters ?? []).map(() => null),
+    normalizedSupporters.map(() => null),
   );
 
   useEffect(() => {

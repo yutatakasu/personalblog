@@ -1,5 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { type NextRequest, NextResponse } from "next/server";
 import {
   evaluateLoginRateLimit,
   getLoginRateLimitIdentifier,
@@ -14,7 +14,10 @@ type CookieOperation = {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 };
 
-function createCookieAwareClient(request: NextRequest, cookieOperations: CookieOperation[]) {
+function createCookieAwareClient(
+  request: NextRequest,
+  cookieOperations: CookieOperation[],
+) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
@@ -25,15 +28,24 @@ function createCookieAwareClient(request: NextRequest, cookieOperations: CookieO
         cookieOperations.push({ name, value, options });
       },
       remove: (name, options) => {
-        cookieOperations.push({ name, value: "", options: { ...options, maxAge: 0 } });
+        cookieOperations.push({
+          name,
+          value: "",
+          options: { ...options, maxAge: 0 },
+        });
       },
     },
   });
 }
 
 export async function GET(request: NextRequest) {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.redirect(new URL("/admin/setup", request.nextUrl.origin));
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return NextResponse.redirect(
+      new URL("/admin/setup", request.nextUrl.origin),
+    );
   }
 
   const cookieOperations: CookieOperation[] = [];
@@ -56,15 +68,22 @@ export async function GET(request: NextRequest) {
 
     params.set("error_description", encodeURIComponent(message));
 
-    const response = NextResponse.redirect(new URL(`/admin/login?${params.toString()}`, request.nextUrl.origin));
-    cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+    const response = NextResponse.redirect(
+      new URL(`/admin/login?${params.toString()}`, request.nextUrl.origin),
+    );
+    cookieOperations.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
     return response;
   }
 
   const { data, error } = await cookieAwareClient.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: new URL("/admin/auth/callback", request.nextUrl.origin).toString(),
+      redirectTo: new URL(
+        "/admin/auth/callback",
+        request.nextUrl.origin,
+      ).toString(),
     },
   });
 
@@ -72,15 +91,22 @@ export async function GET(request: NextRequest) {
     console.error("Failed to start Supabase OAuth flow", error);
     const params = new URLSearchParams({
       error: "oauth_start_failed",
-      ...(error?.message ? { error_description: encodeURIComponent(error.message) } : {}),
+      ...(error?.message
+        ? { error_description: encodeURIComponent(error.message) }
+        : {}),
     });
-    const response = NextResponse.redirect(new URL(`/admin/login?${params.toString()}`, request.nextUrl.origin));
-    cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+    const response = NextResponse.redirect(
+      new URL(`/admin/login?${params.toString()}`, request.nextUrl.origin),
+    );
+    cookieOperations.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
     return response;
   }
 
   const response = NextResponse.redirect(data.url);
-  cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+  cookieOperations.forEach(({ name, value, options }) => {
+    response.cookies.set(name, value, options);
+  });
   return response;
 }
-

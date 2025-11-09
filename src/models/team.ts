@@ -206,4 +206,3 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
  * @deprecated 後方互換性のため残しています。getTeamMembers() を使用してください。
  */
 export const teamMembers = defaultTeamMembers;
-

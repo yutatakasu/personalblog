@@ -85,26 +85,30 @@ export default async function NewsDetailPage({
             </div>
           </div>
           <article className="mt-12 space-y-10 text-neutral-700">
-            {item.content.map((block, index) => (
-              <div key={index} className="space-y-6">
-                {block.text.trim().length > 0 ? (
-                  <p className="text-base leading-relaxed">{block.text}</p>
-                ) : null}
-                {block.image ? (
-                  <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
-                    <div className="relative h-64 w-full sm:h-80">
-                      <Image
-                        src={block.image.src}
-                        alt={block.image.alt}
-                        fill
-                        sizes="100vw"
-                        className="object-cover"
-                      />
+            {item.content.map((block, index) => {
+              const blockKey =
+                block.image?.src ?? `${block.text.slice(0, 24)}-${index}`;
+              return (
+                <div key={blockKey} className="space-y-6">
+                  {block.text.trim().length > 0 ? (
+                    <p className="text-base leading-relaxed">{block.text}</p>
+                  ) : null}
+                  {block.image ? (
+                    <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
+                      <div className="relative h-64 w-full sm:h-80">
+                        <Image
+                          src={block.image.src}
+                          alt={block.image.alt}
+                          fill
+                          sizes="100vw"
+                          className="object-cover"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ) : null}
-              </div>
-            ))}
+                  ) : null}
+                </div>
+              );
+            })}
           </article>
           <div className="mt-12">
             <Link

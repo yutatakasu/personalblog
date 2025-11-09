@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
-import { useRouter } from "next/navigation";
 
 type NewsItem = {
   id: string;
@@ -32,12 +32,12 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
       const { error } = await adminSupabase.from("news").delete().eq("id", id);
 
       if (error) {
-        alert("削除に失敗しました: " + error.message);
+        alert(`削除に失敗しました: ${error.message}`);
         return;
       }
 
       router.refresh();
-    } catch (err) {
+    } catch (_err) {
       alert("削除に失敗しました");
     } finally {
       setDeletingId(null);
@@ -76,7 +76,9 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-serif text-lg text-neutral-900">{item.title}</h3>
+                    <h3 className="font-serif text-lg text-neutral-900">
+                      {item.title}
+                    </h3>
                     <p className="mt-1 text-sm text-neutral-600">
                       {item.date} {item.tag && `・ ${item.tag}`}
                     </p>
@@ -95,6 +97,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
                     編集
                   </Link>
                   <button
+                    type="button"
                     onClick={() => handleDelete(item.id)}
                     disabled={deletingId === item.id}
                     className="rounded-lg border border-red-300 px-3 py-1.5 text-sm text-red-700 transition hover:bg-red-50 disabled:opacity-50"
@@ -117,4 +120,3 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
     </div>
   );
 }
-

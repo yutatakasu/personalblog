@@ -10,11 +10,14 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent-green: var(--accent-green);
-  --font-sans: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+  --font-sans:
+    "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+  --font-mono:
+    "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-serif: "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+  --font-serif:
+    "SF Pro", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 

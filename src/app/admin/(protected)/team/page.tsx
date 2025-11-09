@@ -18,7 +18,9 @@ export default async function AdminTeamPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl text-neutral-900">チームメンバー管理</h1>
+          <h1 className="font-serif text-3xl text-neutral-900">
+            チームメンバー管理
+          </h1>
           <p className="mt-2 text-sm text-neutral-600">
             チームメンバーの追加・編集・削除ができます
           </p>
@@ -35,4 +37,3 @@ export default async function AdminTeamPage() {
     </div>
   );
 }
-

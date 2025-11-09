@@ -34,4 +34,3 @@ export async function isAdminSession(
 
   return isAdminUser(supabase, session.user);
 }
-

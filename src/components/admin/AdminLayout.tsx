@@ -1,10 +1,10 @@
 "use client";
 
+import type { User } from "@supabase/supabase-js";
 import { PanelLeft } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { SupabaseClient, User } from "@supabase/supabase-js";
 import {
   getAdminSupabaseClient,
   isSupabaseConfigured,
@@ -40,7 +40,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const extractUserInfo = useCallback((user: User | null | undefined) => {
     const metadata = user?.user_metadata || {};
     const identityData = user?.identities?.[0]?.identity_data || {};
-    
+
     // デバッグ: ユーザーオブジェクトの構造を確認
     console.log("=== Extracting user info ===");
     console.log("User object:", user);
@@ -48,7 +48,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     console.log("app_metadata:", user?.app_metadata);
     console.log("identities:", user?.identities);
     console.log("identity_data:", identityData);
-    
+
     // ユーザー名を複数の場所から取得
     const name =
       metadata.full_name ||
@@ -57,7 +57,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       identityData.name ||
       user?.email?.split("@")[0] || // フォールバック: メールアドレスの@より前
       null;
-    
+
     // アバター画像URLは複数の場所に保存される可能性がある
     const avatarUrl =
       metadata.avatar_url ||
@@ -67,12 +67,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       user?.app_metadata?.avatar_url ||
       user?.app_metadata?.picture ||
       null;
-    
+
     console.log("Extracted name:", name);
     console.log("Extracted avatarUrl:", avatarUrl);
     console.log("Extracted email:", user?.email);
     console.log("===========================");
-    
+
     const email =
       user?.email ||
       metadata.email ||
@@ -89,7 +89,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const adminSupabase = getAdminSupabaseClient();
-    
+
     const checkSession = async () => {
       // Supabase環境変数のチェック
       if (!isSupabaseConfigured()) {
@@ -113,7 +113,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           const {
             data: { user },
           } = await adminSupabase.auth.getUser();
-          
+
           if (user) {
             const userInfo = extractUserInfo(user);
             setUserEmail(userInfo.email);
@@ -135,7 +135,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = adminSupabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session?.user?.email);
-      
+
       if (event === "SIGNED_OUT" && !session) {
         setUserEmail(null);
         setUserName(null);
@@ -158,22 +158,22 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     try {
       const adminSupabase = getAdminSupabaseClient();
-      
+
       // セッションを確実にクリア
       const { error } = await adminSupabase.auth.signOut();
-      
+
       if (error) {
         console.error("Logout error:", error);
         // エラーが発生してもログイン画面にリダイレクト
         window.location.href = "/admin/login";
         return;
       }
-      
+
       setIsMobileSidebarOpen(false);
-      
+
       // セッションがクリアされるのを少し待つ
       await new Promise((resolve) => setTimeout(resolve, 200));
-      
+
       // 強制的にログイン画面にリダイレクト（ページ全体をリロードしてセッションを確実に更新）
       window.location.href = "/admin/login";
     } catch (error) {

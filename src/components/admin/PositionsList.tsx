@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
-import { useRouter } from "next/navigation";
 
 type Position = {
   id: string;
@@ -30,15 +30,18 @@ export function PositionsList({ positions }: { positions: Position[] }) {
     setDeletingId(id);
     try {
       const adminSupabase = getAdminSupabaseClient();
-      const { error } = await adminSupabase.from("positions").delete().eq("id", id);
+      const { error } = await adminSupabase
+        .from("positions")
+        .delete()
+        .eq("id", id);
 
       if (error) {
-        alert("削除に失敗しました: " + error.message);
+        alert(`削除に失敗しました: ${error.message}`);
         return;
       }
 
       router.refresh();
-    } catch (err) {
+    } catch (_err) {
       alert("削除に失敗しました");
     } finally {
       setDeletingId(null);
@@ -67,7 +70,9 @@ export function PositionsList({ positions }: { positions: Position[] }) {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3">
-                  <h3 className="font-serif text-lg text-neutral-900">{position.title}</h3>
+                  <h3 className="font-serif text-lg text-neutral-900">
+                    {position.title}
+                  </h3>
                   <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">
                     {position.department}
                   </span>
@@ -75,8 +80,12 @@ export function PositionsList({ positions }: { positions: Position[] }) {
                     {position.work_style}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-neutral-600">{position.location}</p>
-                <p className="mt-2 text-sm text-neutral-500 line-clamp-2">{position.teaser}</p>
+                <p className="mt-1 text-sm text-neutral-600">
+                  {position.location}
+                </p>
+                <p className="mt-2 text-sm text-neutral-500 line-clamp-2">
+                  {position.teaser}
+                </p>
                 {position.summary && (
                   <p className="mt-2 text-sm text-neutral-500 line-clamp-2">
                     {position.summary}
@@ -92,6 +101,7 @@ export function PositionsList({ positions }: { positions: Position[] }) {
                 編集
               </Link>
               <button
+                type="button"
                 onClick={() => handleDelete(position.id)}
                 disabled={deletingId === position.id}
                 className="rounded-lg border border-red-300 px-3 py-1.5 text-sm text-red-700 transition hover:bg-red-50 disabled:opacity-50"
@@ -112,4 +122,3 @@ export function PositionsList({ positions }: { positions: Position[] }) {
     </div>
   );
 }
-

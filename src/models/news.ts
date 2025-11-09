@@ -32,13 +32,13 @@ type LegacyImageBlock = {
   alt: string;
 };
 
-type LegacyContentBlock = LegacyParagraphBlock | LegacyImageBlock;
-
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
 const isNewsContentImage = (value: unknown): value is NewsContentImage =>
-  isRecord(value) && typeof value.src === "string" && typeof value.alt === "string";
+  isRecord(value) &&
+  typeof value.src === "string" &&
+  typeof value.alt === "string";
 
 const isContentBlock = (value: unknown): value is ContentBlock =>
   isRecord(value) &&
@@ -48,8 +48,12 @@ const isContentBlock = (value: unknown): value is ContentBlock =>
     value.image === undefined ||
     isNewsContentImage(value.image));
 
-const isLegacyParagraphBlock = (value: unknown): value is LegacyParagraphBlock =>
-  isRecord(value) && value.type === "paragraph" && typeof value.text === "string";
+const isLegacyParagraphBlock = (
+  value: unknown,
+): value is LegacyParagraphBlock =>
+  isRecord(value) &&
+  value.type === "paragraph" &&
+  typeof value.text === "string";
 
 const isLegacyImageBlock = (value: unknown): value is LegacyImageBlock =>
   isRecord(value) &&
@@ -72,7 +76,8 @@ const normalizeImage = (image: unknown): NewsContentImage | null => {
   return null;
 };
 
-const normalizeText = (text: unknown): string => (typeof text === "string" ? text : "");
+const normalizeText = (text: unknown): string =>
+  typeof text === "string" ? text : "";
 
 const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
   raw
@@ -82,7 +87,7 @@ const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
       image:
         block.image === undefined
           ? null
-          : normalizeImage(block.image) ?? null,
+          : (normalizeImage(block.image) ?? null),
     }))
     .filter((block) => block.text.trim().length > 0 || block.image);
 
@@ -124,7 +129,9 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
   }
 
   return normalized.filter(
-    (block) => block.text.trim().length > 0 || (block.image && block.image.src.trim().length > 0),
+    (block) =>
+      block.text.trim().length > 0 ||
+      (block.image && block.image.src.trim().length > 0),
   );
 };
 
@@ -273,7 +280,10 @@ export async function getNewsItems(): Promise<NewsItem[]> {
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
     return items.length > 0 ? items : defaultNewsItems;
   } catch (error) {
-    console.error("Failed to fetch news from Supabase, using default data:", error);
+    console.error(
+      "Failed to fetch news from Supabase, using default data:",
+      error,
+    );
     return defaultNewsItems;
   }
 }
@@ -297,7 +307,10 @@ export async function getNewsItemById(id: string): Promise<NewsItem | null> {
     // Supabaseからデータが取得できた場合はそれを使用、nullの場合はデフォルトデータから検索
     return item ?? defaultNewsItems.find((item) => item.id === id) ?? null;
   } catch (error) {
-    console.error("Failed to fetch news item from Supabase, using default data:", error);
+    console.error(
+      "Failed to fetch news item from Supabase, using default data:",
+      error,
+    );
     return defaultNewsItems.find((item) => item.id === id) ?? null;
   }
 }

@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useForm, useFieldArray } from "react-hook-form";
-import Cropper from "react-easy-crop";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Area } from "react-easy-crop";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Cropper from "react-easy-crop";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { getCroppedImageBlob } from "@/lib/image-crop";
@@ -65,7 +71,9 @@ const newsSchema = z.object({
   thumbnailSrc: z.string().min(1, "サムネイル画像は必須です"),
   thumbnailAlt: z.string().min(1, "画像の説明は必須です"),
   link: z.string().min(1, "リンクは必須です"),
-  content: z.array(contentBlockSchema).min(1, "少なくとも1つの段落を追加してください"),
+  content: z
+    .array(contentBlockSchema)
+    .min(1, "少なくとも1つの段落を追加してください"),
   summary: z.string().optional(),
   tag: z.string().optional(),
 });
@@ -95,13 +103,20 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
     initialData?.thumbnail_src ?? null,
   );
-  const [thumbnailObjectUrl, setThumbnailObjectUrl] = useState<string | null>(null);
+  const [thumbnailObjectUrl, setThumbnailObjectUrl] = useState<string | null>(
+    null,
+  );
   const [thumbnailCropModalOpen, setThumbnailCropModalOpen] = useState(false);
-  const [thumbnailImageForCrop, setThumbnailImageForCrop] = useState<string | null>(null);
+  const [thumbnailImageForCrop, setThumbnailImageForCrop] = useState<
+    string | null
+  >(null);
   const [thumbnailCrop, setThumbnailCrop] = useState({ x: 0, y: 0 });
   const [thumbnailZoom, setThumbnailZoom] = useState(1);
-  const [thumbnailCropAreaPixels, setThumbnailCropAreaPixels] = useState<Area | null>(null);
-  const [thumbnailSelectedFileName, setThumbnailSelectedFileName] = useState<string | null>(null);
+  const [thumbnailCropAreaPixels, setThumbnailCropAreaPixels] =
+    useState<Area | null>(null);
+  const [thumbnailSelectedFileName, setThumbnailSelectedFileName] = useState<
+    string | null
+  >(null);
   const thumbnailFileRef = useRef<File | null>(null);
   const thumbnailFileToCropRef = useRef<File | null>(null);
   const thumbnailFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -111,16 +126,23 @@ export function NewsForm({ initialData }: NewsFormProps) {
       ? initialData.content.map((block) => block.image?.src ?? "")
       : [""];
 
-  const [contentPreviews, setContentPreviews] = useState<string[]>(initialContentPreviews);
+  const [contentPreviews, setContentPreviews] = useState<string[]>(
+    initialContentPreviews,
+  );
   const contentUploadedFilesRef = useRef<(File | null)[]>(
     new Array(initialContentPreviews.length).fill(null),
   );
   const contentFileToCropRef = useRef<File | null>(null);
-  const [contentCropModalIndex, setContentCropModalIndex] = useState<number | null>(null);
-  const [contentImageForCrop, setContentImageForCrop] = useState<string | null>(null);
+  const [contentCropModalIndex, setContentCropModalIndex] = useState<
+    number | null
+  >(null);
+  const [contentImageForCrop, setContentImageForCrop] = useState<string | null>(
+    null,
+  );
   const [contentCrop, setContentCrop] = useState({ x: 0, y: 0 });
   const [contentZoom, setContentZoom] = useState(1);
-  const [contentCropAreaPixels, setContentCropAreaPixels] = useState<Area | null>(null);
+  const [contentCropAreaPixels, setContentCropAreaPixels] =
+    useState<Area | null>(null);
 
   const {
     register,
@@ -175,7 +197,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     name: "content",
   });
 
-  const ensureContentStateLength = (length: number) => {
+  const ensureContentStateLength = useCallback((length: number) => {
     setContentPreviews((prev) => {
       const next = [...prev];
       while (next.length < length) {
@@ -187,12 +209,15 @@ export function NewsForm({ initialData }: NewsFormProps) {
     while (contentUploadedFilesRef.current.length < length) {
       contentUploadedFilesRef.current.push(null);
     }
-    contentUploadedFilesRef.current = contentUploadedFilesRef.current.slice(0, length);
-  };
+    contentUploadedFilesRef.current = contentUploadedFilesRef.current.slice(
+      0,
+      length,
+    );
+  }, []);
 
   useEffect(() => {
     ensureContentStateLength(contentFields.length);
-  }, [contentFields.length]);
+  }, [contentFields.length, ensureContentStateLength]);
 
   useEffect(() => {
     return () => {
@@ -200,7 +225,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         URL.revokeObjectURL(thumbnailObjectUrl);
       }
       contentPreviews.forEach((preview) => {
-        if (preview && preview.startsWith("blob:")) {
+        if (preview?.startsWith("blob:")) {
           URL.revokeObjectURL(preview);
         }
       });
@@ -258,12 +283,19 @@ export function NewsForm({ initialData }: NewsFormProps) {
     }
 
     try {
-      const blob = await getCroppedImageBlob(thumbnailImageForCrop, thumbnailCropAreaPixels);
+      const blob = await getCroppedImageBlob(
+        thumbnailImageForCrop,
+        thumbnailCropAreaPixels,
+      );
       const sourceFileName =
-        thumbnailFileToCropRef.current?.name ?? thumbnailSelectedFileName ?? "thumbnail.jpg";
+        thumbnailFileToCropRef.current?.name ??
+        thumbnailSelectedFileName ??
+        "thumbnail.jpg";
       const extension = getFileExtension(sourceFileName);
       const fileName = `thumbnail-${Date.now()}.${extension}`;
-      const file = new File([blob], fileName, { type: blob.type || "image/jpeg" });
+      const file = new File([blob], fileName, {
+        type: blob.type || "image/jpeg",
+      });
 
       if (thumbnailObjectUrl) {
         URL.revokeObjectURL(thumbnailObjectUrl);
@@ -314,9 +346,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
     setContentCropAreaPixels(null);
     contentFileToCropRef.current = null;
     if (typeof targetIndex === "number") {
-      const input = document.getElementById(`content-image-${targetIndex}`) as
-        | HTMLInputElement
-        | null;
+      const input = document.getElementById(
+        `content-image-${targetIndex}`,
+      ) as HTMLInputElement | null;
       if (input) {
         input.value = "";
       }
@@ -337,14 +369,20 @@ export function NewsForm({ initialData }: NewsFormProps) {
     const index = contentCropModalIndex;
 
     try {
-      const blob = await getCroppedImageBlob(contentImageForCrop, contentCropAreaPixels);
-      const sourceFileName = contentFileToCropRef.current.name ?? "section-image.jpg";
+      const blob = await getCroppedImageBlob(
+        contentImageForCrop,
+        contentCropAreaPixels,
+      );
+      const sourceFileName =
+        contentFileToCropRef.current.name ?? "section-image.jpg";
       const extension = getFileExtension(sourceFileName);
       const fileName = `section-${Date.now()}.${extension}`;
-      const file = new File([blob], fileName, { type: blob.type || "image/jpeg" });
+      const file = new File([blob], fileName, {
+        type: blob.type || "image/jpeg",
+      });
 
       const previousPreview = contentPreviews[index];
-      if (previousPreview && previousPreview.startsWith("blob:")) {
+      if (previousPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(previousPreview);
       }
 
@@ -355,7 +393,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
         next[index] = previewUrl;
         return next;
       });
-      setValue(`content.${index}.imageSrc`, previewUrl, { shouldValidate: true });
+      setValue(`content.${index}.imageSrc`, previewUrl, {
+        shouldValidate: true,
+      });
     } catch (cropError) {
       console.error(cropError);
       setError("画像の切り抜きに失敗しました");
@@ -366,7 +406,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
   const handleRemoveContentImage = (index: number) => {
     const currentPreview = contentPreviews[index];
-    if (currentPreview && currentPreview.startsWith("blob:")) {
+    if (currentPreview?.startsWith("blob:")) {
       URL.revokeObjectURL(currentPreview);
     }
 
@@ -379,7 +419,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
     setValue(`content.${index}.imageSrc`, "", { shouldValidate: true });
     setValue(`content.${index}.imageAlt`, "", { shouldValidate: true });
 
-    const input = document.getElementById(`content-image-${index}`) as HTMLInputElement | null;
+    const input = document.getElementById(
+      `content-image-${index}`,
+    ) as HTMLInputElement | null;
     if (input) {
       input.value = "";
     }
@@ -396,7 +438,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     }
 
     const removedPreview = contentPreviews[index];
-    if (removedPreview && removedPreview.startsWith("blob:")) {
+    if (removedPreview?.startsWith("blob:")) {
       URL.revokeObjectURL(removedPreview);
     }
 
@@ -427,10 +469,14 @@ export function NewsForm({ initialData }: NewsFormProps) {
     try {
       const adminSupabase = getAdminSupabaseClient();
 
-      const newsBucketEnv = process.env.NEXT_PUBLIC_SUPABASE_NEWS_BUCKET?.trim();
+      const newsBucketEnv =
+        process.env.NEXT_PUBLIC_SUPABASE_NEWS_BUCKET?.trim();
       const newsBucket =
-        newsBucketEnv && newsBucketEnv.length > 0 ? newsBucketEnv : "news-photos";
-      const newsFolderEnv = process.env.NEXT_PUBLIC_SUPABASE_NEWS_FOLDER?.trim();
+        newsBucketEnv && newsBucketEnv.length > 0
+          ? newsBucketEnv
+          : "news-photos";
+      const newsFolderEnv =
+        process.env.NEXT_PUBLIC_SUPABASE_NEWS_FOLDER?.trim();
       const newsFolder =
         newsFolderEnv && newsFolderEnv.length > 0 ? newsFolderEnv : undefined;
       const prefix = resolveStoragePrefix(newsBucket, newsFolder);
@@ -464,7 +510,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           setError(
             uploadError.message?.includes("Bucket not found")
               ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
-              : uploadError.message ?? "サムネイル画像のアップロードに失敗しました",
+              : (uploadError.message ??
+                  "サムネイル画像のアップロードに失敗しました"),
           );
           setLoading(false);
           return;
@@ -514,7 +561,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
             setError(
               uploadError.message?.includes("Bucket not found")
                 ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
-                : uploadError.message ?? "段落画像のアップロードに失敗しました",
+                : (uploadError.message ??
+                    "段落画像のアップロードに失敗しました"),
             );
             setLoading(false);
             return;
@@ -532,7 +580,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
             return;
           }
 
-          setValue(`content.${index}.imageSrc`, imageSrc, { shouldValidate: true });
+          setValue(`content.${index}.imageSrc`, imageSrc, {
+            shouldValidate: true,
+          });
           contentUploadedFilesRef.current[index] = null;
         }
 
@@ -572,7 +622,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
           return;
         }
       } else {
-        const { error: insertError } = await adminSupabase.from("news").insert(newsData);
+        const { error: insertError } = await adminSupabase
+          .from("news")
+          .insert(newsData);
 
         if (insertError) {
           setError(insertError.message);
@@ -600,7 +652,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
         )}
 
         <div>
-          <label htmlFor="id" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="id"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             ID <span className="text-red-500">*</span>
           </label>
           <input
@@ -610,14 +665,19 @@ export function NewsForm({ initialData }: NewsFormProps) {
             className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:bg-neutral-100"
             placeholder="atlas-os-v2-release"
           />
-          {errors.id && <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>}
+          {errors.id && (
+            <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>
+          )}
           <p className="mt-1 text-xs text-neutral-500">
             URLに使用されるID（英数字とハイフンのみ、編集時は変更不可）
           </p>
         </div>
 
         <div>
-          <label htmlFor="title" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="title"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             タイトル <span className="text-red-500">*</span>
           </label>
           <input
@@ -626,11 +686,16 @@ export function NewsForm({ initialData }: NewsFormProps) {
             className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
             placeholder="Atlas OS v2 を正式リリース"
           />
-          {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+          )}
         </div>
 
         <div>
-          <label htmlFor="subtitle" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="subtitle"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             サブタイトル
           </label>
           <input
@@ -640,13 +705,18 @@ export function NewsForm({ initialData }: NewsFormProps) {
             placeholder="長期記憶に最適化した新機能を追加"
           />
           {errors.subtitle && (
-            <p className="mt-1 text-sm text-red-600">{errors.subtitle.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.subtitle.message}
+            </p>
           )}
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="date" className="mb-2 block text-sm font-medium text-neutral-700">
+            <label
+              htmlFor="date"
+              className="mb-2 block text-sm font-medium text-neutral-700"
+            >
               日付 <span className="text-red-500">*</span>
             </label>
             <input
@@ -655,11 +725,16 @@ export function NewsForm({ initialData }: NewsFormProps) {
               className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
               placeholder="2025.09.12"
             />
-            {errors.date && <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>}
+            {errors.date && (
+              <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="tag" className="mb-2 block text-sm font-medium text-neutral-700">
+            <label
+              htmlFor="tag"
+              className="mb-2 block text-sm font-medium text-neutral-700"
+            >
               タグ
             </label>
             <input
@@ -668,7 +743,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
               className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
               placeholder="Product Update"
             />
-            {errors.tag && <p className="mt-1 text-sm text-red-600">{errors.tag.message}</p>}
+            {errors.tag && (
+              <p className="mt-1 text-sm text-red-600">{errors.tag.message}</p>
+            )}
           </div>
         </div>
 
@@ -704,7 +781,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
                 onClick={() => thumbnailFileInputRef.current?.click()}
                 disabled={loading}
               >
-                {thumbnailPreview ? "サムネイルを変更" : "サムネイルをアップロード"}
+                {thumbnailPreview
+                  ? "サムネイルを変更"
+                  : "サムネイルをアップロード"}
               </button>
               <input
                 ref={thumbnailFileInputRef}
@@ -716,7 +795,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
               />
             </div>
             {errors.thumbnailSrc && (
-              <p className="text-sm text-red-600">{errors.thumbnailSrc.message}</p>
+              <p className="text-sm text-red-600">
+                {errors.thumbnailSrc.message}
+              </p>
             )}
           </div>
         </div>
@@ -735,12 +816,17 @@ export function NewsForm({ initialData }: NewsFormProps) {
             placeholder="Atlas OS v2 product interface preview"
           />
           {errors.thumbnailAlt && (
-            <p className="mt-1 text-sm text-red-600">{errors.thumbnailAlt.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.thumbnailAlt.message}
+            </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="link" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="link"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             リンク <span className="text-red-500">*</span>
           </label>
           <input
@@ -749,7 +835,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
             className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
             placeholder="/news/atlas-os-v2-release"
           />
-          {errors.link && <p className="mt-1 text-sm text-red-600">{errors.link.message}</p>}
+          {errors.link && (
+            <p className="mt-1 text-sm text-red-600">{errors.link.message}</p>
+          )}
         </div>
 
         <div>
@@ -771,7 +859,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
               const hasImage = !!imageSrc && imageSrc.trim().length > 0;
 
               return (
-                <div key={field.id} className="rounded-xl border border-neutral-200 p-4 sm:p-5">
+                <div
+                  key={field.id}
+                  className="rounded-xl border border-neutral-200 p-4 sm:p-5"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <span className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-400">
                       Section {index + 1}
@@ -827,7 +918,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
                           {contentPreviews[index] ? (
                             <Image
                               src={contentPreviews[index]}
-                              alt={watch(`content.${index}.imageAlt`) || `段落${index + 1}の画像`}
+                              alt={
+                                watch(`content.${index}.imageAlt`) ||
+                                `段落${index + 1}の画像`
+                              }
                               fill
                               sizes="100%"
                               className="object-cover"
@@ -918,12 +1012,17 @@ export function NewsForm({ initialData }: NewsFormProps) {
             })}
           </div>
           {errors.content && (
-            <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.content.message}
+            </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="summary" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="summary"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             概要（一覧表示用）
           </label>
           <textarea
@@ -934,7 +1033,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
             placeholder="長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。"
           />
           {errors.summary && (
-            <p className="mt-1 text-sm text-red-600">{errors.summary.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.summary.message}
+            </p>
           )}
           <p className="mt-1 text-xs text-neutral-500">
             ニュース一覧ページで表示される短い概要です（オプション）
@@ -976,7 +1077,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
               />
             </div>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label className="text-sm font-medium text-neutral-600" htmlFor="thumbnail-zoom">
+              <label
+                className="text-sm font-medium text-neutral-600"
+                htmlFor="thumbnail-zoom"
+              >
                 ズーム
               </label>
               <input
@@ -986,7 +1090,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
                 max={3}
                 step={0.1}
                 value={thumbnailZoom}
-                onChange={(event) => setThumbnailZoom(Number(event.target.value))}
+                onChange={(event) =>
+                  setThumbnailZoom(Number(event.target.value))
+                }
                 className="flex-1"
               />
               <div className="ml-auto flex gap-2">
@@ -1027,7 +1133,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
               />
             </div>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label className="text-sm font-medium text-neutral-600" htmlFor="content-zoom">
+              <label
+                className="text-sm font-medium text-neutral-600"
+                htmlFor="content-zoom"
+              >
                 ズーム
               </label>
               <input

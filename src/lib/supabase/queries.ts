@@ -1,7 +1,7 @@
-import { supabase } from "./server";
-import type { NewsItem, ContentBlock, Position, TeamMember, InvestorGroup } from "@/models";
-import { normalizeNewsContent } from "@/models/news";
 import { normalizeSupporters } from "@/lib/supporters/normalize";
+import type { InvestorGroup, NewsItem, Position, TeamMember } from "@/models";
+import { normalizeNewsContent } from "@/models/news";
+import { supabase } from "./server";
 
 /**
  * News 関連のクエリ関数
@@ -201,4 +201,3 @@ export async function getAllInvestorGroups(): Promise<InvestorGroup[]> {
     })) ?? []
   );
 }
-

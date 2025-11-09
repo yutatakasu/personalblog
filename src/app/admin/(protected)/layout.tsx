@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
-import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 import { isAdminUser } from "@/lib/supabase/admin-auth";
+import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

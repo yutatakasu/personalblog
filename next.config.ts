@@ -24,6 +24,7 @@ if (supabaseHostname) {
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  typedRoutes: false,
   images: {
     remotePatterns,
   },

@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type AdminSidebarProps = {
   onLogout: () => Promise<void> | void;
@@ -25,14 +25,22 @@ type AdminSidebarProps = {
   isCollapsed?: boolean;
 };
 
-function GoogleIcon({ className }: { className?: string }) {
+function GoogleIcon({
+  className,
+  title = "Google ロゴ",
+}: {
+  className?: string;
+  title?: string;
+}) {
   return (
     <svg
       className={className}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
+      <title>{title}</title>
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
         fill="#4285F4"
@@ -115,7 +123,7 @@ export function AdminSidebar({
 
   const displayName =
     (userName && userName.trim().length > 0 ? userName : undefined) ??
-    (userEmail && userEmail.split("@")[0]) ??
+    userEmail?.split("@")[0] ??
     "Google アカウント";
   const displayEmail = userEmail ?? "admin@atlas.inc";
 

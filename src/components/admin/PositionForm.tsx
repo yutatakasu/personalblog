@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { type FieldValues, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 
@@ -13,16 +13,23 @@ const positionSchema = z.object({
   department: z.string().min(1, "部署は必須です"),
   location: z.string().min(1, "勤務地は必須です"),
   workStyle: z.enum(["Onsite", "Hybrid", "Remote"], {
-    required_error: "勤務形態を選択してください",
+    message: "勤務形態を選択してください",
   }),
   teaser: z.string().min(1, "ティーザーは必須です"),
   summary: z.string().min(1, "概要は必須です"),
-  responsibilities: z.array(z.string().min(1, "職務内容を入力してください")).min(1),
+  responsibilities: z
+    .array(z.string().min(1, "職務内容を入力してください"))
+    .min(1),
   requirements: z.array(z.string().min(1, "必須要件を入力してください")).min(1),
-  applyEmail: z.string().email("有効なメールアドレスを入力してください").optional().or(z.literal("")),
+  applyEmail: z
+    .string()
+    .email("有効なメールアドレスを入力してください")
+    .optional()
+    .or(z.literal("")),
 });
 
 type PositionFormData = z.infer<typeof positionSchema>;
+type PositionFormFieldValues = PositionFormData & FieldValues;
 
 type PositionFormProps = {
   initialData?: {
@@ -49,7 +56,7 @@ export function PositionForm({ initialData }: PositionFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<PositionFormData>({
+  } = useForm<PositionFormFieldValues>({
     resolver: zodResolver(positionSchema),
     defaultValues: initialData
       ? {
@@ -75,7 +82,7 @@ export function PositionForm({ initialData }: PositionFormProps) {
     fields: responsibilityFields,
     append: appendResponsibility,
     remove: removeResponsibility,
-  } = useFieldArray({
+  } = useFieldArray<PositionFormFieldValues, "responsibilities">({
     control,
     name: "responsibilities",
   });
@@ -84,12 +91,12 @@ export function PositionForm({ initialData }: PositionFormProps) {
     fields: requirementFields,
     append: appendRequirement,
     remove: removeRequirement,
-  } = useFieldArray({
+  } = useFieldArray<PositionFormFieldValues, "requirements">({
     control,
     name: "requirements",
   });
 
-  const onSubmit = async (data: PositionFormData) => {
+  const onSubmit = async (data: PositionFormFieldValues) => {
     setLoading(true);
     setError(null);
 
@@ -122,7 +129,9 @@ export function PositionForm({ initialData }: PositionFormProps) {
         }
       } else {
         // 新規作成
-        const { error: insertError } = await adminSupabase.from("positions").insert(positionData);
+        const { error: insertError } = await adminSupabase
+          .from("positions")
+          .insert(positionData);
 
         if (insertError) {
           setError(insertError.message);
@@ -133,7 +142,7 @@ export function PositionForm({ initialData }: PositionFormProps) {
 
       router.push("/admin/positions");
       router.refresh();
-    } catch (err) {
+    } catch (_err) {
       setError("保存に失敗しました");
       setLoading(false);
     }
@@ -148,7 +157,10 @@ export function PositionForm({ initialData }: PositionFormProps) {
       )}
 
       <div>
-        <label htmlFor="id" className="mb-2 block text-sm font-medium text-neutral-700">
+        <label
+          htmlFor="id"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
           ID <span className="text-red-500">*</span>
         </label>
         <input
@@ -158,7 +170,9 @@ export function PositionForm({ initialData }: PositionFormProps) {
           className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:bg-neutral-100"
           placeholder="ai-systems-engineer"
         />
-        {errors.id && <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>}
+        {errors.id && (
+          <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>
+        )}
         <p className="mt-1 text-xs text-neutral-500">
           URLに使用されるID（英数字とハイフンのみ、編集時は変更不可）
         </p>
@@ -166,7 +180,10 @@ export function PositionForm({ initialData }: PositionFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label htmlFor="title" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="title"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             タイトル <span className="text-red-500">*</span>
           </label>
           <input
@@ -175,11 +192,16 @@ export function PositionForm({ initialData }: PositionFormProps) {
             className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
             placeholder="AI Systems Engineer"
           />
-          {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+          )}
         </div>
 
         <div>
-          <label htmlFor="department" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="department"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             部署 <span className="text-red-500">*</span>
           </label>
           <input
@@ -189,14 +211,19 @@ export function PositionForm({ initialData }: PositionFormProps) {
             placeholder="Atlas Core"
           />
           {errors.department && (
-            <p className="mt-1 text-sm text-red-600">{errors.department.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.department.message}
+            </p>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label htmlFor="location" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="location"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             勤務地 <span className="text-red-500">*</span>
           </label>
           <input
@@ -205,11 +232,18 @@ export function PositionForm({ initialData }: PositionFormProps) {
             className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
             placeholder="Tokyo / Remote"
           />
-          {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>}
+          {errors.location && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.location.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label htmlFor="workStyle" className="mb-2 block text-sm font-medium text-neutral-700">
+          <label
+            htmlFor="workStyle"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
             勤務形態 <span className="text-red-500">*</span>
           </label>
           <select
@@ -223,13 +257,18 @@ export function PositionForm({ initialData }: PositionFormProps) {
             <option value="Remote">Remote</option>
           </select>
           {errors.workStyle && (
-            <p className="mt-1 text-sm text-red-600">{errors.workStyle.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.workStyle.message}
+            </p>
           )}
         </div>
       </div>
 
       <div>
-        <label htmlFor="teaser" className="mb-2 block text-sm font-medium text-neutral-700">
+        <label
+          htmlFor="teaser"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
           ティーザー <span className="text-red-500">*</span>
         </label>
         <input
@@ -238,11 +277,16 @@ export function PositionForm({ initialData }: PositionFormProps) {
           className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
           placeholder="メモリと推論を結ぶ心臓部を、ともに磨き上げる仲間を探しています。"
         />
-        {errors.teaser && <p className="mt-1 text-sm text-red-600">{errors.teaser.message}</p>}
+        {errors.teaser && (
+          <p className="mt-1 text-sm text-red-600">{errors.teaser.message}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="summary" className="mb-2 block text-sm font-medium text-neutral-700">
+        <label
+          htmlFor="summary"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
           概要 <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -252,14 +296,16 @@ export function PositionForm({ initialData }: PositionFormProps) {
           className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
           placeholder="長期記憶レイヤーと推論エンジンの連携を最適化し、Atlas の知覚・応答品質を継続的に高めます。"
         />
-        {errors.summary && <p className="mt-1 text-sm text-red-600">{errors.summary.message}</p>}
+        {errors.summary && (
+          <p className="mt-1 text-sm text-red-600">{errors.summary.message}</p>
+        )}
       </div>
 
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-sm font-medium text-neutral-700">
+          <span className="text-sm font-medium text-neutral-700">
             職務内容 <span className="text-red-500">*</span>
-          </label>
+          </span>
           <button
             type="button"
             onClick={() => appendResponsibility("")}
@@ -287,15 +333,17 @@ export function PositionForm({ initialData }: PositionFormProps) {
           </div>
         ))}
         {errors.responsibilities && (
-          <p className="mt-1 text-sm text-red-600">{errors.responsibilities.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.responsibilities.message}
+          </p>
         )}
       </div>
 
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-sm font-medium text-neutral-700">
+          <span className="text-sm font-medium text-neutral-700">
             必須要件 <span className="text-red-500">*</span>
-          </label>
+          </span>
           <button
             type="button"
             onClick={() => appendRequirement("")}
@@ -323,12 +371,17 @@ export function PositionForm({ initialData }: PositionFormProps) {
           </div>
         ))}
         {errors.requirements && (
-          <p className="mt-1 text-sm text-red-600">{errors.requirements.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.requirements.message}
+          </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="applyEmail" className="mb-2 block text-sm font-medium text-neutral-700">
+        <label
+          htmlFor="applyEmail"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
           応募メールアドレス
         </label>
         <input
@@ -339,7 +392,9 @@ export function PositionForm({ initialData }: PositionFormProps) {
           placeholder="careers@atlas.inc"
         />
         {errors.applyEmail && (
-          <p className="mt-1 text-sm text-red-600">{errors.applyEmail.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.applyEmail.message}
+          </p>
         )}
       </div>
 
@@ -362,4 +417,3 @@ export function PositionForm({ initialData }: PositionFormProps) {
     </form>
   );
 }
-

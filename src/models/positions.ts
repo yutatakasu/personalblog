@@ -205,7 +205,10 @@ export async function getPositions(): Promise<Position[]> {
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
     return items.length > 0 ? items : defaultPositions;
   } catch (error) {
-    console.error("Failed to fetch positions from Supabase, using default data:", error);
+    console.error(
+      "Failed to fetch positions from Supabase, using default data:",
+      error,
+    );
     return defaultPositions;
   }
 }
@@ -224,12 +227,17 @@ export async function getPositionById(id: string): Promise<Position | null> {
   }
 
   try {
-    const { getPositionById: getPositionByIdFromSupabase } = await import("@/lib/supabase/queries");
+    const { getPositionById: getPositionByIdFromSupabase } = await import(
+      "@/lib/supabase/queries"
+    );
     const item = await getPositionByIdFromSupabase(id);
     // Supabaseからデータが取得できた場合はそれを使用、nullの場合はデフォルトデータから検索
     return item ?? defaultPositions.find((item) => item.id === id) ?? null;
   } catch (error) {
-    console.error("Failed to fetch position from Supabase, using default data:", error);
+    console.error(
+      "Failed to fetch position from Supabase, using default data:",
+      error,
+    );
     return defaultPositions.find((item) => item.id === id) ?? null;
   }
 }

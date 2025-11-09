@@ -1,5 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { type NextRequest, NextResponse } from "next/server";
 import { isAdminSession } from "@/lib/supabase/admin-auth";
 
 type CookieOperation = {
@@ -8,7 +8,11 @@ type CookieOperation = {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 };
 
-function buildRedirect(origin: string, path: string, params?: Record<string, string>) {
+function buildRedirect(
+  origin: string,
+  path: string,
+  params?: Record<string, string>,
+) {
   const url = new URL(path, origin);
   if (params) {
     for (const [key, value] of Object.entries(params)) {
@@ -25,7 +29,8 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const errorParam = requestUrl.searchParams.get("error");
-  const errorDescription = requestUrl.searchParams.get("error_description") ?? undefined;
+  const errorDescription =
+    requestUrl.searchParams.get("error_description") ?? undefined;
 
   if (errorParam) {
     const redirectUrl = buildRedirect(requestUrl.origin, "/admin/login", {
@@ -54,7 +59,11 @@ export async function GET(request: NextRequest) {
           cookieOperations.push({ name, value, options });
         },
         remove: (name, options) => {
-          cookieOperations.push({ name, value: "", options: { ...options, maxAge: 0 } });
+          cookieOperations.push({
+            name,
+            value: "",
+            options: { ...options, maxAge: 0 },
+          });
         },
       },
     },
@@ -72,7 +81,9 @@ export async function GET(request: NextRequest) {
       ...(error?.message ? { error_description: error.message } : {}),
     });
     const response = NextResponse.redirect(redirectUrl);
-    cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+    cookieOperations.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
     return response;
   }
 
@@ -80,16 +91,21 @@ export async function GET(request: NextRequest) {
     await supabase.auth.signOut();
     const redirectUrl = buildRedirect(requestUrl.origin, "/admin/login", {
       error: "unauthorized",
-      error_description: encodeURIComponent("管理者として登録されていないGoogleアカウントです。"),
+      error_description: encodeURIComponent(
+        "管理者として登録されていないGoogleアカウントです。",
+      ),
     });
     const response = NextResponse.redirect(redirectUrl);
-    cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+    cookieOperations.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
     return response;
   }
 
   const redirectUrl = buildRedirect(requestUrl.origin, "/admin/hub");
   const response = NextResponse.redirect(redirectUrl);
-  cookieOperations.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+  cookieOperations.forEach(({ name, value, options }) => {
+    response.cookies.set(name, value, options);
+  });
   return response;
 }
-

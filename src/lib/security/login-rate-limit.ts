@@ -49,7 +49,10 @@ export function getLoginRateLimitIdentifier(request: NextRequest): string {
   return `${ip}-${userAgent}`;
 }
 
-export function evaluateLoginRateLimit(identifier: string, now = Date.now()): LoginRateLimitEvaluation {
+export function evaluateLoginRateLimit(
+  identifier: string,
+  now = Date.now(),
+): LoginRateLimitEvaluation {
   cleanupRateLimitStore(now);
 
   const record = rateLimitStore.get(identifier);
@@ -109,4 +112,3 @@ export function evaluateLoginRateLimit(identifier: string, now = Date.now()): Lo
 export function resetLoginRateLimit(identifier: string) {
   rateLimitStore.delete(identifier);
 }
-

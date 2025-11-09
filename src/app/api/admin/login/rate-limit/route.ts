@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 // レート制限の設定
 const MAX_ATTEMPTS = 5; // 最大試行回数
@@ -13,7 +13,10 @@ const rateLimitStore = new Map<
 
 function getClientIdentifier(request: NextRequest): string {
   // IPアドレスとUser-Agentを組み合わせて識別子を作成
-  const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+  const ip =
+    request.headers.get("x-forwarded-for") ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
   const userAgent = request.headers.get("user-agent") || "unknown";
   return `${ip}-${userAgent}`;
 }
@@ -45,7 +48,7 @@ export async function POST(request: NextRequest) {
         message: `ログイン試行回数が上限に達しました。${remainingMinutes}分後に再試行してください。`,
         retryAfter: record.blockedUntil,
       },
-      { status: 429 }
+      { status: 429 },
     );
   }
 
@@ -63,7 +66,8 @@ export async function POST(request: NextRequest) {
   rateLimitStore.set(identifier, {
     attempts: newAttempts,
     firstAttempt: record.firstAttempt,
-    blockedUntil: newAttempts >= MAX_ATTEMPTS ? now + BLOCK_DURATION_MS : undefined,
+    blockedUntil:
+      newAttempts >= MAX_ATTEMPTS ? now + BLOCK_DURATION_MS : undefined,
   });
 
   if (newAttempts >= MAX_ATTEMPTS) {
@@ -73,7 +77,7 @@ export async function POST(request: NextRequest) {
         message: `ログイン試行回数が上限に達しました。30分後に再試行してください。`,
         retryAfter: now + BLOCK_DURATION_MS,
       },
-      { status: 429 }
+      { status: 429 },
     );
   }
 
@@ -90,4 +94,3 @@ export async function DELETE(request: NextRequest) {
   rateLimitStore.delete(identifier);
   return NextResponse.json({ success: true });
 }
-

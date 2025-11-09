@@ -1,13 +1,13 @@
 import { Header } from "@/components/Header";
 import { ScrollToAtlas } from "@/components/ScrollToAtlas";
+import { getInvestorGroups } from "@/models/backed_by";
+import { getNewsItems } from "@/models/news";
+import { getTeamMembers } from "@/models/team";
 import { AboutSection } from "@/sections/AboutSection";
 import { AtlasHero } from "@/sections/AtlasHero";
 import { CareersSection } from "@/sections/CareersSection";
 import { ContactSection } from "@/sections/ContactSection";
 import { ProductsSection } from "@/sections/ProductsSection";
-import { getNewsItems } from "@/models/news";
-import { getTeamMembers } from "@/models/team";
-import { getInvestorGroups } from "@/models/backed_by";
 
 export default async function Home() {
   const [newsItems, teamMembers, investorGroups] = await Promise.all([
