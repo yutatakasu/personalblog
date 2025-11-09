@@ -3,7 +3,8 @@
 import { PanelLeft } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import {
   getAdminSupabaseClient,
   isSupabaseConfigured,
@@ -30,11 +31,65 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
+  // ユーザー情報を抽出する共通関数
+  const extractUserInfo = useCallback((user: User | null | undefined) => {
+    const metadata = user?.user_metadata || {};
+    const identityData = user?.identities?.[0]?.identity_data || {};
+    
+    // デバッグ: ユーザーオブジェクトの構造を確認
+    console.log("=== Extracting user info ===");
+    console.log("User object:", user);
+    console.log("user_metadata:", metadata);
+    console.log("app_metadata:", user?.app_metadata);
+    console.log("identities:", user?.identities);
+    console.log("identity_data:", identityData);
+    
+    // ユーザー名を複数の場所から取得
+    const name =
+      metadata.full_name ||
+      metadata.name ||
+      identityData.full_name ||
+      identityData.name ||
+      user?.email?.split("@")[0] || // フォールバック: メールアドレスの@より前
+      null;
+    
+    // アバター画像URLは複数の場所に保存される可能性がある
+    const avatarUrl =
+      metadata.avatar_url ||
+      metadata.picture ||
+      identityData.avatar_url ||
+      identityData.picture ||
+      user?.app_metadata?.avatar_url ||
+      user?.app_metadata?.picture ||
+      null;
+    
+    console.log("Extracted name:", name);
+    console.log("Extracted avatarUrl:", avatarUrl);
+    console.log("Extracted email:", user?.email);
+    console.log("===========================");
+    
+    const email =
+      user?.email ||
+      metadata.email ||
+      identityData.email ||
+      user?.app_metadata?.email ||
+      null;
+
+    return {
+      email,
+      name,
+      avatarUrl,
+    };
+  }, []);
+
   useEffect(() => {
     const adminSupabase = getAdminSupabaseClient();
+    
     const checkSession = async () => {
       // Supabase環境変数のチェック
       if (!isSupabaseConfigured()) {
@@ -42,13 +97,32 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // サーバー側で既に認証チェック済みなので、ユーザー情報のみ取得
-      const {
-        data: { user },
-      } = await adminSupabase.auth.getUser();
+      try {
+        // セッションとユーザー情報を取得
+        const {
+          data: { session },
+        } = await adminSupabase.auth.getSession();
 
-      if (user) {
-        setUserEmail(user.email ?? null);
+        if (session?.user) {
+          const userInfo = extractUserInfo(session.user);
+          setUserEmail(userInfo.email);
+          setUserName(userInfo.name);
+          setUserAvatarUrl(userInfo.avatarUrl);
+        } else {
+          // セッションがない場合、getUser()も試す
+          const {
+            data: { user },
+          } = await adminSupabase.auth.getUser();
+          
+          if (user) {
+            const userInfo = extractUserInfo(user);
+            setUserEmail(userInfo.email);
+            setUserName(userInfo.name);
+            setUserAvatarUrl(userInfo.avatarUrl);
+          }
+        }
+      } catch (error) {
+        console.error("Error getting session/user:", error);
       }
 
       setLoading(false);
@@ -56,28 +130,57 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
     checkSession();
 
-    // 認証状態の変更を監視（ログアウト時のみリダイレクト）
+    // 認証状態の変更を監視（すべてのイベントを処理）
     const {
       data: { subscription },
-    } = adminSupabase.auth.onAuthStateChange((event, session) => {
+    } = adminSupabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session?.user?.email);
+      
       if (event === "SIGNED_OUT" && !session) {
+        setUserEmail(null);
+        setUserName(null);
+        setUserAvatarUrl(null);
         router.push("/admin/login");
       } else if (session?.user) {
-        setUserEmail(session.user.email ?? null);
+        // SIGNED_IN, TOKEN_REFRESHED, USER_UPDATED などのイベントでユーザー情報を更新
+        const userInfo = extractUserInfo(session.user);
+        setUserEmail(userInfo.email);
+        setUserName(userInfo.name);
+        setUserAvatarUrl(userInfo.avatarUrl);
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router, extractUserInfo]);
 
   const handleLogout = async () => {
-    const adminSupabase = getAdminSupabaseClient();
-    await adminSupabase.auth.signOut();
-    router.push("/admin/login");
-    router.refresh();
-    setIsMobileSidebarOpen(false);
+    try {
+      const adminSupabase = getAdminSupabaseClient();
+      
+      // セッションを確実にクリア
+      const { error } = await adminSupabase.auth.signOut();
+      
+      if (error) {
+        console.error("Logout error:", error);
+        // エラーが発生してもログイン画面にリダイレクト
+        window.location.href = "/admin/login";
+        return;
+      }
+      
+      setIsMobileSidebarOpen(false);
+      
+      // セッションがクリアされるのを少し待つ
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      
+      // 強制的にログイン画面にリダイレクト（ページ全体をリロードしてセッションを確実に更新）
+      window.location.href = "/admin/login";
+    } catch (error) {
+      console.error("Failed to logout:", error);
+      // エラーが発生してもログイン画面にリダイレクト
+      window.location.href = "/admin/login";
+    }
   };
 
   const toggleSidebar = () => {
@@ -142,6 +245,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <AdminSidebar
             onLogout={handleLogout}
             userEmail={userEmail}
+            userName={userName}
+            userAvatarUrl={userAvatarUrl}
             isCollapsed={isSidebarCollapsed}
           />
         </div>
@@ -244,6 +349,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               className="h-full"
               onLogout={handleLogout}
               userEmail={userEmail}
+              userName={userName}
+              userAvatarUrl={userAvatarUrl}
               onNavigate={() => setIsMobileSidebarOpen(false)}
             />
           </div>

@@ -100,7 +100,27 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 }
 ```
 
-## 5. 動作確認
+## 5. Supabase Storage の設定
+
+ニュースのサムネイルおよび本文内の画像は Supabase Storage の `news-photos` バケットに保存します。
+
+1. Supabase Dashboard の **Storage** を開く
+2. 「Create bucket」をクリックし、以下の設定でバケットを作成
+   - **Name**: `news-photos`
+   - **Public bucket**: 有効（公開URLを取得するため）
+3. 必要に応じて、チームメンバーやサポーター管理で使用する `team-photos` / `supporters-photos` などのバケットも同様に用意
+4. バケット名や保存先フォルダを変更したい場合は、`.env.local` に以下の環境変数を設定（未設定時はデフォルト値を使用）:
+
+   ```env
+   NEXT_PUBLIC_SUPABASE_NEWS_BUCKET=news-photos
+   NEXT_PUBLIC_SUPABASE_NEWS_FOLDER=
+   ```
+
+   `NEXT_PUBLIC_SUPABASE_NEWS_FOLDER` を指定すると、バケット直下ではなくサブフォルダに画像を保存できます。
+
+5. SQL Editor で `supabase/sql/storage-news-photos.sql` を実行し、`news-photos` バケット用の RLS ポリシー（閲覧は公開、アップロード/更新/削除は管理者のみ）を設定してください
+
+## 6. 動作確認
 
 1. 開発サーバーを起動：
    ```bash
@@ -110,7 +130,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 2. ブラウザで `http://localhost:3000` にアクセス
 3. ニュースページ (`/news`) や採用ページ (`/positions`) が正常に表示されることを確認
 
-## 6. フェイルセーフ機能
+## 7. フェイルセーフ機能
 
 この実装では、Supabase が利用できない場合や環境変数が設定されていない場合、デフォルトデータ（`src/models/*.ts` の `default*` 配列）が自動的に使用されます。
 
@@ -120,7 +140,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 - **本番環境**: Supabase に障害が発生してもサイトが動作し続ける
 - **段階的移行**: Supabase への移行を段階的に行える
 
-## 7. データ更新方法
+## 8. データ更新方法
 
 ### 管理画面から更新（推奨）
 
@@ -140,7 +160,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 
 **注意**: 管理画面の使用を推奨します。より使いやすく、バリデーションも含まれています。
 
-## 8. トラブルシューティング
+## 9. トラブルシューティング
 
 ### データが表示されない
 
@@ -154,7 +174,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 1. `pnpm install` を実行して依存関係を更新
 2. TypeScript の型チェックを実行：`pnpm tsc --noEmit`
 
-## 参考資料
+## 10. 参考資料
 
 - [Supabase Documentation](https://supabase.com/docs)
 - [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)

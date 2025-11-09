@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { SupporterForm } from "@/components/admin/SupporterForm";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
+import { normalizeSupporters } from "@/lib/supporters/normalize";
 
 export default async function AdminSupporterEditPage({
   params,
@@ -10,7 +11,7 @@ export default async function AdminSupporterEditPage({
   const { id } = await params;
   const numericId = parseInt(id, 10);
 
-  if (isNaN(numericId)) {
+  if (Number.isNaN(numericId)) {
     notFound();
   }
 
@@ -25,17 +26,28 @@ export default async function AdminSupporterEditPage({
     notFound();
   }
 
+  const normalizedSupporters = normalizeSupporters(supporterGroup.supporters);
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-3xl text-neutral-900">サポーターグループの編集</h1>
-        <p className="mt-2 text-sm text-neutral-600">サポーターグループの内容を編集します</p>
+        <h1 className="font-serif text-3xl text-neutral-900">
+          サポーターグループの編集
+        </h1>
+        <p className="mt-2 text-sm text-neutral-600">
+          サポーターグループの内容を編集します
+        </p>
       </div>
 
       <div className="rounded-lg border border-neutral-200 bg-white p-6">
-        <SupporterForm initialData={supporterGroup} />
+        <SupporterForm
+          initialData={{
+            id: supporterGroup.id,
+            category: supporterGroup.category,
+            supporters: normalizedSupporters,
+          }}
+        />
       </div>
     </div>
   );
 }
-

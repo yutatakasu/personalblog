@@ -84,35 +84,27 @@ export default async function NewsDetailPage({
               />
             </div>
           </div>
-          <article className="mt-12 space-y-6 text-neutral-700">
-            {item.content.map((block, index) => {
-              if (block.type === "paragraph") {
-                return (
-                  <p key={index} className="text-base leading-relaxed">
-                    {block.text}
-                  </p>
-                );
-              }
-              if (block.type === "image") {
-                return (
-                  <div
-                    key={index}
-                    className="my-8 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100"
-                  >
+          <article className="mt-12 space-y-10 text-neutral-700">
+            {item.content.map((block, index) => (
+              <div key={index} className="space-y-6">
+                {block.text.trim().length > 0 ? (
+                  <p className="text-base leading-relaxed">{block.text}</p>
+                ) : null}
+                {block.image ? (
+                  <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
                     <div className="relative h-64 w-full sm:h-80">
                       <Image
-                        src={block.src}
-                        alt={block.alt}
+                        src={block.image.src}
+                        alt={block.image.alt}
                         fill
                         sizes="100vw"
                         className="object-cover"
                       />
                     </div>
                   </div>
-                );
-              }
-              return null;
-            })}
+                ) : null}
+              </div>
+            ))}
           </article>
           <div className="mt-12">
             <Link

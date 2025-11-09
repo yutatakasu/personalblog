@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
-import { useRouter } from "next/navigation";
 
 type TeamMember = {
   id: string;
@@ -30,15 +30,18 @@ export function TeamList({ teamMembers }: { teamMembers: TeamMember[] }) {
     setDeletingId(id);
     try {
       const adminSupabase = getAdminSupabaseClient();
-      const { error } = await adminSupabase.from("team_members").delete().eq("id", id);
+      const { error } = await adminSupabase
+        .from("team_members")
+        .delete()
+        .eq("id", id);
 
       if (error) {
-        alert("削除に失敗しました: " + error.message);
+        alert(`削除に失敗しました: ${error.message}`);
         return;
       }
 
       router.refresh();
-    } catch (err) {
+    } catch (_err) {
       alert("削除に失敗しました");
     } finally {
       setDeletingId(null);
@@ -72,17 +75,26 @@ export function TeamList({ teamMembers }: { teamMembers: TeamMember[] }) {
                   fill
                   sizes="80px"
                   className="object-cover"
+                  unoptimized={member.image_src.startsWith("http")}
                 />
               </div>
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-serif text-lg text-neutral-900">{member.name}</h3>
-                    <p className="mt-1 text-sm font-medium text-neutral-600">{member.title}</p>
-                    <p className="mt-2 text-sm text-neutral-500 line-clamp-2">{member.focus}</p>
+                    <h3 className="font-serif text-lg text-neutral-900">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-neutral-600">
+                      {member.title}
+                    </p>
+                    <p className="mt-2 text-sm text-neutral-500 line-clamp-2">
+                      {member.focus}
+                    </p>
                     <p className="mt-2 text-xs text-neutral-400">
-                      位置: 行 {member.position_row}, 列 {member.position_column}
-                      {member.position_offset_y && `, オフセット: ${member.position_offset_y}`}
+                      位置: 行 {member.position_row}, 列{" "}
+                      {member.position_column}
+                      {member.position_offset_y &&
+                        `, オフセット: ${member.position_offset_y}`}
                     </p>
                   </div>
                 </div>
@@ -94,6 +106,7 @@ export function TeamList({ teamMembers }: { teamMembers: TeamMember[] }) {
                     編集
                   </Link>
                   <button
+                    type="button"
                     onClick={() => handleDelete(member.id)}
                     disabled={deletingId === member.id}
                     className="rounded-lg border border-red-300 px-3 py-1.5 text-sm text-red-700 transition hover:bg-red-50 disabled:opacity-50"
@@ -109,4 +122,3 @@ export function TeamList({ teamMembers }: { teamMembers: TeamMember[] }) {
     </div>
   );
 }
-

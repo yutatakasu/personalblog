@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from "@supabase/ssr";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -14,15 +14,18 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 let client: SupabaseClient | null = null;
 
 export function getAdminSupabaseClient(): SupabaseClient {
-  if (typeof window === "undefined") {
-    throw new Error("getAdminSupabaseClient must be used in a client component");
-  }
-
   if (!client) {
-    client = createClientComponentClient({
-      supabaseUrl: supabaseUrl || "https://placeholder.supabase.co",
-      supabaseKey: supabaseAnonKey || "placeholder-key",
-    });
+    client = createBrowserClient(
+      supabaseUrl || "https://placeholder.supabase.co",
+      supabaseAnonKey || "placeholder-key",
+      {
+        cookieOptions: {
+          lifetime: 60 * 60 * 24 * 7,
+          sameSite: "lax",
+          path: "/",
+        },
+      },
+    );
   }
 
   return client;
