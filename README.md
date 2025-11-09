@@ -40,7 +40,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - 本番・Preview 環境の環境変数は Vercel Project Settings → Environment Variables に登録してください。
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-  - `ADMIN_EMAILS`
 - ローカル開発では Vercel CLI を使って同じ値を同期できます。
   ```bash
   npm i -g vercel
@@ -51,6 +50,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   pnpm dev
   ```
 - `.env.local` は `.gitignore` によりコミットされません。必要な人が各自で `vercel env pull` を実行してください。
-- 詳細なセットアップ手順は `docs/supabase-setup.md` と `docs/admin-setup.md` を参照してください。
+- 詳細なセットアップ手順は `docs/supabase-setup.md` と `docs/admin-setup.md` を参照してください（管理者権限は Supabase Authentication のユーザーメタデータで設定します）。
 
 # atlas-hp

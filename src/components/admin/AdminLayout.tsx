@@ -21,27 +21,28 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      // サーバー側で既に認証チェック済みなので、ユーザー情報のみ取得
       const {
-        data: { session },
-      } = await adminSupabase.auth.getSession();
+        data: { user },
+      } = await adminSupabase.auth.getUser();
 
-      if (!session) {
-        router.push("/admin/login");
-        return;
+      if (user) {
+        setUserEmail(user.email ?? null);
       }
 
-      setUserEmail(session.user.email ?? null);
       setLoading(false);
     };
 
     checkSession();
 
-    // 認証状態の変更を監視
+    // 認証状態の変更を監視（ログアウト時のみリダイレクト）
     const {
       data: { subscription },
-    } = adminSupabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
+    } = adminSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" && !session) {
         router.push("/admin/login");
+      } else if (session?.user) {
+        setUserEmail(session.user.email ?? null);
       }
     });
 
@@ -68,9 +69,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className="min-h-screen bg-neutral-50 lg:flex">
+      <div className="flex min-h-screen bg-neutral-50">
         <AdminSidebar onLogout={handleLogout} userEmail={userEmail} />
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col">
           <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-4 lg:hidden">
             <div className="flex items-center gap-3">
               <button
@@ -113,8 +114,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               </button>
             </div>
           </div>
-          <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-10">
-            {children}
+          <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
+            <div className="mx-auto w-full max-w-6xl">
+              {children}
+            </div>
           </main>
         </div>
       </div>

@@ -58,35 +58,23 @@ Supabase Dashboard の **「Authentication」** → **「URL Configuration」** 
 - Site URL: `http://localhost:3001` (開発環境) または本番URL
 - Redirect URLs: `http://localhost:3001/admin/auth/callback` を追加
 
-## 3. 環境変数の設定
+## 3. Supabase設定の確認
 
-`.env.local` ファイルに、許可するGoogleアカウントのメールアドレスを設定：
+`.env.local` ファイルに Supabase の公開キーが設定されていることを確認します：
 
 ```env
-# 管理者のメールアドレス（Googleアカウントのメールアドレス）
-ADMIN_EMAILS=your-email@gmail.com
-
-# Supabase設定（既に設定済みのはず）
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-**重要**:
-- `ADMIN_EMAILS` に、許可するGoogleアカウントのメールアドレスを設定
-- 複数の管理者がいる場合は、カンマ区切りで指定: `email1@gmail.com,email2@gmail.com`
+管理者権限は Supabase の `admin_users` テーブルで管理します。以下の手順を実施してください：
+
+1. Supabase Dashboard の **SQL Editor** で `supabase/sql/admin-users.sql` を実行し、テーブルと関数を作成
+2. Table Editor から `admin_users` テーブルを開き、管理者として許可する Google アカウントのメールアドレスを追加（小文字推奨）
 
 ## 4. RLSポリシーの更新
 
-`docs/supabase-admin-rls-strict.sql` を実行して、Googleアカウントのメールアドレスに更新してください。
-
-```sql
--- 例: Googleアカウントのメールアドレスに変更
-auth.jwt() ->> 'email' IN (
-  'your-email@gmail.com'
-  -- 複数の管理者がいる場合は追加:
-  -- , 'another-admin@gmail.com'
-)
-```
+`supabase/sql/supabase-admin-rls-strict.sql` を Supabase の SQL Editor で実行し、`admin_users` に登録されているメールアドレスのユーザーだけが書き込みできるようにします。
 
 ## 5. 動作確認
 
@@ -101,7 +89,7 @@ auth.jwt() ->> 'email' IN (
 
 4. Googleアカウントでログイン
 
-5. 環境変数に設定したメールアドレスと一致する場合のみ、管理画面にアクセスできます
+5. `admin_users` テーブルにメールアドレスが登録されている場合のみ、管理画面にアクセスできます
 
 ## 6. レート制限について
 
@@ -121,9 +109,9 @@ auth.jwt() ->> 'email' IN (
 
 ### 「このアカウントには管理画面へのアクセス権限がありません」と表示される
 
-1. `.env.local` の `ADMIN_EMAILS` に、ログインしたGoogleアカウントのメールアドレスが含まれているか確認
-2. メールアドレスの大文字小文字が一致しているか確認
-3. 環境変数を変更した場合は、開発サーバーを再起動
+1. `admin_users` テーブルに対象メールアドレスが登録されているか確認
+2. メールアドレスを追加した後は、一度ログアウトしてから再度 Google でログイン
+3. `supabase/sql/supabase-admin-rls-strict.sql` を最新状態で適用しているか確認
 
 ### レート制限エラーが表示される
 

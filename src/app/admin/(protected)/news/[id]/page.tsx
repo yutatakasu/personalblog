@@ -9,7 +9,7 @@ export default async function AdminNewsEditPage({
 }) {
   const { id } = await params;
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: newsItem, error } = await supabase
     .from("news")
     .select("*")

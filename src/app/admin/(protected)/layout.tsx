@@ -1,17 +1,11 @@
 import { redirect } from "next/navigation";
-import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
+import { isAdminUser } from "@/lib/supabase/admin-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-function getAdminEmails(): string[] {
-  return (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((email) => email.trim())
-    .filter((email) => email.length > 0);
-}
 
 export default async function AdminProtectedLayout({
   children,
@@ -22,25 +16,22 @@ export default async function AdminProtectedLayout({
     redirect("/admin/setup");
   }
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const {
-    data: { session },
+    data: { user },
     error,
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getUser();
 
   if (error) {
-    console.error("Failed to get admin session:", error);
+    console.error("Failed to get admin user:", error);
     redirect("/admin/login");
   }
 
-  if (!session) {
+  if (!user) {
     redirect("/admin/login");
   }
 
-  const userEmail = session.user.email;
-  const adminEmails = getAdminEmails();
-
-  if (adminEmails.length > 0 && (!userEmail || !adminEmails.includes(userEmail))) {
+  if (!(await isAdminUser(supabase, user))) {
     redirect("/admin/login?error=unauthorized");
   }
 

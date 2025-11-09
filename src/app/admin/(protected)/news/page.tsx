@@ -3,7 +3,7 @@ import { NewsList } from "@/components/admin/NewsList";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export default async function AdminNewsPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: newsItems, error } = await supabase
     .from("news")
     .select("*")
