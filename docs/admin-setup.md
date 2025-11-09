@@ -21,12 +21,10 @@
 ```env
 # 管理者のメールアドレス（カンマ区切りで複数指定可能）
 ADMIN_EMAILS=admin@atlas.inc,another-admin@atlas.inc
-NEXT_PUBLIC_ADMIN_EMAILS=admin@atlas.inc,another-admin@atlas.inc
 ```
 
 **注意**: 
-- `ADMIN_EMAILS` はサーバー側で使用（`src/app/admin/layout.tsx`）
-- `NEXT_PUBLIC_ADMIN_EMAILS` はクライアント側で使用（`src/components/admin/AdminLayout.tsx`、`src/app/admin/login/page.tsx`）
+- `ADMIN_EMAILS` はサーバー側で使用（`src/app/admin/(protected)/layout.tsx`）
 - 両方設定する必要があります
 
 ### 1.3 RLS ポリシーの設定
@@ -72,7 +70,7 @@ auth.jwt() ->> 'email' IN (
 1. **フロントエンド側のチェック**:
    - ログインページで管理者メールアドレスをチェック
    - 管理画面のレイアウトで管理者メールアドレスをチェック
-   - 環境変数 `ADMIN_EMAILS` または `NEXT_PUBLIC_ADMIN_EMAILS` に設定されたメールアドレスのみアクセス可能
+   - 環境変数 `ADMIN_EMAILS` に設定されたメールアドレスのみアクセス可能
 
 2. **データベース側のチェック（RLS）**:
    - Supabase の RLS ポリシーで、特定のメールアドレスのみが書き込み可能
@@ -152,7 +150,7 @@ Supabase Storage を使用した画像アップロード機能を実装予定で
 **現在の実装では、以下の2つのチェックでアクセスを制御しています：**
 
 1. **環境変数によるチェック**:
-   - `.env.local` の `ADMIN_EMAILS` と `NEXT_PUBLIC_ADMIN_EMAILS` に設定されたメールアドレスのみが管理画面にアクセス可能
+   - `.env.local` の `ADMIN_EMAILS` に設定されたメールアドレスのみが管理画面にアクセス可能
    - この設定を変更するには、コードの変更と再デプロイが必要
 
 2. **RLSポリシーによるチェック**:
@@ -174,12 +172,12 @@ Supabase Storage を使用した画像アップロード機能を実装予定で
 
 1. メールアドレスとパスワードが正しいか確認
 2. Supabase Dashboard でユーザーが作成されているか確認
-3. `.env.local` の `ADMIN_EMAILS` と `NEXT_PUBLIC_ADMIN_EMAILS` にメールアドレスが設定されているか確認
+3. `.env.local` の `ADMIN_EMAILS` にメールアドレスが設定されているか確認
 4. ブラウザのコンソールでエラーを確認
 
 ### 「アクセス権限がありません」と表示される
 
-1. `.env.local` の `ADMIN_EMAILS` と `NEXT_PUBLIC_ADMIN_EMAILS` に、ログインしようとしているメールアドレスが含まれているか確認
+1. `.env.local` の `ADMIN_EMAILS` に、ログインしようとしているメールアドレスが含まれているか確認
 2. `docs/supabase-admin-rls-strict.sql` のメールアドレスが正しく設定されているか確認
 3. 環境変数を変更した場合は、開発サーバーを再起動
 

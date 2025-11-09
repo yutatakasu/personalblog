@@ -6,9 +6,12 @@ import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [
-  "admin@atlas.inc",
-];
+function getAdminEmails(): string[] {
+  return (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim())
+    .filter((email) => email.length > 0);
+}
 
 export default async function AdminProtectedLayout({
   children,
@@ -35,7 +38,9 @@ export default async function AdminProtectedLayout({
   }
 
   const userEmail = session.user.email;
-  if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
+  const adminEmails = getAdminEmails();
+
+  if (adminEmails.length > 0 && (!userEmail || !adminEmails.includes(userEmail))) {
     redirect("/admin/login?error=unauthorized");
   }
 

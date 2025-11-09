@@ -10,8 +10,7 @@ export function createServerSupabaseClient() {
       get(name: string) {
         try {
           return cookies().get(name)?.value;
-        } catch (error) {
-          console.warn("Supabase cookie get failed", error);
+        } catch {
           return undefined;
         }
       },

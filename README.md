@@ -41,7 +41,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `ADMIN_EMAILS`
-  - `NEXT_PUBLIC_ADMIN_EMAILS`
 - ローカル開発では Vercel CLI を使って同じ値を同期できます。
   ```bash
   npm i -g vercel

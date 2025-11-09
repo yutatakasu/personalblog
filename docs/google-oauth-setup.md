@@ -65,15 +65,14 @@ Supabase Dashboard の **「Authentication」** → **「URL Configuration」** 
 ```env
 # 管理者のメールアドレス（Googleアカウントのメールアドレス）
 ADMIN_EMAILS=your-email@gmail.com
-NEXT_PUBLIC_ADMIN_EMAILS=your-email@gmail.com
 
 # Supabase設定（既に設定済みのはず）
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-**重要**: 
-- `ADMIN_EMAILS` と `NEXT_PUBLIC_ADMIN_EMAILS` に、許可するGoogleアカウントのメールアドレスを設定
+**重要**:
+- `ADMIN_EMAILS` に、許可するGoogleアカウントのメールアドレスを設定
 - 複数の管理者がいる場合は、カンマ区切りで指定: `email1@gmail.com,email2@gmail.com`
 
 ## 4. RLSポリシーの更新
@@ -122,7 +121,7 @@ auth.jwt() ->> 'email' IN (
 
 ### 「このアカウントには管理画面へのアクセス権限がありません」と表示される
 
-1. `.env.local` の `ADMIN_EMAILS` と `NEXT_PUBLIC_ADMIN_EMAILS` に、ログインしたGoogleアカウントのメールアドレスが含まれているか確認
+1. `.env.local` の `ADMIN_EMAILS` に、ログインしたGoogleアカウントのメールアドレスが含まれているか確認
 2. メールアドレスの大文字小文字が一致しているか確認
 3. 環境変数を変更した場合は、開発サーバーを再起動
 

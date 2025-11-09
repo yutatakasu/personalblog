@@ -30,19 +30,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // 管理者チェック（メールアドレスで判定）
-      const adminEmails =
-        process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [
-          "admin@atlas.inc",
-        ];
-      const userEmail = session.user.email;
-
-      if (!userEmail || !adminEmails.includes(userEmail)) {
-        router.push("/admin/login?error=unauthorized");
-        return;
-      }
-
-      setUserEmail(userEmail);
+      setUserEmail(session.user.email ?? null);
       setLoading(false);
     };
 
