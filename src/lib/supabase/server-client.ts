@@ -1,0 +1,26 @@
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+export function createServerSupabaseClient() {
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      get(name: string) {
+        try {
+          return cookies().get(name)?.value;
+        } catch (error) {
+          console.warn("Supabase cookie get failed", error);
+          return undefined;
+        }
+      },
+      set() {
+        // Server Components では cookie の書き込みが許可されていないため no-op
+      },
+      remove() {
+        // Server Components では cookie の削除が許可されていないため no-op
+      },
+    },
+  });
+}

@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { adminSupabase } from "@/lib/supabase/admin";
 import { NewsList } from "@/components/admin/NewsList";
+import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export default async function AdminNewsPage() {
-  const { data: newsItems, error } = await adminSupabase
+  const supabase = createServerSupabaseClient();
+  const { data: newsItems, error } = await supabase
     .from("news")
     .select("*")
     .order("date", { ascending: false });

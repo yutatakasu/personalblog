@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function AuthCallbackPage() {
           setError(
             errorDescription
               ? decodeURIComponent(errorDescription)
-              : "認証に失敗しました。",
+              : "認証に失敗しました。"
           );
           setLoading(false);
           return;
@@ -31,6 +31,7 @@ export default function AuthCallbackPage() {
 
         // codeがある場合は、セッションを交換
         let session;
+        const adminSupabase = getAdminSupabaseClient();
         if (code) {
           const {
             data: { session: exchangedSession },
@@ -38,7 +39,13 @@ export default function AuthCallbackPage() {
           } = await adminSupabase.auth.exchangeCodeForSession(code);
 
           if (exchangeError || !exchangedSession) {
-            setError("認証コードの交換に失敗しました。");
+            console.error(
+              "Supabase exchangeCodeForSession error",
+              exchangeError
+            );
+            setError(
+              exchangeError?.message || "認証コードの交換に失敗しました。"
+            );
             setLoading(false);
             return;
           }
@@ -51,7 +58,10 @@ export default function AuthCallbackPage() {
           } = await adminSupabase.auth.getSession();
 
           if (sessionError || !existingSession) {
-            setError("認証コードが取得できませんでした。");
+            console.error("Supabase getSession error", sessionError);
+            setError(
+              sessionError?.message || "認証コードが取得できませんでした。"
+            );
             setLoading(false);
             return;
           }
@@ -59,10 +69,9 @@ export default function AuthCallbackPage() {
         }
 
         // 管理者チェック（環境変数に設定されたメールアドレスのみ）
-        const adminEmails =
-          process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [
-            "admin@atlas.inc",
-          ];
+        const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(
+          ","
+        ).map((email) => email.trim()) || ["admin@atlas.inc"];
         const userEmail = session.user.email;
 
         if (!userEmail || !adminEmails.includes(userEmail)) {
@@ -76,7 +85,7 @@ export default function AuthCallbackPage() {
           method: "DELETE",
         });
 
-        router.push("/admin/news");
+        router.push("/admin/hub");
         router.refresh();
       } catch (err) {
         setError("認証処理中にエラーが発生しました。");
@@ -118,4 +127,3 @@ export default function AuthCallbackPage() {
 
   return null;
 }
-

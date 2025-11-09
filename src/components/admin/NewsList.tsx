@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 import { useRouter } from "next/navigation";
 
 type NewsItem = {
@@ -28,6 +28,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
 
     setDeletingId(id);
     try {
+      const adminSupabase = getAdminSupabaseClient();
       const { error } = await adminSupabase.from("news").delete().eq("id", id);
 
       if (error) {
