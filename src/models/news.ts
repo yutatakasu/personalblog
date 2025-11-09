@@ -1,10 +1,23 @@
+export type ContentBlock =
+  | {
+      type: "paragraph";
+      text: string;
+    }
+  | {
+      type: "image";
+      src: string;
+      alt: string;
+    };
+
 export type NewsItem = {
   id: string;
   title: string;
+  subtitle?: string;
   date: string;
   thumbnailSrc: string;
   thumbnailAlt: string;
   link: string;
+  content: ContentBlock[];
   summary?: string;
   tag?: string;
 };
@@ -17,10 +30,21 @@ export const defaultNewsItems: NewsItem[] = [
   {
     id: "atlas-os-v2-release",
     title: "Atlas OS v2 を正式リリース",
+    subtitle: "長期記憶に最適化した新機能を追加",
     date: "2025.09.12",
     thumbnailSrc: "/members_far_from.jpg",
     thumbnailAlt: "Atlas OS v2 product interface preview",
     link: "/news/atlas-os-v2-release",
+    content: [
+      {
+        type: "paragraph",
+        text: "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
+      },
+      {
+        type: "paragraph",
+        text: "Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。",
+      },
+    ],
     summary:
       "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
     tag: "Product Update",
@@ -32,6 +56,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members.jpg",
     thumbnailAlt: "Atlas と三井物産の共同プロジェクトイメージ",
     link: "/news/mitsui-collaboration",
+    content: [
+      {
+        type: "paragraph",
+        text: "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
+      },
+    ],
     summary:
       "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
     tag: "Partnership",
@@ -43,6 +73,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/trees_and_sky.jpg",
     thumbnailAlt: "Series A funding announcement",
     link: "/news/series-a-funding",
+    content: [
+      {
+        type: "paragraph",
+        text: "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
+      },
+    ],
     summary:
       "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
     tag: "Funding",
@@ -54,6 +90,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members_far_from.jpg",
     thumbnailAlt: "Atlas team reviewing roadmap diagrams",
     link: "/news/memory-layer-roadmap",
+    content: [
+      {
+        type: "paragraph",
+        text: "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
+      },
+    ],
     summary:
       "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
     tag: "Product",
@@ -65,6 +107,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members.jpg",
     thumbnailAlt: "Researchers collaborating in the Kyoto lab",
     link: "/news/kyoto-research-lab",
+    content: [
+      {
+        type: "paragraph",
+        text: "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
+      },
+    ],
     summary:
       "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
     tag: "R&D",
@@ -76,6 +124,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/trees_and_sky.jpg",
     thumbnailAlt: "Conference hall for AI governance forum",
     link: "/news/ai-governance-forum",
+    content: [
+      {
+        type: "paragraph",
+        text: "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
+      },
+    ],
     summary:
       "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
     tag: "Event",

@@ -2,19 +2,34 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 import Image from "next/image";
+import type { ContentBlock } from "@/models";
+
+const contentBlockSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("paragraph"),
+    text: z.string().min(1, "段落の内容を入力してください"),
+  }),
+  z.object({
+    type: z.literal("image"),
+    src: z.string().min(1, "画像URLを入力してください"),
+    alt: z.string().min(1, "画像の説明を入力してください"),
+  }),
+]);
 
 const newsSchema = z.object({
   id: z.string().min(1, "IDは必須です"),
   title: z.string().min(1, "タイトルは必須です"),
+  subtitle: z.string().optional(),
   date: z.string().min(1, "日付は必須です"),
   thumbnailSrc: z.string().min(1, "サムネイル画像は必須です"),
   thumbnailAlt: z.string().min(1, "画像の説明は必須です"),
   link: z.string().min(1, "リンクは必須です"),
+  content: z.array(contentBlockSchema).min(1, "少なくとも1つのコンテンツブロックが必要です"),
   summary: z.string().optional(),
   tag: z.string().optional(),
 });
@@ -25,10 +40,12 @@ type NewsFormProps = {
   initialData?: {
     id: string;
     title: string;
+    subtitle?: string;
     date: string;
     thumbnail_src: string;
     thumbnail_alt: string;
     link: string;
+    content?: ContentBlock[];
     summary?: string;
     tag?: string;
   };
@@ -45,6 +62,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     setValue,
     watch,
@@ -54,14 +72,31 @@ export function NewsForm({ initialData }: NewsFormProps) {
       ? {
           id: initialData.id,
           title: initialData.title,
+          subtitle: initialData.subtitle || "",
           date: initialData.date,
           thumbnailSrc: initialData.thumbnail_src,
           thumbnailAlt: initialData.thumbnail_alt,
           link: initialData.link,
+          content: initialData.content || [{ type: "paragraph", text: "" }],
           summary: initialData.summary || "",
           tag: initialData.tag || "",
         }
-      : undefined,
+      : {
+          content: [{ type: "paragraph", text: "" }],
+          subtitle: "",
+          summary: "",
+          tag: "",
+        },
+  });
+
+  const {
+    fields: contentFields,
+    append: appendContent,
+    remove: removeContent,
+    move: moveContent,
+  } = useFieldArray({
+    control,
+    name: "content",
   });
 
   const thumbnailSrc = watch("thumbnailSrc");
@@ -75,10 +110,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
       const newsData = {
         id: data.id,
         title: data.title,
+        subtitle: data.subtitle || null,
         date: data.date,
         thumbnail_src: data.thumbnailSrc,
         thumbnail_alt: data.thumbnailAlt,
         link: data.link,
+        content: data.content,
         summary: data.summary || null,
         tag: data.tag || null,
       };
@@ -150,6 +187,21 @@ export function NewsForm({ initialData }: NewsFormProps) {
           placeholder="Atlas OS v2 を正式リリース"
         />
         {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="subtitle" className="mb-2 block text-sm font-medium text-neutral-700">
+          サブタイトル
+        </label>
+        <input
+          id="subtitle"
+          {...register("subtitle")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="長期記憶に最適化した新機能を追加"
+        />
+        {errors.subtitle && (
+          <p className="mt-1 text-sm text-red-600">{errors.subtitle.message}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -243,17 +295,131 @@ export function NewsForm({ initialData }: NewsFormProps) {
       </div>
 
       <div>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-sm font-medium text-neutral-700">
+            内容 <span className="text-red-500">*</span>
+          </label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => appendContent({ type: "paragraph", text: "" })}
+              className="text-sm text-neutral-600 underline"
+            >
+              + 段落を追加
+            </button>
+            <button
+              type="button"
+              onClick={() => appendContent({ type: "image", src: "", alt: "" })}
+              className="text-sm text-neutral-600 underline"
+            >
+              + 画像を追加
+            </button>
+          </div>
+        </div>
+        <div className="space-y-4">
+          {contentFields.map((field, index) => {
+            const blockType = watch(`content.${index}.type`);
+            return (
+              <div
+                key={field.id}
+                className="rounded-lg border border-neutral-200 bg-neutral-50 p-4"
+              >
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-medium text-neutral-500">
+                    {blockType === "paragraph" ? "段落" : "画像"} ({index + 1})
+                  </span>
+                  <div className="flex gap-2">
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => moveContent(index, index - 1)}
+                        className="text-xs text-neutral-600 underline"
+                      >
+                        上へ
+                      </button>
+                    )}
+                    {index < contentFields.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => moveContent(index, index + 1)}
+                        className="text-xs text-neutral-600 underline"
+                      >
+                        下へ
+                      </button>
+                    )}
+                    {contentFields.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeContent(index)}
+                        className="text-xs text-red-600 underline"
+                      >
+                        削除
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {blockType === "paragraph" ? (
+                  <textarea
+                    {...register(`content.${index}.text` as const)}
+                    rows={4}
+                    className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                    placeholder="段落の内容を入力してください"
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    <input
+                      {...register(`content.${index}.src` as const)}
+                      className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                      placeholder="/path/to/image.jpg"
+                    />
+                    <input
+                      {...register(`content.${index}.alt` as const)}
+                      className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                      placeholder="画像の説明"
+                    />
+                    {watch(`content.${index}.src`) && (
+                      <div className="relative h-32 w-full overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+                        <Image
+                          src={watch(`content.${index}.src`)}
+                          alt={watch(`content.${index}.alt`) || "Preview"}
+                          fill
+                          sizes="100%"
+                          className="object-cover"
+                          onError={() => {}}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+                {errors.content?.[index] && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.content[index]?.message || "エラーがあります"}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {errors.content && (
+          <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>
+        )}
+      </div>
+
+      <div>
         <label htmlFor="summary" className="mb-2 block text-sm font-medium text-neutral-700">
-          概要
+          概要（一覧表示用）
         </label>
         <textarea
           id="summary"
           {...register("summary")}
-          rows={4}
+          rows={3}
           className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
           placeholder="長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。"
         />
         {errors.summary && <p className="mt-1 text-sm text-red-600">{errors.summary.message}</p>}
+        <p className="mt-1 text-xs text-neutral-500">
+          ニュース一覧ページで表示される短い概要です（オプション）
+        </p>
       </div>
 
       <div className="flex gap-4">
@@ -275,4 +441,3 @@ export function NewsForm({ initialData }: NewsFormProps) {
     </form>
   );
 }
-

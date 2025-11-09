@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { NewsForm } from "@/components/admin/NewsForm";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
+import type { ContentBlock } from "@/models";
 
 export default async function AdminNewsEditPage({
   params,
@@ -28,7 +29,14 @@ export default async function AdminNewsEditPage({
       </div>
 
       <div className="rounded-lg border border-neutral-200 bg-white p-6">
-        <NewsForm initialData={newsItem} />
+        <NewsForm
+          initialData={{
+            ...newsItem,
+            thumbnail_src: newsItem.thumbnail_src,
+            thumbnail_alt: newsItem.thumbnail_alt,
+            content: (newsItem.content as ContentBlock[]) || [],
+          }}
+        />
       </div>
     </div>
   );

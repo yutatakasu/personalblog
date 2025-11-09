@@ -55,8 +55,8 @@
 
 Supabase Dashboard の **「Authentication」** → **「URL Configuration」** で、以下のリダイレクトURLが設定されていることを確認：
 
-- Site URL: `http://localhost:3001` (開発環境) または本番URL
-- Redirect URLs: `http://localhost:3001/admin/auth/callback` を追加
+- Site URL: `http://localhost:3000` (開発環境) または本番URL
+- Redirect URLs: `http://localhost:3000/admin/auth/callback` を追加
 
 ## 3. Supabase設定の確認
 
@@ -67,23 +67,31 @@ NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
+**重要**: 環境変数 `ADMIN_EMAILS` は使用しません。管理者権限は `admin_users` テーブルで管理します。
+
+## 4. 管理者リストの設定
+
 管理者権限は Supabase の `admin_users` テーブルで管理します。以下の手順を実施してください：
 
 1. Supabase Dashboard の **SQL Editor** で `supabase/sql/admin-users.sql` を実行し、テーブルと関数を作成
-2. Table Editor から `admin_users` テーブルを開き、管理者として許可する Google アカウントのメールアドレスを追加（小文字推奨）
+2. Table Editor から `admin_users` テーブルを開き、管理者として許可する Google アカウントのメールアドレスを追加
+   - メールアドレスは小文字で登録することを推奨（関数内で自動的に正規化されます）
+   - 複数人いる場合は1行ずつメールアドレスを追加
 
-## 4. RLSポリシーの更新
+## 5. RLSポリシーの設定
 
 `supabase/sql/supabase-admin-rls-strict.sql` を Supabase の SQL Editor で実行し、`admin_users` に登録されているメールアドレスのユーザーだけが書き込みできるようにします。
 
-## 5. 動作確認
+このSQLファイルは、`is_admin_user(auth.jwt() ->> 'email')` を使用してJWTからメールアドレスを取得し、`admin_users` テーブルに存在するかチェックします。
+
+## 6. 動作確認
 
 1. 開発サーバーを起動：
    ```bash
    pnpm dev
    ```
 
-2. `http://localhost:3001/admin/login` にアクセス
+2. `http://localhost:3000/admin/login` にアクセス
 
 3. **「Googleでログイン」** ボタンをクリック
 
@@ -91,7 +99,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 5. `admin_users` テーブルにメールアドレスが登録されている場合のみ、管理画面にアクセスできます
 
-## 6. レート制限について
+## 7. レート制限について
 
 ログイン試行回数が5回を超えると、30分間ブロックされます。これはブルートフォース攻撃を防ぐための保護機能です。
 
@@ -99,7 +107,28 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 - **時間ウィンドウ**: 15分
 - **ブロック時間**: 30分
 
-## 7. トラブルシューティング
+## 8. 認証フローの詳細
+
+### 8.1 認証の流れ
+
+1. **ログイン開始**: `/admin/login` で「Googleでログイン」ボタンをクリック
+2. **OAuth認証**: Google の認証画面にリダイレクト
+3. **認証完了**: Google が `/admin/auth/callback?code=...` にリダイレクト
+4. **セッション交換**: Route Handler (`/admin/auth/callback/route.ts`) で認証コードをセッションに交換
+5. **管理者チェック**: `is_admin_user` RPC関数で `admin_users` テーブルを確認
+6. **Cookie保存**: セッション情報をCookieに保存
+7. **リダイレクト**: `/admin/hub` にリダイレクト
+8. **レイアウトチェック**: `/admin/(protected)/layout.tsx` で `getUser()` を使用してユーザーを取得し、再度管理者権限を確認
+9. **管理画面表示**: 管理者の場合のみ管理画面を表示
+
+### 8.2 セキュリティの仕組み
+
+- **Route Handler**: OAuth認証完了後、Cookieにセッション情報を書き込む（Server ComponentではCookieの書き込みができないため）
+- **`getUser()` の使用**: `getSession()` の代わりに `getUser()` を使用して、Supabase Authサーバーで認証データを検証
+- **二重チェック**: Route Handler と サーバー側レイアウトの両方で管理者権限を確認
+- **RLSポリシー**: データベース側でも `is_admin_user` 関数を使用して書き込み権限を制御
+
+## 9. トラブルシューティング
 
 ### Google OAuthが動作しない
 

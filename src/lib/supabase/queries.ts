@@ -1,6 +1,7 @@
 import { supabase } from "./server";
 import type {
   NewsItem,
+  ContentBlock,
   Position,
   TeamMember,
   InvestorGroup,
@@ -24,10 +25,12 @@ export async function getAllNews(): Promise<NewsItem[]> {
     data?.map((item) => ({
       id: item.id,
       title: item.title,
+      subtitle: item.subtitle ?? undefined,
       date: item.date,
       thumbnailSrc: item.thumbnail_src,
       thumbnailAlt: item.thumbnail_alt,
       link: item.link,
+      content: (item.content as ContentBlock[]) ?? [],
       summary: item.summary ?? undefined,
       tag: item.tag ?? undefined,
     })) ?? []
@@ -57,10 +60,12 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
   return {
     id: data.id,
     title: data.title,
+    subtitle: data.subtitle ?? undefined,
     date: data.date,
     thumbnailSrc: data.thumbnail_src,
     thumbnailAlt: data.thumbnail_alt,
     link: data.link,
+    content: (data.content as ContentBlock[]) ?? [],
     summary: data.summary ?? undefined,
     tag: data.tag ?? undefined,
   };
