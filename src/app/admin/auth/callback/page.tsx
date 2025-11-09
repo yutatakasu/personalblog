@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -31,6 +31,7 @@ export default function AuthCallbackPage() {
 
         // codeがある場合は、セッションを交換
         let session;
+        const adminSupabase = getAdminSupabaseClient();
         if (code) {
           const {
             data: { session: exchangedSession },
@@ -38,7 +39,13 @@ export default function AuthCallbackPage() {
           } = await adminSupabase.auth.exchangeCodeForSession(code);
 
           if (exchangeError || !exchangedSession) {
-            setError("認証コードの交換に失敗しました。");
+            console.error(
+              "Supabase exchangeCodeForSession error",
+              exchangeError
+            );
+            setError(
+              exchangeError?.message || "認証コードの交換に失敗しました。"
+            );
             setLoading(false);
             return;
           }
@@ -51,7 +58,10 @@ export default function AuthCallbackPage() {
           } = await adminSupabase.auth.getSession();
 
           if (sessionError || !existingSession) {
-            setError("認証コードが取得できませんでした。");
+            console.error("Supabase getSession error", sessionError);
+            setError(
+              sessionError?.message || "認証コードが取得できませんでした。"
+            );
             setLoading(false);
             return;
           }

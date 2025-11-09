@@ -1,8 +1,7 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,7 +19,7 @@ export default async function AdminProtectedLayout({
     redirect("/admin/setup");
   }
 
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerSupabaseClient();
   const {
     data: { session },
     error,

@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NewsForm } from "@/components/admin/NewsForm";
+import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export default async function AdminNewsEditPage({
   params,
@@ -10,7 +9,7 @@ export default async function AdminNewsEditPage({
 }) {
   const { id } = await params;
 
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerSupabaseClient();
   const { data: newsItem, error } = await supabase
     .from("news")
     .select("*")

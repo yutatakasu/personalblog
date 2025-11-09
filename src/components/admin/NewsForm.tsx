@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 import Image from "next/image";
 
 const newsSchema = z.object({
@@ -71,6 +71,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     setError(null);
 
     try {
+      const adminSupabase = getAdminSupabaseClient();
       const newsData = {
         id: data.id,
         title: data.title,
