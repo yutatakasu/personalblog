@@ -1,10 +1,7 @@
 import { supabase } from "./server";
-import type {
-  NewsItem,
-  Position,
-  TeamMember,
-  InvestorGroup,
-} from "@/models";
+import type { NewsItem, ContentBlock, Position, TeamMember, InvestorGroup } from "@/models";
+import { normalizeNewsContent } from "@/models/news";
+import { normalizeSupporters } from "@/lib/supporters/normalize";
 
 /**
  * News 関連のクエリ関数
@@ -24,10 +21,12 @@ export async function getAllNews(): Promise<NewsItem[]> {
     data?.map((item) => ({
       id: item.id,
       title: item.title,
+      subtitle: item.subtitle ?? undefined,
       date: item.date,
       thumbnailSrc: item.thumbnail_src,
       thumbnailAlt: item.thumbnail_alt,
       link: item.link,
+      content: normalizeNewsContent(item.content),
       summary: item.summary ?? undefined,
       tag: item.tag ?? undefined,
     })) ?? []
@@ -57,10 +56,12 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
   return {
     id: data.id,
     title: data.title,
+    subtitle: data.subtitle ?? undefined,
     date: data.date,
     thumbnailSrc: data.thumbnail_src,
     thumbnailAlt: data.thumbnail_alt,
     link: data.link,
+    content: normalizeNewsContent(data.content),
     summary: data.summary ?? undefined,
     tag: data.tag ?? undefined,
   };
@@ -191,7 +192,12 @@ export async function getAllInvestorGroups(): Promise<InvestorGroup[]> {
   return (
     data?.map((item) => ({
       category: item.category,
-      supporters: item.supporters as string[],
+      supporters: normalizeSupporters(item.supporters).map((supporter) => ({
+        name: supporter.name,
+        title: supporter.title ?? undefined,
+        focus: supporter.focus ?? undefined,
+        imageSrc: supporter.image_src ?? undefined,
+      })),
     })) ?? []
   );
 }

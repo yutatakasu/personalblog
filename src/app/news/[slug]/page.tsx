@@ -63,6 +63,9 @@ export default async function NewsDetailPage({
             <h1 className="font-serif text-3xl leading-tight text-neutral-900 sm:text-4xl">
               {item.title}
             </h1>
+            {item.subtitle && (
+              <p className="text-lg text-neutral-600">{item.subtitle}</p>
+            )}
             {item.tag ? (
               <span className="inline-block rounded-full border border-neutral-200 px-3 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500">
                 {item.tag}
@@ -81,20 +84,27 @@ export default async function NewsDetailPage({
               />
             </div>
           </div>
-          <article className="mt-12 space-y-6 text-neutral-700">
-            {item.summary ? (
-              <p className="text-base leading-relaxed">{item.summary}</p>
-            ) : null}
-            <p className="text-base leading-relaxed">
-              Atlas は Memory as a Service
-              の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。
-              {
-                " 本記事の詳細は現在準備中ですが、最新情報は順次更新してまいります。"
-              }
-            </p>
-            <p className="text-base leading-relaxed">
-              詳細については、お問い合わせフォームまたはパートナーチームまでご連絡ください。
-            </p>
+          <article className="mt-12 space-y-10 text-neutral-700">
+            {item.content.map((block, index) => (
+              <div key={index} className="space-y-6">
+                {block.text.trim().length > 0 ? (
+                  <p className="text-base leading-relaxed">{block.text}</p>
+                ) : null}
+                {block.image ? (
+                  <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
+                    <div className="relative h-64 w-full sm:h-80">
+                      <Image
+                        src={block.image.src}
+                        alt={block.image.alt}
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </article>
           <div className="mt-12">
             <Link

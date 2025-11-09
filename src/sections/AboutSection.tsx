@@ -8,8 +8,8 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 
 import type { InvestorGroup } from "@/models/backed_by";
-import type { TeamMember } from "@/models/team";
 import type { NewsItem } from "@/models/news";
+import type { TeamMember } from "@/models/team";
 
 type TeamCardProps = {
   member: TeamMember;
@@ -220,8 +220,23 @@ export function AboutSection({
                 </h3>
                 <ul className="mt-3 space-y-2 text-xs text-neutral-600 sm:mt-4 sm:space-y-3 sm:text-sm">
                   {group.supporters.map((supporter) => (
-                    <li key={supporter} className="leading-relaxed">
-                      {supporter}
+                    <li
+                      key={supporter.name}
+                      className="space-y-0.5 leading-relaxed"
+                    >
+                      <p className="font-medium text-neutral-800">
+                        {supporter.name}
+                      </p>
+                      {supporter.title ? (
+                        <p className="text-[0.7rem] uppercase tracking-widest text-neutral-400">
+                          {supporter.title}
+                        </p>
+                      ) : null}
+                      {supporter.focus ? (
+                        <p className="text-[0.75rem] text-neutral-500">
+                          {supporter.focus}
+                        </p>
+                      ) : null}
                     </li>
                   ))}
                 </ul>
