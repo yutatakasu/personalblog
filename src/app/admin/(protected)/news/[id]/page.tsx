@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { adminSupabase } from "@/lib/supabase/admin";
 import { NewsForm } from "@/components/admin/NewsForm";
+import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 
 export default async function AdminNewsEditPage({
   params,
@@ -9,7 +9,8 @@ export default async function AdminNewsEditPage({
 }) {
   const { id } = await params;
 
-  const { data: newsItem, error } = await adminSupabase
+  const supabase = createServerSupabaseClient();
+  const { data: newsItem, error } = await supabase
     .from("news")
     .select("*")
     .eq("id", id)
