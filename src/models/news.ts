@@ -1,12 +1,143 @@
+export type NewsContentImage = {
+  src: string;
+  alt: string;
+};
+
+export type ContentBlock = {
+  text: string;
+  image?: NewsContentImage | null;
+};
+
 export type NewsItem = {
   id: string;
   title: string;
+  subtitle?: string;
   date: string;
   thumbnailSrc: string;
   thumbnailAlt: string;
   link: string;
+  content: ContentBlock[];
   summary?: string;
   tag?: string;
+};
+
+type LegacyParagraphBlock = {
+  type: "paragraph";
+  text: string;
+};
+
+type LegacyImageBlock = {
+  type: "image";
+  src: string;
+  alt: string;
+};
+
+type LegacyContentBlock = LegacyParagraphBlock | LegacyImageBlock;
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const isNewsContentImage = (value: unknown): value is NewsContentImage =>
+  isRecord(value) && typeof value.src === "string" && typeof value.alt === "string";
+
+const isContentBlock = (value: unknown): value is ContentBlock =>
+  isRecord(value) &&
+  typeof value.text === "string" &&
+  (!("image" in value) ||
+    value.image === null ||
+    value.image === undefined ||
+    isNewsContentImage(value.image));
+
+const isLegacyParagraphBlock = (value: unknown): value is LegacyParagraphBlock =>
+  isRecord(value) && value.type === "paragraph" && typeof value.text === "string";
+
+const isLegacyImageBlock = (value: unknown): value is LegacyImageBlock =>
+  isRecord(value) &&
+  value.type === "image" &&
+  typeof value.src === "string" &&
+  typeof value.alt === "string";
+
+const normalizeImage = (image: unknown): NewsContentImage | null => {
+  if (!image) {
+    return null;
+  }
+
+  if (isNewsContentImage(image)) {
+    return {
+      src: image.src,
+      alt: image.alt,
+    };
+  }
+
+  return null;
+};
+
+const normalizeText = (text: unknown): string => (typeof text === "string" ? text : "");
+
+const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
+  raw
+    .filter((block): block is ContentBlock => isContentBlock(block))
+    .map((block) => ({
+      text: normalizeText(block.text),
+      image:
+        block.image === undefined
+          ? null
+          : normalizeImage(block.image) ?? null,
+    }))
+    .filter((block) => block.text.trim().length > 0 || block.image);
+
+const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
+  const normalized: ContentBlock[] = [];
+
+  for (let index = 0; index < raw.length; index += 1) {
+    const current = raw[index];
+
+    if (isLegacyParagraphBlock(current)) {
+      const next = raw[index + 1];
+      if (isLegacyImageBlock(next)) {
+        normalized.push({
+          text: normalizeText(current.text),
+          image: {
+            src: next.src,
+            alt: next.alt,
+          },
+        });
+        index += 1;
+      } else {
+        normalized.push({
+          text: normalizeText(current.text),
+          image: null,
+        });
+      }
+      continue;
+    }
+
+    if (isLegacyImageBlock(current)) {
+      normalized.push({
+        text: "",
+        image: {
+          src: current.src,
+          alt: current.alt,
+        },
+      });
+    }
+  }
+
+  return normalized.filter(
+    (block) => block.text.trim().length > 0 || (block.image && block.image.src.trim().length > 0),
+  );
+};
+
+export const normalizeNewsContent = (raw: unknown): ContentBlock[] => {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  if (raw.every((block) => isContentBlock(block))) {
+    return normalizeNewContentBlocks(raw);
+  }
+
+  return normalizeLegacyContentBlocks(raw);
 };
 
 /**
@@ -17,10 +148,21 @@ export const defaultNewsItems: NewsItem[] = [
   {
     id: "atlas-os-v2-release",
     title: "Atlas OS v2 を正式リリース",
+    subtitle: "長期記憶に最適化した新機能を追加",
     date: "2025.09.12",
     thumbnailSrc: "/members_far_from.jpg",
     thumbnailAlt: "Atlas OS v2 product interface preview",
     link: "/news/atlas-os-v2-release",
+    content: [
+      {
+        text: "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
+        image: null,
+      },
+      {
+        text: "Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。",
+        image: null,
+      },
+    ],
     summary:
       "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
     tag: "Product Update",
@@ -32,6 +174,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members.jpg",
     thumbnailAlt: "Atlas と三井物産の共同プロジェクトイメージ",
     link: "/news/mitsui-collaboration",
+    content: [
+      {
+        text: "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
+        image: null,
+      },
+    ],
     summary:
       "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
     tag: "Partnership",
@@ -43,6 +191,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/trees_and_sky.jpg",
     thumbnailAlt: "Series A funding announcement",
     link: "/news/series-a-funding",
+    content: [
+      {
+        text: "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
+        image: null,
+      },
+    ],
     summary:
       "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
     tag: "Funding",
@@ -54,6 +208,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members_far_from.jpg",
     thumbnailAlt: "Atlas team reviewing roadmap diagrams",
     link: "/news/memory-layer-roadmap",
+    content: [
+      {
+        text: "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
+        image: null,
+      },
+    ],
     summary:
       "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
     tag: "Product",
@@ -65,6 +225,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/members.jpg",
     thumbnailAlt: "Researchers collaborating in the Kyoto lab",
     link: "/news/kyoto-research-lab",
+    content: [
+      {
+        text: "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
+        image: null,
+      },
+    ],
     summary:
       "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
     tag: "R&D",
@@ -76,6 +242,12 @@ export const defaultNewsItems: NewsItem[] = [
     thumbnailSrc: "/trees_and_sky.jpg",
     thumbnailAlt: "Conference hall for AI governance forum",
     link: "/news/ai-governance-forum",
+    content: [
+      {
+        text: "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
+        image: null,
+      },
+    ],
     summary:
       "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
     tag: "Event",

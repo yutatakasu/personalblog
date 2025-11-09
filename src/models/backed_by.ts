@@ -1,6 +1,13 @@
+export type Supporter = {
+  name: string;
+  title?: string;
+  focus?: string;
+  imageSrc?: string;
+};
+
 export type InvestorGroup = {
   category: string;
-  supporters: string[];
+  supporters: Supporter[];
 };
 
 /**
@@ -11,22 +18,71 @@ export const defaultInvestorGroups: InvestorGroup[] = [
   {
     category: "Lead Investors",
     supporters: [
-      "North Star Ventures",
-      "FutureFabric Capital",
-      "Tokyo Frontier Fund",
+      {
+        name: "North Star Ventures",
+        title: "Lead Investor",
+        focus: "Atlas の初期シードから継続的に支援しています。",
+        imageSrc: "/investors/north-star.png",
+      },
+      {
+        name: "FutureFabric Capital",
+        title: "Strategic Partner",
+        focus: "エンタープライズ市場への拡張をリード。",
+        imageSrc: "/investors/future-fabric.png",
+      },
+      {
+        name: "Tokyo Frontier Fund",
+        title: "Corporate Fund",
+        focus: "製造業ユースケースの共同開発を推進。",
+        imageSrc: "/investors/tokyo-frontier.png",
+      },
     ],
   },
   {
     category: "Strategic Angels",
     supporters: [
-      "Ayumi Tanaka (ex-DeepMind)",
-      "Ken Carter (ex-Snowflake)",
-      "Yui Nakamura (LayerX)",
+      {
+        name: "Ayumi Tanaka",
+        title: "ex-DeepMind",
+        focus: "AI安全領域のリサーチアドバイザー。",
+        imageSrc: "/investors/ayumi-tanaka.png",
+      },
+      {
+        name: "Ken Carter",
+        title: "ex-Snowflake",
+        focus: "データプラットフォーム戦略を支援。",
+        imageSrc: "/investors/ken-carter.png",
+      },
+      {
+        name: "Yui Nakamura",
+        title: "LayerX",
+        focus: "ガバメント領域での導入をコンサルティング。",
+        imageSrc: "/investors/yui-nakamura.png",
+      },
     ],
   },
   {
     category: "Enterprise Partners",
-    supporters: ["Mitsuba Holdings", "Pacific Systems", "Global Insight Group"],
+    supporters: [
+      {
+        name: "Mitsuba Holdings",
+        title: "Manufacturing Partner",
+        focus: "グローバル工場の記憶レイヤー統合を実証。",
+        imageSrc: "/investors/mitsuba.png",
+      },
+      {
+        name: "Pacific Systems",
+        title: "Systems Integrator",
+        focus: "業務データ統合とAIオーケストレーション基盤を導入。",
+        imageSrc: "/investors/pacific-systems.png",
+      },
+      {
+        name: "Global Insight Group",
+        title: "Consulting Alliance",
+        focus: "エンタープライズ分析チーム向けのテンプレートを共同開発。",
+        imageSrc: "/investors/global-insight.png",
+      },
+    ],
   },
 ];
 

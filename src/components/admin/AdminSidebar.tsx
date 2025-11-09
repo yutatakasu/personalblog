@@ -1,170 +1,63 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useMemo } from "react";
+import {
+  Briefcase,
+  Command,
+  Handshake,
+  LayoutDashboard,
+  LogOut,
+  Newspaper,
+  Users,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 type AdminSidebarProps = {
   onLogout: () => Promise<void> | void;
   userEmail?: string | null;
+  userName?: string | null;
+  userAvatarUrl?: string | null;
   className?: string;
   variant?: "desktop" | "mobile";
   onNavigate?: () => void;
+  isCollapsed?: boolean;
 };
+
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+        fill="#4285F4"
+      />
+      <path
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+        fill="#34A853"
+      />
+      <path
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+        fill="#EA4335"
+      />
+    </svg>
+  );
+}
 
 type NavItem = {
   href: string;
   label: string;
-  description?: string;
-  icon: ReactNode;
+  icon: typeof LayoutDashboard;
 };
-
-function SidebarIcon({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 shadow-sm">
-      {children}
-    </span>
-  );
-}
-
-function DashboardIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="7" height="9" x="3" y="3" rx="1" />
-      <rect width="7" height="5" x="14" y="3" rx="1" />
-      <rect width="7" height="9" x="14" y="12" rx="1" />
-      <rect width="7" height="5" x="3" y="15" rx="1" />
-    </svg>
-  );
-}
-
-function NewsIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
-      <path d="M12 4v18" />
-      <path d="M8 8h2" />
-      <path d="M8 12h2" />
-      <path d="M8 16h2" />
-      <path d="M14 8h2" />
-      <path d="M14 12h2" />
-      <path d="M14 16h2" />
-    </svg>
-  );
-}
-
-function PositionsIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 12V5h12v7" />
-      <path d="M6 19h12" />
-      <path d="M10 9h4" />
-      <path d="m12 5 .4-2h3.2l.4 2" />
-      <path d="M5 12h6v7H5z" />
-    </svg>
-  );
-}
-
-function TeamIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M8 21v-2a4 4 0 0 1 3-3.87" />
-      <circle cx="12" cy="7" r="4" />
-      <path d="M6 8a3 3 0 1 1-2-2" />
-      <path d="M18 8a3 3 0 1 0 2-2" />
-    </svg>
-  );
-}
-
-function InvestorsIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M7 21h10" />
-      <path d="M12 17v4" />
-      <path d="M9 7h6" />
-      <path d="M10 11h4" />
-      <path d="M5 21V6L12 3l7 3v15" />
-    </svg>
-  );
-}
-
-function ExternalIcon() {
-  return (
-    <svg
-      className="h-3.5 w-3.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" x2="21" y1="14" y2="3" />
-    </svg>
-  );
-}
-
-function LogoutIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" x2="9" y1="12" y2="12" />
-    </svg>
-  );
-}
 
 const navSections: { title: string; items: NavItem[] }[] = [
   {
@@ -172,13 +65,8 @@ const navSections: { title: string; items: NavItem[] }[] = [
     items: [
       {
         href: "/admin/hub",
-        label: "ダッシュボード",
-        description: "更新状況と主要リンク",
-        icon: (
-          <SidebarIcon>
-            <DashboardIcon />
-          </SidebarIcon>
-        ),
+        label: "ハブ",
+        icon: LayoutDashboard,
       },
     ],
   },
@@ -188,42 +76,22 @@ const navSections: { title: string; items: NavItem[] }[] = [
       {
         href: "/admin/news",
         label: "ニュース",
-        description: "ニュース配信の管理",
-        icon: (
-          <SidebarIcon>
-            <NewsIcon />
-          </SidebarIcon>
-        ),
+        icon: Newspaper,
       },
       {
         href: "/admin/positions",
         label: "募集情報",
-        description: "採用ポジション管理",
-        icon: (
-          <SidebarIcon>
-            <PositionsIcon />
-          </SidebarIcon>
-        ),
+        icon: Briefcase,
       },
       {
         href: "/admin/team",
         label: "チームメンバー",
-        description: "メンバー紹介の編集",
-        icon: (
-          <SidebarIcon>
-            <TeamIcon />
-          </SidebarIcon>
-        ),
+        icon: Users,
       },
       {
-        href: "/admin/investors",
-        label: "投資家グループ",
-        description: "支援者リスト管理",
-        icon: (
-          <SidebarIcon>
-            <InvestorsIcon />
-          </SidebarIcon>
-        ),
+        href: "/admin/supporters",
+        label: "サポーター",
+        icon: Handshake,
       },
     ],
   },
@@ -232,160 +100,269 @@ const navSections: { title: string; items: NavItem[] }[] = [
 export function AdminSidebar({
   onLogout,
   userEmail,
+  userName,
+  userAvatarUrl,
   className,
   variant = "desktop",
   onNavigate,
+  isCollapsed = false,
 }: AdminSidebarProps) {
   const pathname = usePathname();
-
-  const activeMap = useMemo(() => {
-    return new Map(
-      navSections
-        .flatMap((section) => section.items)
-        .map((item) => {
-          const isActive =
-            pathname === item.href ||
-            (pathname?.startsWith(item.href) && item.href !== "/admin/hub");
-          return [item.href, isActive] as const;
-        }),
-    );
-  }, [pathname]);
-
+  const collapsed = variant === "desktop" && isCollapsed;
   const isMobile = variant === "mobile";
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const displayName =
+    (userName && userName.trim().length > 0 ? userName : undefined) ??
+    (userEmail && userEmail.split("@")[0]) ??
+    "Google アカウント";
+  const displayEmail = userEmail ?? "admin@atlas.inc";
+
+  useEffect(() => {
+    if (!showLogoutDialog) {
+      return undefined;
+    }
+
+    if (typeof document === "undefined") {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showLogoutDialog]);
+
+  useEffect(() => {
+    if (!showLogoutDialog) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowLogoutDialog(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showLogoutDialog]);
+
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true);
+  };
+
+  const handleLogoutConfirm = async () => {
+    setIsLoggingOut(true);
+    try {
+      await onLogout();
+      // ログアウトが成功した場合、リダイレクトが行われるので
+      // ここで状態をリセットする必要はない（window.location.hrefでリダイレクトされる）
+    } catch (error) {
+      console.error("Logout error:", error);
+      // エラーが発生した場合でも、リダイレクトが行われる可能性がある
+      // エラーが発生した場合はダイアログを閉じる
+      setIsLoggingOut(false);
+      setShowLogoutDialog(false);
+    }
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutDialog(false);
+  };
+
+  const desktopWidthClass = collapsed ? "md:w-20" : "md:w-72";
   const rootClassName = [
-    "flex flex-col border-neutral-200 bg-white",
-    isMobile ? "h-full w-full" : "hidden h-screen w-72 border-r lg:flex",
+    "flex flex-col bg-white/85 text-neutral-700 backdrop-blur",
+    isMobile
+      ? "h-full w-full max-w-xs shadow-xl"
+      : [
+          "hidden h-screen md:flex md:border-r md:border-neutral-200 md:shadow-sm",
+          desktopWidthClass,
+        ].join(" "),
     className ?? "",
   ]
     .join(" ")
     .trim();
 
+  const renderNavItem = (item: NavItem) => {
+    const isActive =
+      pathname === item.href ||
+      (pathname?.startsWith(item.href) && item.href !== "/admin/hub");
+
+    const linkClassName = [
+      "group flex items-center rounded-lg text-sm font-medium transition",
+      collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5",
+      isActive
+        ? "bg-neutral-900 text-white shadow-sm"
+        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
+    ].join(" ");
+
+    const Icon = item.icon;
+
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={linkClassName}
+        onClick={() => {
+          if (onNavigate) {
+            onNavigate();
+          }
+        }}
+        title={collapsed ? item.label : undefined}
+      >
+        <Icon
+          className={[
+            "h-4 w-4",
+            isActive
+              ? "text-white"
+              : "text-neutral-500 group-hover:text-neutral-900",
+          ].join(" ")}
+        />
+        {collapsed ? (
+          <span className="sr-only">{item.label}</span>
+        ) : (
+          <span className="truncate">{item.label}</span>
+        )}
+      </Link>
+    );
+  };
+
   return (
     <aside className={rootClassName}>
-      <div className="flex h-16 items-center border-b border-neutral-200 px-6">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-neutral-500">Atlas</p>
-          <p className="font-serif text-xl text-neutral-900">Admin Hub</p>
-        </div>
+      <div className="border-b border-neutral-200 px-3 py-4">
+        <Link
+          href="/admin/hub"
+          className="flex items-center gap-3 rounded-lg px-2 py-2 transition hover:bg-neutral-100"
+          onClick={() => {
+            if (onNavigate) {
+              onNavigate();
+            }
+          }}
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-900 text-white">
+            <Command className="h-4 w-4" />
+          </div>
+          {collapsed ? null : (
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-neutral-900">Atlas</p>
+              <p className="text-xs text-neutral-500">Admin</p>
+            </div>
+          )}
+        </Link>
       </div>
 
-      <div className="border-b border-neutral-200 px-6 py-4">
-        <div className="relative">
-          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-neutral-400">
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m21 21-4.35-4.35" />
-              <circle cx="11" cy="11" r="8" />
-            </svg>
-          </span>
-          <input
-            type="search"
-            placeholder="セクションを検索"
-            className="h-10 w-full rounded-lg border border-neutral-200 bg-neutral-50 pl-10 pr-3 text-sm text-neutral-700 outline-none transition focus:border-neutral-900 focus:bg-white focus:ring-2 focus:ring-neutral-900/10"
-          />
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="space-y-8">
+      <div className="flex-1 overflow-y-auto px-3 py-5">
+        <nav className="space-y-6">
           {navSections.map((section) => (
-            <div key={section.title}>
-              <p className="px-2 text-xs font-semibold uppercase tracking-widest text-neutral-400">
-                {section.title}
-              </p>
-              <div className="mt-3 space-y-2">
-                {section.items.map((item) => {
-                  const isActive = activeMap.get(item.href);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={[
-                        "flex items-center gap-3 rounded-xl border border-transparent bg-white p-3 text-left transition",
-                        isActive
-                          ? "border-neutral-900 bg-neutral-900 text-white shadow-sm"
-                          : "hover:border-neutral-200 hover:bg-neutral-50",
-                      ].join(" ")}
-                      onClick={() => {
-                        if (onNavigate) {
-                          onNavigate();
-                        }
-                      }}
-                    >
-                      <span
-                        className={[
-                          "flex h-12 w-12 items-center justify-center rounded-lg border text-neutral-600",
-                          isActive
-                            ? "border-neutral-800 bg-neutral-800/70 text-white"
-                            : "border-neutral-200 bg-white",
-                        ].join(" ")}
-                      >
-                        {item.icon}
-                      </span>
-                      <span className="flex-1">
-                        <span
-                          className={[
-                            "block text-sm font-medium",
-                            isActive ? "text-white" : "text-neutral-900",
-                          ].join(" ")}
-                        >
-                          {item.label}
-                        </span>
-                        {item.description ? (
-                          <span
-                            className={[
-                              "mt-1 block text-xs",
-                              isActive ? "text-neutral-100/80" : "text-neutral-500",
-                            ].join(" ")}
-                          >
-                            {item.description}
-                          </span>
-                        ) : null}
-                      </span>
-                    </Link>
-                  );
-                })}
+            <div key={section.title} className="space-y-2">
+              {collapsed ? null : (
+                <p className="px-1 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+                  {section.title}
+                </p>
+              )}
+              <div className="space-y-1">
+                {section.items.map(renderNavItem)}
               </div>
             </div>
           ))}
-        </div>
+        </nav>
       </div>
 
-      <div className="space-y-3 border-t border-neutral-200 px-6 py-5">
-        <Link
-          href="/"
-          className="group flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-700 transition hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-        >
-          <span>Atlas サイトへ</span>
-          <span className="text-neutral-400 group-hover:text-white">
-            <ExternalIcon />
-          </span>
-        </Link>
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-xs text-neutral-500">ログイン中</p>
-              <p className="mt-1 text-sm font-medium text-neutral-900">
-                {userEmail ?? "admin@atlas.inc"}
+      <div className="border-t border-neutral-200 px-3 py-4">
+        {collapsed ? (
+          <button
+            type="button"
+            onClick={handleLogoutClick}
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+            disabled={isLoggingOut}
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="sr-only">ログアウト</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white/80 p-3 shadow-sm">
+            {userAvatarUrl ? (
+              <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg">
+                <Image
+                  src={userAvatarUrl}
+                  alt={displayName}
+                  width={36}
+                  height={36}
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                <GoogleIcon className="h-5 w-5" title={displayName} />
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <GoogleIcon className="h-3 w-3 text-neutral-400" />
+                <p className="truncate text-sm font-medium text-neutral-900">
+                  {displayName}
+                </p>
+              </div>
+              <p className="truncate text-xs text-neutral-500">
+                {displayEmail}
               </p>
             </div>
             <button
-              onClick={() => onLogout()}
-              className="inline-flex items-center gap-1 rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+              type="button"
+              onClick={handleLogoutClick}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="ログアウト"
+              disabled={isLoggingOut}
             >
-              <LogoutIcon />
-              <span>ログアウト</span>
+              <LogOut className="h-4 w-4" />
             </button>
           </div>
-        </div>
+        )}
       </div>
+
+      {showLogoutDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={handleLogoutCancel}
+            aria-hidden="true"
+          />
+          <div className="relative w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-6 shadow-2xl">
+            <h3 className="text-lg font-semibold text-neutral-900">
+              ログアウトしますか？
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600">
+              ログアウトすると、管理画面にアクセスできなくなります。再度ログインする必要があります。
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={handleLogoutCancel}
+                disabled={isLoggingOut}
+                className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                キャンセル
+              </button>
+              <button
+                type="button"
+                onClick={handleLogoutConfirm}
+                disabled={isLoggingOut}
+                className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoggingOut ? "ログアウト中..." : "ログアウト"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
