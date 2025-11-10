@@ -1,55 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atlas HP – 開発ガイド
 
-## Getting Started
+社内向け Atlas ホームページの開発フローをまとめたドキュメントです。新しく参画したメンバーでも迷わないよう、環境構築からリリースまでの手順を記載しています。
 
-First, run the development server:
+---
+
+## 1. 事前準備
+
+| ツール     | バージョン目安 | 備考                              |
+| ---------- | -------------- | --------------------------------- |
+| Node.js    | 20.x           | `asdf` や `nvm` でインストール    |
+| pnpm       | 8.x 以上       | `npm i -g pnpm`                   |
+| Git        | 2.x 以上       | GitHub へアクセスできる状態にする |
+| Vercel CLI | 任意           | Preview への手動デプロイに利用    |
+
+Supabase CLI も devDependencies に含まれているので、リポジトリ内で `pnpm exec supabase` が使えます。
+
+---
+
+## 2. リポジトリのセットアップ
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <REPO_URL>
+cd atlas-hp
+pnpm install             # 依存パッケージの導入
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`pnpm install` のタイミングで Supabase CLI の実体も展開されます。失敗する場合は `pnpm rebuild supabase` を試してください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 3. Supabase プロジェクト
 
-## Learn More
+プロジェクトは以下の 2 つに分かれています。
 
-To learn more about Next.js, take a look at the following resources:
+| 用途          | Supabase              | Next.js            | Vercel scope              |
+| ------------- | --------------------- | ------------------ | ------------------------- |
+| 開発・Preview | **dev プロジェクト**  | ローカル / Preview | `Development` / `Preview` |
+| 本番          | **prod プロジェクト** | Production         | `Production`              |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3-1. 必要な SQL
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Supabase Dashboard の SQL Editor で次のファイルを実行して構成を揃えます。
 
-## Deploy on Vercel
+1. `supabase/sql/supabase-schema.sql` – テーブル定義 & RLS
+2. `supabase/sql/admin-users.sql` – 管理者判定関数とテーブル
+3. `supabase/sql/storage-news-photos.sql`
+4. `supabase/sql/storage-team-photos.sql`
+5. `supabase/sql/storage-supporters-photos.sql`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3-2. 管理者アカウントの登録
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sql
+insert into admin_users (email)
+values ('your.email@example.com')
+on conflict (email) do nothing;
 
-## Environment Variables & Local Development
+select is_admin_user('your.email@example.com');  -- true になることを確認
+```
 
-- 本番・Preview 環境の環境変数は Vercel Project Settings → Environment Variables に登録してください。
-  - `NEXT_PUBLIC_SUPABASE_URL`
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- ローカル開発では Vercel CLI を使って同じ値を同期できます。
-  ```bash
-  npm i -g vercel
-  vercel login
-  vercel env pull .env.local        # Production 環境の値を取得
-  # Preview や Development を取得したい場合は --environment フラグを使用:
-  # vercel env pull .env.local --environment=preview
-  pnpm dev
-  ```
-- `.env.local` は `.gitignore` によりコミットされません。必要な人が各自で `vercel env pull` を実行してください。
-- 詳細なセットアップ手順は `docs/supabase-setup.md` と `docs/admin-setup.md` を参照してください（管理者権限は Supabase Authentication のユーザーメタデータで設定します）。
+---
 
-# atlas-hp
+## 4. 環境変数
+
+### 4-1. ローカル開発 (`.env.local`)
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=<dev Supabase の URL>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<dev Supabase の Anon key>
+
+# 必要に応じて
+# NEXT_PUBLIC_SUPABASE_NEWS_BUCKET=news-photos
+# NEXT_PUBLIC_SUPABASE_TEAM_BUCKET=team-photos
+# NEXT_PUBLIC_SUPABASE_SUPPORTERS_BUCKET=supporters-photos
+# NEXT_PUBLIC_SUPABASE_TEAM_FOLDER=dev
+```
+
+`.env.local` は `.gitignore` 済みです。Vercel CLI を使って同期する場合は `vercel env pull .env.local --environment=preview` を利用します。
+
+### 4-2. Vercel 側
+
+| scope                 | `NEXT_PUBLIC_SUPABASE_URL` | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
+| --------------------- | -------------------------- | ------------------------------- |
+| Development / Preview | dev プロジェクトを指定     | dev プロジェクトを指定          |
+| Production            | prod プロジェクトを指定    | prod プロジェクトを指定         |
+
+---
+
+## 5. Supabase Auth の URL 設定（dev プロジェクト）
+
+Preview とローカルで同じ dev Supabase を共有する場合は、環境に応じて **Site URL を切り替える運用** が必要です。
+
+| 作業モード     | Site URL                                                   | Redirect URLs                                                                                                    |
+| -------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| ローカル開発中 | `http://localhost:3000`                                    | `http://localhost:3000/admin/auth/callback`                                                                      |
+| Preview 確認時 | `https://atlas-hp-dev.vercel.app`（固定 Preview ドメイン） | `https://atlas-hp-dev.vercel.app/admin/auth/callback`<br>`https://atlas-hp-git-*.vercel.app/admin/auth/callback` |
+
+ローカルで十分動作確認したら、Preview を見る前に Site URL を Preview 用ドメインへ戻します。逆にローカル作業へ戻る際は再び `localhost` に切り替えます。
+
+> ワイルドカード付き Preview ドメインとローカルを完全に共存させることはできないため、この切り替え運用が必要です。
+
+---
+
+## 6. 開発フロー
+
+1. **ブランチ作成**
+
+   - `main` から `feature/<ticket>` を切る
+
+2. **ローカル開発**
+
+   - Supabase の Site URL を `http://localhost:3000` に設定
+   - `pnpm dev` で起動し、`http://localhost:3000` で動作確認
+   - 管理画面のログインが dev Supabase を参照することを確認 (`is_admin_user` が true)
+
+3. **Preview で QA**
+
+   - Supabase Site URL を Preview ドメインに変更
+   - ブランチを GitHub に push（または `pnpm exec vercel`）して Preview デプロイ
+   - Preview の `/admin/*` で動作確認
+
+4. **リリース**
+
+   - Pull Request をレビューし `main` にマージ
+   - Vercel が Production デプロイを実行
+   - 必要に応じて prod Supabase にマイグレーションを適用 (`pnpm exec supabase db push --profile prod`)
+
+5. **後片付け**
+   - ローカル作業へ戻る場合は dev Supabase の Site URL を `http://localhost:3000` に戻す
+
+---
+
+## 7. よく使うコマンド
+
+```bash
+pnpm dev                      # ローカル開発サーバー
+pnpm build                    # プロダクションビルド確認
+pnpm run supabase -- --help   # Supabase CLI のコマンド一覧
+pnpm exec supabase db diff    # スキーマ差分作成（要 profile）
+pnpm exec supabase db push    # スキーマ適用（要 profile）
+pnpm exec vercel              # Preview デプロイ
+pnpm exec vercel --prod       # Production デプロイ
+```
+
+---
+
+## 8. トラブルシューティング
+
+| 症状                                       | 確認項目                                                                    |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
+| ログイン後に別ドメインへ飛ぶ               | Supabase の Site URL が正しい環境に設定されているか                         |
+| 「管理者として登録されていない」           | `admin_users` にメールが登録されているか / `is_admin_user` が true を返すか |
+| 画像アップロードでバケットが無いと言われる | `storage-*.sql` を dev / prod それぞれのプロジェクトで実行済みか            |
+| Preview が本番 DB を参照する               | Vercel Preview scope の環境変数が dev Supabase を向いているか               |
+
+---
+
+詳細なセットアップ手順や RLS 方針は `docs/supabase-setup.md` および `docs/admin-setup.md` を参照してください。問題が解決しない場合は Slack の `#atlas-hp` チャンネルで相談してください。\*\*\* End Patch
