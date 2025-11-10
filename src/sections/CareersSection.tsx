@@ -1,14 +1,19 @@
 import Link from "next/link";
 
-import { positions } from "@/models/positions";
+import type { Position } from "@/models/positions";
 
-const highlightedPositions = positions.slice(0, 3);
+type CareersSectionProps = {
+  positions: Position[];
+};
 
-export function CareersSection() {
+const HIGHLIGHTED_POSITIONS_COUNT = 3;
+
+export function CareersSection({ positions }: CareersSectionProps) {
+  const highlightedPositions = positions.slice(0, HIGHLIGHTED_POSITIONS_COUNT);
   return (
     <section
       id="careers"
-      className="snap-start snap-always flex min-h-svh items-center justify-center bg-white"
+      className="snap-start snap-always flex min-h-svh items-center justify-center bg-[#f8f7f4]"
     >
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-24 2xl:py-28">
         <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-12 lg:gap-16 md:items-start">

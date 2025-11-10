@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS news (
 );
 
 -- コンテンツ構造の説明
-COMMENT ON COLUMN news.content IS '段落ごとの配列。各要素は { text: string, image?: { src: string, alt: string } } の形式';
+COMMENT ON COLUMN news.content IS '段落ごとの配列。各要素は { title: string, text: string, image?: { src: string, alt: string } | null } の形式';
 
 -- Positions テーブル
 CREATE TABLE IF NOT EXISTS positions (
