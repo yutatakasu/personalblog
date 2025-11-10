@@ -16,8 +16,36 @@ function AdminLoginPageInner() {
 
   // URLパラメータからエラーを取得
   useEffect(() => {
-    if (searchParams.get("error") === "unauthorized") {
-      setError("このアカウントには管理画面へのアクセス権限がありません。");
+    const errorParam = searchParams.get("error");
+    const errorDescription = searchParams.get("error_description");
+    const rateLimitMessage = searchParams.get("rate_limit_message");
+
+    if (rateLimitMessage) {
+      setRateLimitError(decodeURIComponent(rateLimitMessage));
+    } else if (errorParam === "unauthorized") {
+      setError(
+        errorDescription
+          ? decodeURIComponent(errorDescription)
+          : "このアカウントには管理画面へのアクセス権限がありません。",
+      );
+    } else if (errorParam === "rate_limited") {
+      setRateLimitError(
+        errorDescription
+          ? decodeURIComponent(errorDescription)
+          : "ログイン試行回数が上限に達しました。しばらくしてから再試行してください。",
+      );
+    } else if (errorParam === "exchange_failed") {
+      setError(
+        errorDescription
+          ? decodeURIComponent(errorDescription)
+          : "認証に失敗しました。もう一度お試しください。",
+      );
+    } else if (errorParam === "oauth_start_failed") {
+      setError(
+        errorDescription
+          ? decodeURIComponent(errorDescription)
+          : "ログインの開始に失敗しました。もう一度お試しください。",
+      );
     }
   }, [searchParams]);
 
@@ -35,30 +63,9 @@ function AdminLoginPageInner() {
     setLoading(true);
 
     try {
-      // レート制限チェック
-      const rateLimitResponse = await fetch("/api/admin/login/rate-limit", {
-        method: "POST",
-      });
-
-      if (!rateLimitResponse.ok) {
-        const rateLimitData = await rateLimitResponse.json();
-        setRateLimitError(rateLimitData.message);
-        setLoading(false);
-        return;
-      }
-
-      const adminSupabase = getAdminSupabaseClient();
-      const { error: signInError } = await adminSupabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/admin/auth/callback`,
-        },
-      });
-
-      if (signInError) {
-        setError(signInError.message);
-        setLoading(false);
-      }
+      // サーバー側の /admin/login/start ルートにリダイレクト
+      // サーバー側でレート制限チェックが行われる
+      window.location.href = "/admin/login/start";
     } catch (_err) {
       setError("ログインに失敗しました。もう一度お試しください。");
       setLoading(false);
