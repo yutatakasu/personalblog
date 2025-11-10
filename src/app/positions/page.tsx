@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -17,6 +18,7 @@ const workStyleLabel = {
 } as const;
 
 export default async function PositionsPage() {
+  noStore();
   const positions = await getPositions();
   const firstPositionId = positions[0]?.id ?? "ai-systems-engineer";
 
