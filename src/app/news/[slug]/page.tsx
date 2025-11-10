@@ -84,12 +84,20 @@ export default async function NewsDetailPage({
               />
             </div>
           </div>
-          <article className="mt-12 space-y-10 text-neutral-700">
+          <article className="mt-12 space-y-12 text-neutral-700">
             {item.content.map((block, index) => {
               const blockKey =
-                block.image?.src ?? `${block.text.slice(0, 24)}-${index}`;
+                block.image?.src ??
+                `${block.title}-${block.text.slice(0, 24)}-${index}`;
               return (
-                <div key={blockKey} className="space-y-6">
+                <section key={blockKey} className="space-y-6">
+                  {block.title.trim().length > 0 ? (
+                    <header>
+                      <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl">
+                        {block.title}
+                      </h2>
+                    </header>
+                  ) : null}
                   {block.text.trim().length > 0 ? (
                     <p className="text-base leading-relaxed">{block.text}</p>
                   ) : null}
@@ -106,7 +114,7 @@ export default async function NewsDetailPage({
                       </div>
                     </div>
                   ) : null}
-                </div>
+                </section>
               );
             })}
           </article>

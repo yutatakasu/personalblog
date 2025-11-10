@@ -4,8 +4,15 @@ export type NewsContentImage = {
 };
 
 export type ContentBlock = {
+  title: string;
   text: string;
   image?: NewsContentImage | null;
+};
+
+type ContentBlockCandidate = {
+  title?: string;
+  text: string;
+  image?: NewsContentImage | null | undefined;
 };
 
 export type NewsItem = {
@@ -40,13 +47,34 @@ const isNewsContentImage = (value: unknown): value is NewsContentImage =>
   typeof value.src === "string" &&
   typeof value.alt === "string";
 
-const isContentBlock = (value: unknown): value is ContentBlock =>
-  isRecord(value) &&
-  typeof value.text === "string" &&
-  (!("image" in value) ||
-    value.image === null ||
-    value.image === undefined ||
-    isNewsContentImage(value.image));
+const isNewContentBlockCandidate = (
+  value: unknown,
+): value is ContentBlockCandidate => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+
+  if (typeof record.text !== "string") {
+    return false;
+  }
+
+  if ("title" in record && typeof record.title !== "string") {
+    return false;
+  }
+
+  if (
+    "image" in record &&
+    record.image !== null &&
+    record.image !== undefined &&
+    !isNewsContentImage(record.image)
+  ) {
+    return false;
+  }
+
+  return true;
+};
 
 const isLegacyParagraphBlock = (
   value: unknown,
@@ -79,17 +107,29 @@ const normalizeImage = (image: unknown): NewsContentImage | null => {
 const normalizeText = (text: unknown): string =>
   typeof text === "string" ? text : "";
 
+const normalizeTitle = (title: unknown): string =>
+  typeof title === "string" ? title : "";
+
 const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
   raw
-    .filter((block): block is ContentBlock => isContentBlock(block))
+    .filter(
+      (block): block is ContentBlockCandidate =>
+        isNewContentBlockCandidate(block),
+    )
     .map((block) => ({
+      title: normalizeTitle(block.title),
       text: normalizeText(block.text),
       image:
         block.image === undefined
           ? null
           : (normalizeImage(block.image) ?? null),
     }))
-    .filter((block) => block.text.trim().length > 0 || block.image);
+    .filter(
+      (block) =>
+        block.title.trim().length > 0 ||
+        block.text.trim().length > 0 ||
+        block.image,
+    );
 
 const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
   const normalized: ContentBlock[] = [];
@@ -101,6 +141,7 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
       const next = raw[index + 1];
       if (isLegacyImageBlock(next)) {
         normalized.push({
+          title: "",
           text: normalizeText(current.text),
           image: {
             src: next.src,
@@ -110,6 +151,7 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
         index += 1;
       } else {
         normalized.push({
+          title: "",
           text: normalizeText(current.text),
           image: null,
         });
@@ -119,6 +161,7 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
 
     if (isLegacyImageBlock(current)) {
       normalized.push({
+        title: "",
         text: "",
         image: {
           src: current.src,
@@ -140,7 +183,7 @@ export const normalizeNewsContent = (raw: unknown): ContentBlock[] => {
     return [];
   }
 
-  if (raw.every((block) => isContentBlock(block))) {
+  if (raw.every((block) => isNewContentBlockCandidate(block))) {
     return normalizeNewContentBlocks(raw);
   }
 
@@ -162,10 +205,12 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/atlas-os-v2-release",
     content: [
       {
+        title: "アップデート概要",
         text: "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
         image: null,
       },
       {
+        title: "Atlas が提供する価値",
         text: "Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。",
         image: null,
       },
@@ -183,6 +228,7 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/mitsui-collaboration",
     content: [
       {
+        title: "共同プロジェクトの概要",
         text: "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
         image: null,
       },
@@ -200,6 +246,7 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/series-a-funding",
     content: [
       {
+        title: "資金調達の目的",
         text: "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
         image: null,
       },
@@ -217,6 +264,7 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/memory-layer-roadmap",
     content: [
       {
+        title: "ロードマップ公開の背景",
         text: "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
         image: null,
       },
@@ -234,6 +282,7 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/kyoto-research-lab",
     content: [
       {
+        title: "京都ラボ設立の狙い",
         text: "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
         image: null,
       },
@@ -251,6 +300,7 @@ export const defaultNewsItems: NewsItem[] = [
     link: "/news/ai-governance-forum",
     content: [
       {
+        title: "フォーラム登壇の内容",
         text: "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
         image: null,
       },

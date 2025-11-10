@@ -38,7 +38,8 @@ const resolveStoragePrefix = (bucket: string, folder?: string) =>
 
 const contentBlockSchema = z
   .object({
-    text: z.string().min(1, "段落の内容を入力してください"),
+    title: z.string().trim().min(1, "段落タイトルを入力してください"),
+    text: z.string().trim().min(1, "段落の内容を入力してください"),
     imageSrc: z.string().optional(),
     imageAlt: z.string().optional(),
   })
@@ -165,11 +166,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
           content:
             initialData.content && initialData.content.length > 0
               ? initialData.content.map((block) => ({
+                  title: block.title ?? "",
                   text: block.text ?? "",
                   imageSrc: block.image?.src ?? "",
                   imageAlt: block.image?.alt ?? "",
                 }))
-              : [{ text: "", imageSrc: "", imageAlt: "" }],
+              : [{ title: "", text: "", imageSrc: "", imageAlt: "" }],
           summary: initialData.summary ?? "",
           tag: initialData.tag ?? "",
         }
@@ -181,7 +183,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
           thumbnailSrc: "",
           thumbnailAlt: "",
           link: "",
-          content: [{ text: "", imageSrc: "", imageAlt: "" }],
+          content: [{ title: "", text: "", imageSrc: "", imageAlt: "" }],
           summary: "",
           tag: "",
         },
@@ -428,7 +430,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
   };
 
   const appendContentSection = () => {
-    appendContent({ text: "", imageSrc: "", imageAlt: "" });
+    appendContent({ title: "", text: "", imageSrc: "", imageAlt: "" });
     ensureContentStateLength(contentFields.length + 1);
   };
 
@@ -587,6 +589,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         }
 
         formattedContent.push({
+          title: block.title.trim(),
           text: block.text,
           image: imageSrc
             ? {
@@ -898,6 +901,25 @@ export function NewsForm({ initialData }: NewsFormProps) {
                     </div>
                   </div>
                   <div className="mt-4 space-y-4">
+                    <div>
+                      <label
+                        htmlFor={`content-title-${index}`}
+                        className="mb-1 block text-xs font-medium text-neutral-600"
+                      >
+                        段落タイトル <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id={`content-title-${index}`}
+                        {...register(`content.${index}.title` as const)}
+                        className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                        placeholder="段落タイトルを入力してください"
+                      />
+                      {errors.content?.[index]?.title && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.content[index]?.title?.message}
+                        </p>
+                      )}
+                    </div>
                     <div>
                       <textarea
                         {...register(`content.${index}.text` as const)}

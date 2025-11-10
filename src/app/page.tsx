@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { ScrollToAtlas } from "@/components/ScrollToAtlas";
 import { getInvestorGroups } from "@/models/backed_by";
 import { getNewsItems } from "@/models/news";
+import { getPositions } from "@/models/positions";
 import { getTeamMembers } from "@/models/team";
 import { AboutSection } from "@/sections/AboutSection";
 import { AtlasHero } from "@/sections/AtlasHero";
@@ -10,11 +11,13 @@ import { ContactSection } from "@/sections/ContactSection";
 import { ProductsSection } from "@/sections/ProductsSection";
 
 export default async function Home() {
-  const [newsItems, teamMembers, investorGroups] = await Promise.all([
-    getNewsItems(),
-    getTeamMembers(),
-    getInvestorGroups(),
-  ]);
+  const [newsItems, teamMembers, investorGroups, positions] =
+    await Promise.all([
+      getNewsItems(),
+      getTeamMembers(),
+      getInvestorGroups(),
+      getPositions(),
+    ]);
 
   return (
     <div className="min-h-screen">
@@ -28,7 +31,7 @@ export default async function Home() {
           teamMembers={teamMembers}
           investorGroups={investorGroups}
         />
-        <CareersSection />
+        <CareersSection positions={positions} />
         <ContactSection />
       </main>
     </div>

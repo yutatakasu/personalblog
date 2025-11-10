@@ -1,47 +1,66 @@
-const products = [
-  {
-    title: "Atlas OS",
-    description:
-      "企業全体でエージェントを統合するオペレーティングレイヤー。権限管理と知識共有を一元化します。",
-  },
-  {
-    title: "Atlas Studio",
-    description:
-      "ノーコードで業務特化の AI エージェントを設計・デプロイできるビルダー。リアルタイム監視と継続学習に対応。",
-  },
-  {
-    title: "Atlas Insights",
-    description:
-      "組織データを横断的に分析し、意思決定のトリガーとなるインサイトを通知します。",
-  },
+const productPositions = [
+  { column: 1, row: 1, offsetY: "-20px" },
+  { column: 2, row: 2, offsetY: "-60px" },
+  { column: 3, row: 1, offsetY: "-40px" },
 ];
+
+function ProductItem({
+  index,
+  position,
+}: {
+  index: number;
+  position?: { column: number; row: number; offsetY: string };
+}) {
+  return (
+    <div
+      className="flex flex-col items-center justify-center"
+      style={
+        position
+          ? {
+              gridColumnStart: position.column,
+              gridRowStart: position.row,
+              marginTop: position.offsetY,
+            }
+          : undefined
+      }
+    >
+      <div className="flex h-14 w-14 items-center justify-center sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24">
+        <div className="flex flex-col items-center justify-center gap-2 text-[#2a2a2a]/40">
+          <span className="text-4xl font-light sm:text-5xl md:text-6xl">?</span>
+          <span className="font-mono text-[0.5rem] uppercase tracking-[0.3em] sm:text-[0.55rem] md:text-xs">
+            coming soon...
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ProductsSection() {
   return (
     <section
       id="products"
-      className="snap-start snap-always flex min-h-svh items-center justify-center"
+      className="snap-start snap-always flex min-h-svh items-center justify-center bg-[#f8f7f4]"
     >
       <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:py-20 xl:py-24">
-        <p className="mb-6 text-left font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] text-black/40 sm:mb-8 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-10 md:text-xs lg:mb-12 xl:mb-14 xl:text-sm">
+        <p className="mb-6 text-center font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] text-[#2a2a2a]/40 sm:mb-8 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-10 md:text-xs lg:mb-12 xl:mb-14 xl:text-sm">
           Products
         </p>
-        <h2 className="mt-2 text-left font-serif text-xl text-black sm:mt-3 sm:text-2xl md:mt-4 md:text-3xl lg:mt-6 lg:text-5xl">
+        <h2 className="mt-2 text-center font-serif text-xl text-[#2a2a2a] sm:mt-3 sm:text-2xl md:mt-4 md:text-3xl lg:mt-6 lg:text-5xl">
           スケールする AI を支える、3 つのコアプロダクト
         </h2>
-        <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-2 sm:gap-6 md:mt-10 md:gap-8 lg:mt-12 lg:grid-cols-3 lg:gap-10">
-          {products.map((product) => (
-            <div
-              key={product.title}
-              className="border border-black/15 p-4 font-sans sm:p-5 md:p-6"
-            >
-              <h3 className="font-serif text-base font-semibold text-black sm:text-lg md:text-xl">
-                {product.title}
-              </h3>
-              <p className="mt-2 text-xs font-medium leading-relaxed text-black/70 sm:mt-3 sm:text-sm md:mt-4">
-                {product.description}
-              </p>
-            </div>
+        <div className="mt-6 grid grid-cols-2 gap-8 sm:mt-8 sm:gap-10 md:mt-10 md:gap-12 lg:hidden">
+          {[1, 2, 3].map((index) => (
+            <ProductItem key={index} index={index} />
+          ))}
+        </div>
+        <div className="mt-6 hidden w-full lg:grid lg:mt-12 xl:mt-14 grid-cols-3 grid-rows-2 gap-x-16 gap-y-12 xl:gap-x-20 xl:gap-y-14 justify-items-center">
+          {[1, 2, 3].map((index, i) => (
+            <ProductItem
+              key={index}
+              index={index}
+              position={productPositions[i]}
+            />
           ))}
         </div>
       </div>

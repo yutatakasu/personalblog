@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
@@ -65,7 +63,7 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 transition hover:border-neutral-300 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 sm:gap-4 sm:rounded-2xl sm:p-3"
+      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-[#f8f7f4] p-2.5 transition hover:border-neutral-300 hover:bg-[#f5f4f1] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:gap-4 sm:rounded-2xl sm:p-3"
     >
       <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:h-16 sm:w-24 sm:rounded-xl">
         <Image
@@ -142,7 +140,7 @@ export function AboutSection({
 
       <section
         id="about-team"
-        className="snap-start snap-always flex h-screen items-start justify-center bg-white text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center bg-[#f8f7f4] text-neutral-900 md:items-center"
       >
         <div className="w-full px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <div className="mx-auto max-w-6xl">
@@ -158,7 +156,7 @@ export function AboutSection({
                   type="button"
                   onClick={() => setIsTeamExpanded((previous) => !previous)}
                   aria-expanded={isTeamExpanded}
-                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
+                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-[#f8f7f4] text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
                 >
                   <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
                   <span className="sr-only">
@@ -199,7 +197,7 @@ export function AboutSection({
 
       <section
         id="about-backed"
-        className="snap-start snap-always flex h-screen items-start justify-center text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center bg-[#f8f7f4] text-neutral-900 md:items-center"
       >
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
@@ -213,7 +211,7 @@ export function AboutSection({
             {investorGroups.map((group) => (
               <div
                 key={group.category}
-                className="rounded-xl border border-neutral-200 bg-neutral-50 p-3 sm:rounded-2xl sm:p-4 md:p-6"
+                className="rounded-xl border border-neutral-200 bg-white/50 p-3 sm:rounded-2xl sm:p-4 md:p-6"
               >
                 <h3 className="font-serif text-base text-neutral-900 sm:text-lg">
                   {group.category}
@@ -248,7 +246,7 @@ export function AboutSection({
 
       <section
         id="about-news"
-        className="snap-start snap-always flex h-screen items-start justify-center text-neutral-900 md:items-center"
+        className="snap-start snap-always flex h-screen items-start justify-center bg-[#f8f7f4] text-neutral-900 md:items-center"
       >
         <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
           <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
