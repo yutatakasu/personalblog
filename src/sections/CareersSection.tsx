@@ -13,19 +13,19 @@ export function CareersSection({ positions }: CareersSectionProps) {
   return (
     <section
       id="careers"
-      className="snap-start snap-always flex min-h-svh items-center justify-center bg-[#f8f7f4]"
+      className="snap-start snap-always flex min-h-screen items-start justify-center bg-[#f8f7f4] md:items-center"
     >
-      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-24 2xl:py-28">
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20 xl:py-28 2xl:py-32">
         <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-12 lg:gap-16 md:items-start">
           <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
             <div className="space-y-3 sm:space-y-4 md:space-y-5">
-              <p className="font-mono uppercase tracking-[0.3em] text-[0.6rem] text-black/40 sm:text-[0.65rem] sm:tracking-[0.4em] md:text-xs">
+              <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-black/40 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
                 Careers
               </p>
-              <h2 className="font-serif text-2xl text-black sm:text-3xl md:text-4xl lg:text-5xl">
+              <h2 className="font-serif text-xl leading-snug text-black sm:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.1] xl:text-5xl">
                 Atlasに、温度のある視点を持ち込んでください。
               </h2>
-              <p className="text-xs text-black/65 sm:text-sm md:text-base">
+              <p className="text-xs leading-relaxed text-black/65 sm:text-sm md:text-base">
                 仕組みを研ぎ澄ましながらも、人が安心して挑戦できる余白を残したい——
                 そんな想いを大切にしています。
               </p>

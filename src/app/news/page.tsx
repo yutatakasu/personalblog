@@ -1,9 +1,11 @@
+import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 
 import { getNewsItems } from "@/models/news";
 
 export default async function NewsPage() {
+  noStore();
   const newsItems = await getNewsItems();
   return (
     <main className="min-h-svh bg-white text-neutral-900">
