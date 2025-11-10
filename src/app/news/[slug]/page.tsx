@@ -1,17 +1,15 @@
+import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getNewsItemById, getNewsItems } from "@/models/news";
+import { getNewsItemById } from "@/models/news";
 
 type NewsDetailPageParams = {
   slug: string;
 };
 
-export async function generateStaticParams() {
-  const newsItems = await getNewsItems();
-  return newsItems.map((item) => ({ slug: item.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -36,6 +34,7 @@ export default async function NewsDetailPage({
 }: {
   params: Promise<NewsDetailPageParams>;
 }) {
+  noStore();
   const { slug } = await params;
   const item = await getNewsItemById(slug);
 

@@ -96,7 +96,7 @@ export function AtlasHero() {
   return (
     <section
       id="atlas"
-      className="relative snap-start snap-always flex min-h-svh items-center justify-center text-center"
+      className="relative snap-start snap-always flex min-h-screen items-start justify-center text-center md:items-center"
     >
       <div className="flex flex-col items-center gap-2 px-4 py-8 font-mono text-black sm:gap-3 sm:px-6 sm:py-12 md:gap-4 md:py-16 lg:py-20 xl:py-24">
         <h2 className="text-xl uppercase tracking-[0.25em] text-black/50 sm:text-2xl sm:tracking-[0.3em] md:text-4xl md:tracking-[0.4em] lg:text-5xl">
@@ -108,7 +108,7 @@ export function AtlasHero() {
             className="text-lg tracking-wide sm:text-xl md:text-2xl lg:text-4xl"
             delayProfile="uniform"
           />
-          <div className="relative">
+          <div className="relative flex flex-col items-center gap-3 md:block md:gap-0">
             <Typewriter
               text="For the benefit of humanity"
               startDelay={1800}
@@ -117,7 +117,7 @@ export function AtlasHero() {
             />
             <Link
               href="/positions#open-roles"
-              className="absolute left-full top-full ml-6 mt-4 inline-flex items-center gap-2 whitespace-nowrap font-serif text-base text-[#2a2a2a]/70 transition hover:text-[#2a2a2a] sm:ml-8 sm:mt-5 sm:text-lg md:ml-10 md:mt-6 md:text-xl lg:ml-12 lg:mt-8 lg:text-2xl"
+              className="mt-3 inline-flex items-center gap-2 whitespace-nowrap font-serif text-base text-[#2a2a2a]/70 transition hover:text-[#2a2a2a] md:absolute md:left-full md:top-full md:ml-6 md:mt-4 md:mt-0 sm:text-lg md:text-lg lg:ml-10 lg:text-xl xl:ml-12 xl:text-2xl"
             >
               Join our team
               <span aria-hidden className="text-[#2a2a2a]/50">→</span>

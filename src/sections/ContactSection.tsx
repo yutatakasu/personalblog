@@ -6,7 +6,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative snap-start snap-always flex min-h-svh items-center justify-center text-white"
+      className="relative snap-start snap-always flex min-h-screen items-start justify-center text-white md:items-center"
     >
       <div className="absolute inset-0 overflow-hidden">
         <Image
@@ -22,13 +22,13 @@ export function ContactSection() {
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex h-full w-full items-center px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-28 md:px-8 md:py-16 md:pb-32 lg:py-20 lg:pb-36 xl:py-28 xl:pb-40 2xl:py-32 2xl:pb-44">
+      <div className="relative z-10 flex h-full w-full items-start px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-28 md:items-center md:px-8 md:py-16 md:pb-32 lg:px-10 lg:py-20 lg:pb-36 xl:py-28 xl:pb-40 2xl:py-32 2xl:pb-44">
         <div className="mx-auto w-full max-w-5xl text-white">
           <div className="text-left">
-            <p className="font-mono uppercase tracking-[0.25em] text-[0.6rem] font-medium text-white/70 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
+            <p className="mb-4 font-mono uppercase tracking-[0.25em] text-[0.6rem] font-medium text-white/70 sm:mb-6 sm:text-[0.65rem] sm:tracking-[0.3em] md:mb-8 md:text-xs lg:mb-10 lg:text-sm xl:mb-14">
               Contact
             </p>
-            <h2 className="mt-2 font-serif text-lg leading-tight sm:mt-3 sm:text-xl md:mt-4 md:text-2xl lg:mt-6 lg:text-3xl">
+            <h2 className="mt-2 font-serif text-lg leading-tight text-white sm:mt-3 sm:text-xl md:mt-4 md:text-2xl lg:mt-6 lg:text-3xl lg:leading-[1.1]">
               Company Information
             </h2>
           </div>
