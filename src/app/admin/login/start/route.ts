@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import {
-  evaluateLoginRateLimit,
+  checkLoginRateLimit,
   getLoginRateLimitIdentifier,
 } from "@/lib/security/login-rate-limit";
 
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   const cookieAwareClient = createCookieAwareClient(request, cookieOperations);
 
   const identifier = getLoginRateLimitIdentifier(request);
-  const evaluation = evaluateLoginRateLimit(identifier);
+  const evaluation = checkLoginRateLimit(identifier);
 
   if (!evaluation.allowed) {
     const params = new URLSearchParams({
