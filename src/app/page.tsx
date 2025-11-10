@@ -1,3 +1,5 @@
+import { unstable_noStore as noStore } from "next/cache";
+
 import { Header } from "@/components/Header";
 import { ScrollToAtlas } from "@/components/ScrollToAtlas";
 import { getInvestorGroups } from "@/models/backed_by";
@@ -11,6 +13,7 @@ import { ContactSection } from "@/sections/ContactSection";
 import { ProductsSection } from "@/sections/ProductsSection";
 
 export default async function Home() {
+  noStore();
   const [newsItems, teamMembers, investorGroups, positions] =
     await Promise.all([
       getNewsItems(),
