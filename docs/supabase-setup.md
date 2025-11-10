@@ -21,7 +21,63 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 **注意**: `.env.local` は `.gitignore` に含まれているため、Git にコミットされません。
 
-## 3. データベーススキーマの作成
+## 3. Supabase CLI の利用
+
+ダッシュボードに加えて、Supabase CLI を使ってローカルでスキーマやストレージの管理を行えるように設定済みです。
+
+### 3.1 前提
+
+- `pnpm install` 済み（`supabase` CLI が `devDependencies` に追加されています）
+- `pnpm run supabase` コマンドで Supabase CLI を呼び出せます
+
+```bash
+pnpm run supabase -- --version
+```
+
+### 3.2 初期化済みディレクトリ
+
+- `supabase/config.toml`: Supabase CLI が生成する基本設定ファイル（このリポジトリですでに作成済み）
+- `supabase/sql`: 既存の SQL スクリプト群。CLI の `db push`/`db pull` を使う際は、このフォルダをベースに整理します
+- 今後 CLI で `supabase start` や `supabase db diff` を実行すると、`supabase/migrations/` や `supabase/functions/` などの公式構成が追加されます
+
+### 3.3 ログインとリンク
+
+1. Supabase Access Token をダッシュボードの [Account Settings > Access Tokens](https://supabase.com/dashboard/account/tokens) で発行
+2. CLI からログイン：
+
+   ```bash
+   pnpm run supabase -- login
+   ```
+
+3. プロジェクトをリンク（初回のみ）：
+
+   ```bash
+   pnpm run supabase -- link --project-ref <your-project-ref>
+   ```
+
+   `project-ref` はダッシュボードの URL（例: `https://app.supabase.com/project/<project-ref>`）から確認できます。
+
+### 3.4 よく使うコマンド
+
+| コマンド | 用途 |
+| --- | --- |
+| `pnpm run supabase -- status` | ローカル開発用コンテナの状態確認 |
+| `pnpm run supabase -- start` | Supabase ローカル環境の起動 |
+| `pnpm run supabase -- db pull` | リモート DB からスキーマを取得（`supabase/migrations` 以下に反映） |
+| `pnpm run supabase -- db push` | ローカルで変更したスキーマをリモートに反映（十分にレビューしてから実行） |
+| `pnpm run supabase -- db diff` | リモートとの差分からマイグレーション SQL を生成 |
+| `pnpm run supabase -- functions deploy` | Edge Functions をデプロイ（今後導入する場合） |
+
+> **注意:** `db push` はリモートのスキーマを書き換えるため、必ずレビュー済みの SQL／マイグレーションで実行してください。必要に応じて Preview 環境で先にテストすることを推奨します。
+
+### 3.5 ダッシュボードとの使い分け
+
+- **CLI**: スキーマ変更やマイグレーション作成、ローカル開発環境の起動に便利
+- **ダッシュボード**: データのクイック編集、Storage バケット管理、Auth 設定などの GUI 操作に便利
+
+CLI を使ってマイグレーションを管理しつつ、運用ではダッシュボードでデータを編集するのが推奨フローです。
+
+## 4. データベーススキーマの作成
 
 1. Supabase Dashboard の SQL Editor を開く
 2. `docs/supabase-schema.sql` の内容をコピーして実行
@@ -31,7 +87,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    - `team_members` - チームメンバー
    - `investor_groups` - 投資家グループ
 
-## 4. 初期データの投入
+## 5. 初期データの投入
 
 Supabase Dashboard の Table Editor から、各テーブルに初期データを投入してください。
 
@@ -100,7 +156,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 }
 ```
 
-## 5. Supabase Storage の設定
+## 6. Supabase Storage の設定
 
 ニュースのサムネイルおよび本文内の画像は Supabase Storage の `news-photos` バケットに保存します。
 
@@ -120,7 +176,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 
 5. SQL Editor で `supabase/sql/storage-news-photos.sql` を実行し、`news-photos` バケット用の RLS ポリシー（閲覧は公開、アップロード/更新/削除は管理者のみ）を設定してください
 
-## 6. 動作確認
+## 7. 動作確認
 
 1. 開発サーバーを起動：
    ```bash
@@ -130,7 +186,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 2. ブラウザで `http://localhost:3000` にアクセス
 3. ニュースページ (`/news`) や採用ページ (`/positions`) が正常に表示されることを確認
 
-## 7. フェイルセーフ機能
+## 8. フェイルセーフ機能
 
 この実装では、Supabase が利用できない場合や環境変数が設定されていない場合、デフォルトデータ（`src/models/*.ts` の `default*` 配列）が自動的に使用されます。
 
@@ -140,7 +196,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 - **本番環境**: Supabase に障害が発生してもサイトが動作し続ける
 - **段階的移行**: Supabase への移行を段階的に行える
 
-## 8. データ更新方法
+## 9. データ更新方法
 
 ### 管理画面から更新（推奨）
 
@@ -160,7 +216,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 
 **注意**: 管理画面の使用を推奨します。より使いやすく、バリデーションも含まれています。
 
-## 9. トラブルシューティング
+## 10. トラブルシューティング
 
 ### データが表示されない
 
@@ -174,7 +230,7 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 1. `pnpm install` を実行して依存関係を更新
 2. TypeScript の型チェックを実行：`pnpm tsc --noEmit`
 
-## 10. 参考資料
+## 11. 参考資料
 
 - [Supabase Documentation](https://supabase.com/docs)
 - [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)
