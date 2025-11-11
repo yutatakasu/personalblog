@@ -123,10 +123,10 @@ export function Footer({ className = "" }: FooterProps) {
                 <p>
                   - ご不明点があれば{" "}
                   <a
-                    href="mailto:privacy@atlas.inc"
+                    href="mailto:info@atlas-official.net"
                     className="underline decoration-white/40 underline-offset-4 hover:text-white"
                   >
-                    privacy@atlas.inc
+                    info@atlas-official.net
                   </a>{" "}
                   までお問い合わせください。
                 </p>
