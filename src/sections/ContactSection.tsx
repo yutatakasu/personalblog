@@ -22,7 +22,7 @@ export function ContactSection() {
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex w-full flex-1 justify-center px-4 pb-24 pt-24 sm:px-6 sm:pb-28 sm:pt-28 md:px-8 md:pb-32 md:pt-32 lg:px-10 lg:pb-36 lg:pt-36 xl:pb-40 xl:pt-40 2xl:pb-44 2xl:pt-44">
+      <div className="relative z-10 flex w-full flex-1 justify-center px-4 pb-24 pt-16 sm:px-6 sm:pb-28 sm:pt-28 md:px-8 md:pb-32 md:pt-32 lg:px-10 lg:pb-36 lg:pt-36 xl:pb-40 xl:pt-40 2xl:pb-44 2xl:pt-44">
         <div className="grid w-full max-w-5xl grid-rows-[auto_1fr] gap-6 text-left sm:gap-8 md:gap-10">
           <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] font-medium text-white/70 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
             Contact

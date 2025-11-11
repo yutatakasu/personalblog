@@ -19,7 +19,10 @@ function useSupportsHover() {
   const [supportsHover, setSupportsHover] = useState(true);
 
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    ) {
       return;
     }
 
@@ -59,13 +62,17 @@ function TeamCard({ member, className, style }: TeamCardProps) {
 
   return (
     <article
-      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${!supportsHover && canToggleDetail ? "cursor-pointer touch-manipulation" : ""} ${
-        className ?? ""
-      }`}
+      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
+        !supportsHover && canToggleDetail
+          ? "cursor-pointer touch-manipulation"
+          : ""
+      } ${className ?? ""}`}
       style={style}
       role={!supportsHover && canToggleDetail ? "button" : undefined}
       tabIndex={!supportsHover && canToggleDetail ? 0 : undefined}
-      aria-expanded={!supportsHover && canToggleDetail ? isDetailOpen : undefined}
+      aria-expanded={
+        !supportsHover && canToggleDetail ? isDetailOpen : undefined
+      }
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -99,10 +106,10 @@ function TeamCard({ member, className, style }: TeamCardProps) {
           supportsHover
             ? "opacity-0 group-hover:opacity-100"
             : canToggleDetail
-              ? isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
-              : "opacity-100"
+            ? isDetailOpen
+              ? "opacity-100"
+              : "opacity-0"
+            : "opacity-100"
         }`}
       >
         {member.focus}
@@ -141,9 +148,9 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 
   return (
     <article
-      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""} ${
-        className ?? ""
-      }`}
+      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      } ${className ?? ""}`}
       role={!supportsHover && hasDetail ? "button" : undefined}
       tabIndex={!supportsHover && hasDetail ? 0 : undefined}
       aria-expanded={!supportsHover && hasDetail ? isDetailOpen : undefined}
@@ -183,8 +190,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           <span className="block font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-400 sm:text-[0.5rem] sm:tracking-[0.3em]">
@@ -255,7 +262,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      })),
+      }))
   );
 
   return (
@@ -273,12 +280,9 @@ export function AboutSection({
             sizes="100vw"
             className="object-cover"
           />
-          <div
-            className="absolute inset-0 bg-black/40"
-            aria-hidden
-          />
+          <div className="absolute inset-0 bg-black/40" aria-hidden />
         </div>
-        <div className="relative z-10 flex w-full justify-center px-4 pb-8 pt-24 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+        <div className="relative z-10 flex w-full justify-center px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
           <div className="grid w-full max-w-4xl grid-rows-[auto_1fr] gap-6 text-left sm:gap-8 md:gap-10">
             <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-white/60 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
               About
@@ -303,7 +307,7 @@ export function AboutSection({
         id="about-team"
         className="snap-start snap-always flex min-h-screen justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="w-full px-4 pb-8 pt-24 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+        <div className="w-full px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
           <div className="mx-auto grid w-full max-w-6xl grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
             <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
               Team
@@ -362,7 +366,7 @@ export function AboutSection({
         id="about-backed"
         className="snap-start snap-always flex min-h-screen justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 pb-8 pt-24 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
           <div className="grid w-full grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
             <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
               We Are Backed By
@@ -374,7 +378,10 @@ export function AboutSection({
               </h2>
               <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
                 {categorizedSupporters.map((supporter) => (
-                  <SupporterCard key={`${supporter.category}-${supporter.name}`} supporter={supporter} />
+                  <SupporterCard
+                    key={`${supporter.category}-${supporter.name}`}
+                    supporter={supporter}
+                  />
                 ))}
               </div>
               <div className="hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-10 md:gap-y-10">
@@ -403,7 +410,7 @@ export function AboutSection({
         id="about-news"
         className="snap-start snap-always flex min-h-screen justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="mx-auto w-full max-w-5xl px-4 pb-8 pt-24 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+        <div className="mx-auto w-full max-w-5xl px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
           <div className="grid w-full grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
             <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
               Current News
