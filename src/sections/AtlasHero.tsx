@@ -120,7 +120,7 @@ export function AtlasHero() {
               />
               <Link
                 href="/positions#open-roles"
-                className="absolute bottom-0 right-0 translate-x-full translate-y-full inline-flex items-center gap-2 whitespace-nowrap font-serif text-base text-[#2a2a2a]/70 transition hover:text-[#2a2a2a] ml-3 mt-2 sm:text-lg sm:ml-4 sm:mt-2 md:text-xl md:ml-24 md:mt-32 lg:text-2xl lg:ml-32 lg:mt-48 xl:ml-40 xl:mt-64"
+                className="mt-10 flex items-center justify-center gap-2 whitespace-nowrap font-serif text-sm text-[#2a2a2a]/70 transition hover:text-[#2a2a2a] sm:text-base md:absolute md:bottom-0 md:right-0 md:ml-24 md:mt-32 md:translate-x-full md:translate-y-full md:justify-start md:text-xl lg:text-2xl lg:ml-32 lg:mt-48 xl:ml-40 xl:mt-64"
               >
                 Join our team
                 <span aria-hidden className="text-[#2a2a2a]/50">

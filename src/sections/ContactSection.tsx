@@ -6,7 +6,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative snap-start snap-always flex min-h-screen justify-center text-white"
+      className="relative flex min-h-screen flex-col items-center justify-start text-white snap-start snap-always"
     >
       <div className="absolute inset-0 overflow-hidden">
         <Image
@@ -22,7 +22,7 @@ export function ContactSection() {
           aria-hidden
         />
       </div>
-      <div className="relative z-10 flex w-full justify-center px-4 pb-24 pt-24 sm:px-6 sm:pb-28 sm:pt-28 md:px-8 md:pb-32 md:pt-32 lg:px-10 lg:pb-36 lg:pt-36 xl:pb-40 xl:pt-40 2xl:pb-44 2xl:pt-44">
+      <div className="relative z-10 flex w-full flex-1 justify-center px-4 pb-24 pt-24 sm:px-6 sm:pb-28 sm:pt-28 md:px-8 md:pb-32 md:pt-32 lg:px-10 lg:pb-36 lg:pt-36 xl:pb-40 xl:pt-40 2xl:pb-44 2xl:pt-44">
         <div className="grid w-full max-w-5xl grid-rows-[auto_1fr] gap-6 text-left sm:gap-8 md:gap-10">
           <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] font-medium text-white/70 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
             Contact
@@ -75,7 +75,8 @@ export function ContactSection() {
                   所在地
                 </dt>
                 <dd className="leading-relaxed wrap-break-word">
-                  〒1500043 東京都渋谷区道玄坂 1丁目10番8号渋谷道玄坂東急ビル2F-C
+                  〒1500043 東京都渋谷区道玄坂
+                  1丁目10番8号渋谷道玄坂東急ビル2F-C
                 </dd>
               </div>
             </dl>
@@ -83,10 +84,10 @@ export function ContactSection() {
               <p>
                 メール：
                 <a
-                  href="mailto:contact@atlas.inc"
+                  href="mailto:info@atlas-official.net"
                   className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-3 hover:decoration-white sm:underline-offset-4"
                 >
-                  contact@atlas.inc
+                  info@atlas-official.net
                 </a>
               </p>
               <p>営業時間: 平日 10:00 - 18:00</p>
@@ -94,7 +95,7 @@ export function ContactSection() {
           </div>
         </div>
       </div>
-      <Footer className="absolute bottom-0 left-0 right-0" />
+      <Footer className="relative mt-auto" />
     </section>
   );
 }

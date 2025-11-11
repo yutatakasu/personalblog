@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { InvestorGroup } from "@/models/backed_by";
+import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
 
@@ -15,13 +15,69 @@ type TeamCardProps = {
   style?: CSSProperties;
 };
 
+function useSupportsHover() {
+  const [supportsHover, setSupportsHover] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    const handleChange = (event: MediaQueryListEvent) => {
+      setSupportsHover(event.matches);
+    };
+
+    setSupportsHover(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  return supportsHover;
+}
+
 function TeamCard({ member, className, style }: TeamCardProps) {
+  const supportsHover = useSupportsHover();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const canToggleDetail = Boolean(member.focus);
+
+  useEffect(() => {
+    if (supportsHover && isDetailOpen) {
+      setIsDetailOpen(false);
+    }
+  }, [supportsHover, isDetailOpen]);
+
+  const handleToggleDetail = () => {
+    if (supportsHover || !canToggleDetail) {
+      return;
+    }
+    setIsDetailOpen((previous) => !previous);
+  };
+
   return (
     <article
-      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
+      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${!supportsHover && canToggleDetail ? "cursor-pointer touch-manipulation" : ""} ${
         className ?? ""
       }`}
       style={style}
+      role={!supportsHover && canToggleDetail ? "button" : undefined}
+      tabIndex={!supportsHover && canToggleDetail ? 0 : undefined}
+      aria-expanded={!supportsHover && canToggleDetail ? isDetailOpen : undefined}
+      onClick={handleToggleDetail}
+      onKeyDown={(event) => {
+        if (
+          supportsHover ||
+          !canToggleDetail ||
+          (event.key !== "Enter" && event.key !== " ")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setIsDetailOpen((previous) => !previous);
+      }}
     >
       <div className="relative h-14 w-14 overflow-hidden rounded-[14px] border border-neutral-200 bg-neutral-100 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24">
         <Image
@@ -38,9 +94,105 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       <p className="font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-500 sm:text-[0.5rem] sm:tracking-[0.3em]">
         {member.title}
       </p>
-      <p className="mt-1.5 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 sm:mt-2 sm:max-w-[220px] sm:text-xs">
+      <p
+        className={`mt-1.5 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:mt-2 sm:max-w-[220px] sm:text-xs ${
+          supportsHover
+            ? "opacity-0 group-hover:opacity-100"
+            : canToggleDetail
+              ? isDetailOpen
+                ? "opacity-100"
+                : "opacity-0"
+              : "opacity-100"
+        }`}
+      >
         {member.focus}
       </p>
+    </article>
+  );
+}
+
+type CategorizedSupporter = Supporter & {
+  category: string;
+};
+
+type SupporterCardProps = {
+  supporter: CategorizedSupporter;
+  className?: string;
+};
+
+function SupporterCard({ supporter, className }: SupporterCardProps) {
+  const supportsHover = useSupportsHover();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const hasDetail = Boolean(supporter.focus);
+  const imageSrc = supporter.imageSrc ?? "/favicon.svg";
+
+  useEffect(() => {
+    if (supportsHover && isDetailOpen) {
+      setIsDetailOpen(false);
+    }
+  }, [supportsHover, isDetailOpen]);
+
+  const handleToggleDetail = () => {
+    if (supportsHover || !hasDetail) {
+      return;
+    }
+    setIsDetailOpen((previous) => !previous);
+  };
+
+  return (
+    <article
+      className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""} ${
+        className ?? ""
+      }`}
+      role={!supportsHover && hasDetail ? "button" : undefined}
+      tabIndex={!supportsHover && hasDetail ? 0 : undefined}
+      aria-expanded={!supportsHover && hasDetail ? isDetailOpen : undefined}
+      onClick={handleToggleDetail}
+      onKeyDown={(event) => {
+        if (
+          supportsHover ||
+          !hasDetail ||
+          (event.key !== "Enter" && event.key !== " ")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setIsDetailOpen((previous) => !previous);
+      }}
+    >
+      <div className="relative h-14 w-14 overflow-hidden rounded-[14px] border border-neutral-200 bg-neutral-100 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24">
+        <Image
+          src={imageSrc}
+          alt={`${supporter.name} logo`}
+          fill
+          sizes="(min-width: 1024px) 96px, (min-width: 768px) 80px, (min-width: 640px) 64px, 56px"
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <p className="mt-0.5 font-serif text-xs text-neutral-900 sm:text-sm md:text-base">
+        {supporter.name}
+      </p>
+      {supporter.title ? (
+        <p className="font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-500 sm:text-[0.5rem] sm:tracking-[0.3em]">
+          {supporter.title}
+        </p>
+      ) : null}
+      {supporter.focus ? (
+        <p
+          className={`mt-1.5 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:mt-2 sm:max-w-[220px] sm:text-xs ${
+            supportsHover
+              ? "opacity-0 group-hover:opacity-100"
+              : isDetailOpen
+                ? "opacity-100"
+                : "opacity-0"
+          }`}
+        >
+          <span className="block font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-400 sm:text-[0.5rem] sm:tracking-[0.3em]">
+            {supporter.category}
+          </span>
+          {supporter.focus}
+        </p>
+      ) : null}
     </article>
   );
 }
@@ -98,6 +250,13 @@ export function AboutSection({
   const hasAdditionalMembers = teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
+  const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
+    (group) =>
+      group.supporters.map((supporter) => ({
+        ...supporter,
+        category: group.category,
+      })),
+  );
 
   return (
     <>
@@ -115,7 +274,7 @@ export function AboutSection({
             className="object-cover"
           />
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-md"
+            className="absolute inset-0 bg-black/40"
             aria-hidden
           />
         </div>
@@ -213,38 +372,26 @@ export function AboutSection({
                 信頼できるパートナーとともに、Atlas
                 の記憶レイヤーは産業全体へと浸透します。
               </h2>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-6 lg:gap-8 xl:grid-cols-4">
-                {investorGroups.map((group) => (
-                  <div
-                    key={group.category}
-                    className="rounded-xl border border-neutral-200 bg-white/50 p-3 sm:rounded-2xl sm:p-4 md:p-6"
-                  >
-                    <h3 className="font-serif text-base text-neutral-900 sm:text-lg">
-                      {group.category}
-                    </h3>
-                    <ul className="mt-3 space-y-2 text-xs text-neutral-600 sm:mt-4 sm:space-y-3 sm:text-sm">
-                      {group.supporters.map((supporter) => (
-                        <li
-                          key={supporter.name}
-                          className="space-y-0.5 leading-relaxed"
-                        >
-                          <p className="font-medium text-neutral-800">
-                            {supporter.name}
-                          </p>
-                          {supporter.title ? (
-                            <p className="text-[0.7rem] uppercase tracking-widest text-neutral-400">
-                              {supporter.title}
-                            </p>
-                          ) : null}
-                          {supporter.focus ? (
-                            <p className="text-[0.75rem] text-neutral-500">
-                              {supporter.focus}
-                            </p>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+              <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
+                {categorizedSupporters.map((supporter) => (
+                  <SupporterCard key={`${supporter.category}-${supporter.name}`} supporter={supporter} />
+                ))}
+              </div>
+              <div className="hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-10 md:gap-y-10">
+                {categorizedSupporters.map((supporter) => (
+                  <SupporterCard
+                    key={`${supporter.category}-${supporter.name}`}
+                    supporter={supporter}
+                    className="max-w-none"
+                  />
+                ))}
+              </div>
+              <div className="hidden w-full lg:grid mx-auto max-w-7xl grid-cols-5 gap-x-10 gap-y-12 justify-items-center xl:gap-x-12 xl:gap-y-14">
+                {categorizedSupporters.map((supporter) => (
+                  <SupporterCard
+                    key={`${supporter.category}-${supporter.name}`}
+                    supporter={supporter}
+                  />
                 ))}
               </div>
             </div>

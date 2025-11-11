@@ -47,18 +47,11 @@ export default async function PositionsPage() {
               にどんな温度を足してくれるかを聞かせてください。
             </p>
             <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
-              <SmoothScrollLink
-                targetId={firstPositionId}
-                className="inline-flex items-center gap-2 text-black/80 underline underline-offset-4 transition hover:text-black"
-              >
-                Explore roles
-                <span aria-hidden>→</span>
-              </SmoothScrollLink>
               <Link
-                href="mailto:careers@atlas.inc"
+                href="mailto:info@atlas-official.net"
                 className="inline-flex items-center gap-2 text-black/50 transition hover:text-black/80"
               >
-                careers@atlas.inc
+                info@atlas-official.net
                 <span aria-hidden>→</span>
               </Link>
             </div>
@@ -108,7 +101,7 @@ export default async function PositionsPage() {
                   </p>
                 </div>
                 <Link
-                  href={`mailto:${position.applyEmail ?? "careers@atlas.inc"}`}
+                  href={`mailto:${position.applyEmail ?? "info@atlas-official.net"}`}
                   className="inline-flex items-center gap-2 text-sm font-medium text-black/70 underline underline-offset-4 transition hover:text-black"
                 >
                   Apply / Talk
@@ -116,7 +109,11 @@ export default async function PositionsPage() {
                 </Link>
               </header>
 
-              <p className="mt-6 text-sm leading-relaxed text-black/70 sm:text-base">
+              <p className="mt-6 text-xs text-black/55 sm:text-sm">
+                {position.teaser}
+              </p>
+
+              <p className="mt-4 text-sm leading-relaxed text-black/70 sm:text-base">
                 {position.summary}
               </p>
 
@@ -148,17 +145,6 @@ export default async function PositionsPage() {
                   </ul>
                 </div>
               </div>
-
-              <p className="mt-8 text-sm text-black/55">
-                質問やカジュアル面談の希望があれば、
-                <Link
-                  href="mailto:careers@atlas.inc"
-                  className="ml-1 inline-flex items-center gap-1 text-black/70 underline underline-offset-4 transition hover:text-black"
-                >
-                  careers@atlas.inc
-                </Link>
-                までお気軽にご連絡ください。
-              </p>
             </article>
           ))}
         </section>

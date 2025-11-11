@@ -38,17 +38,17 @@ export function CareersSection({ positions }: CareersSectionProps) {
                   <span aria-hidden>→</span>
                 </Link>
                 <Link
-                  href="mailto:careers@atlas.inc"
+                  href="mailto:info@atlas-official.net"
                   className="inline-flex items-center gap-1.5 text-black/50 transition hover:text-black/80 sm:gap-2"
                 >
-                  careers@atlas.inc
+                  info@atlas-official.net
                   <span aria-hidden>→</span>
                 </Link>
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
               <div className="flex items-center justify-between text-[0.65rem] uppercase tracking-[0.25em] text-black/45 sm:text-xs sm:tracking-[0.3em]">
-                <span className="font-mono">Open roles</span>
+                <span className="font-mono">Open positions</span>
                 <Link
                   href="/positions#open-roles"
                   className="text-[0.6rem] lowercase tracking-[0.15em] text-black/40 transition hover:text-black/80 sm:text-[0.7rem] sm:tracking-[0.2em]"
