@@ -16,7 +16,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
       id="careers"
       className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
     >
-      <div className="grid w-full max-w-5xl grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+      <div className="grid w-full max-w-5xl flex-1 grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
         <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-black/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
           Careers
         </p>
