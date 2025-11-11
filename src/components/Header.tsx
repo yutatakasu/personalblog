@@ -14,7 +14,16 @@ const sectionIds = [
   "contact",
 ] as const;
 
-const darkSurfaceSections = new Set(["about", "contact"]);
+const sectionThemes: Record<string, "dark" | "light"> = {
+  atlas: "light",
+  products: "light",
+  about: "dark",
+  "about-team": "light",
+  "about-backed": "light",
+  "about-news": "light",
+  careers: "light",
+  contact: "dark",
+};
 
 const normalizeSectionId = (sectionId: string) => {
   if (sectionId.startsWith("about-")) {
@@ -61,7 +70,6 @@ export function Header() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    // 初期表示は常に atlas を維持
     setActiveSection("atlas");
 
     const observer = new IntersectionObserver(
@@ -70,13 +78,13 @@ export function Header() {
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) {
-          const next = visible[0].target.id || "atlas";
-          setSurfaceSection(next);
-          setActiveSection(normalizeSectionId(next));
+          const nextId = visible[0].target.id || "atlas";
+          setSurfaceSection(nextId);
+          setActiveSection(normalizeSectionId(nextId));
         }
       },
       {
-        threshold: 0.55,
+        threshold: 0.4,
         rootMargin: "-72px 0px -25% 0px",
       },
     );
@@ -104,7 +112,8 @@ export function Header() {
     { id: "careers", label: "Careers", href: "#careers" },
     { id: "contact", label: "Contact", href: "#contact" },
   ];
-  const isSectionDark = (section: string) => darkSurfaceSections.has(section);
+  const isSectionDark = (section: string) =>
+    sectionThemes[section] === "dark";
 
   const isDarkBackground = isSectionDark(surfaceSection);
   const baseHeaderTextClass = isDarkBackground
@@ -131,46 +140,7 @@ export function Header() {
     ? "text-neutral-100"
     : "text-neutral-900";
 
-  const resolveCurrentSection = () => {
-    if (typeof window === "undefined") {
-      return null;
-    }
-
-    const viewportHeight =
-      window.innerHeight || document.documentElement.clientHeight;
-    let maxIntersection = 0;
-    let bestSectionId: string = surfaceSection;
-
-    sectionIds.forEach((sectionId) => {
-      const element = document.getElementById(sectionId);
-      if (!element) {
-        return;
-      }
-      const rect = element.getBoundingClientRect();
-      const intersectionTop = Math.max(rect.top, 0);
-      const intersectionBottom = Math.min(rect.bottom, viewportHeight);
-      const intersectionHeight = intersectionBottom - intersectionTop;
-      if (intersectionHeight <= 0) {
-        return;
-      }
-      if (intersectionHeight > maxIntersection) {
-        maxIntersection = intersectionHeight;
-        bestSectionId = sectionId;
-      }
-    });
-
-    return {
-      surface: bestSectionId,
-      active: normalizeSectionId(bestSectionId),
-    };
-  };
-
   const handleOpenMenu = () => {
-    const current = resolveCurrentSection();
-    if (current) {
-      setSurfaceSection(current.surface);
-      setActiveSection(current.active);
-    }
     setIsMenuOpen(true);
   };
 

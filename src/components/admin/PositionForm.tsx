@@ -389,7 +389,7 @@ export function PositionForm({ initialData }: PositionFormProps) {
           type="email"
           {...register("applyEmail")}
           className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-          placeholder="careers@atlas.inc"
+          placeholder="info@atlas-official.net"
         />
         {errors.applyEmail && (
           <p className="mt-1 text-sm text-red-600">
