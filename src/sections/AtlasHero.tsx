@@ -96,7 +96,7 @@ export function AtlasHero() {
   return (
     <section
       id="atlas"
-      className="relative snap-start snap-always flex min-h-screen justify-center text-center"
+      className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center text-center"
     >
       <div className="flex w-full max-w-4xl flex-col px-4 pb-8 pt-24 font-mono text-black sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
         <div className="shrink-0">

@@ -26,7 +26,7 @@ export default async function Home() {
     <div className="min-h-screen">
       <ScrollToAtlas />
       <Header />
-      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+      <main className="h-screen h-dvh overflow-y-scroll overscroll-y-contain snap-y snap-mandatory scroll-smooth">
         <AtlasHero />
         <ProductsSection />
         <AboutSection
