@@ -60,7 +60,7 @@ const newsSchema = z.object({
     .optional()
     .refine(
       (value) => !value || value.length === 0 || emailRegex.test(value),
-      "正しいメールアドレスを入力してください",
+      "正しいメールアドレスを入力してください"
     ),
 });
 
@@ -87,10 +87,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
-    initialData?.thumbnail_src ?? null,
+    initialData?.thumbnail_src ?? null
   );
   const [thumbnailObjectUrl, setThumbnailObjectUrl] = useState<string | null>(
-    null,
+    null
   );
   const [thumbnailCropModalOpen, setThumbnailCropModalOpen] = useState(false);
   const [thumbnailImageForCrop, setThumbnailImageForCrop] = useState<
@@ -117,20 +117,20 @@ export function NewsForm({ initialData }: NewsFormProps) {
       : new Array(initialContentPreviews.length).fill("");
 
   const [contentPreviews, setContentPreviews] = useState<string[]>(
-    initialContentPreviews,
+    initialContentPreviews
   );
   const contentUploadedFilesRef = useRef<(File | null)[]>(
-    new Array(initialContentPreviews.length).fill(null),
+    new Array(initialContentPreviews.length).fill(null)
   );
-  const contentImageAltCacheRef = useRef<string[]>(
-    [...initialContentImageAlts],
-  );
+  const contentImageAltCacheRef = useRef<string[]>([
+    ...initialContentImageAlts,
+  ]);
   const contentFileToCropRef = useRef<File | null>(null);
   const [contentCropModalIndex, setContentCropModalIndex] = useState<
     number | null
   >(null);
   const [contentImageForCrop, setContentImageForCrop] = useState<string | null>(
-    null,
+    null
   );
   const [contentCrop, setContentCrop] = useState({ x: 0, y: 0 });
   const [contentZoom, setContentZoom] = useState(1);
@@ -203,14 +203,14 @@ export function NewsForm({ initialData }: NewsFormProps) {
     }
     contentUploadedFilesRef.current = contentUploadedFilesRef.current.slice(
       0,
-      length,
+      length
     );
     while (contentImageAltCacheRef.current.length < length) {
       contentImageAltCacheRef.current.push("");
     }
     contentImageAltCacheRef.current = contentImageAltCacheRef.current.slice(
       0,
-      length,
+      length
     );
   }, []);
 
@@ -284,7 +284,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     try {
       const blob = await getCroppedImageBlob(
         thumbnailImageForCrop,
-        thumbnailCropAreaPixels,
+        thumbnailCropAreaPixels
       );
       const sourceFileName =
         thumbnailFileToCropRef.current?.name ??
@@ -346,7 +346,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     contentFileToCropRef.current = null;
     if (typeof targetIndex === "number") {
       const input = document.getElementById(
-        `content-image-${targetIndex}`,
+        `content-image-${targetIndex}`
       ) as HTMLInputElement | null;
       if (input) {
         input.value = "";
@@ -370,7 +370,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     try {
       const blob = await getCroppedImageBlob(
         contentImageForCrop,
-        contentCropAreaPixels,
+        contentCropAreaPixels
       );
       const sourceFileName =
         contentFileToCropRef.current.name ?? "section-image.jpg";
@@ -420,7 +420,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     contentImageAltCacheRef.current[index] = "";
 
     const input = document.getElementById(
-      `content-image-${index}`,
+      `content-image-${index}`
     ) as HTMLInputElement | null;
     if (input) {
       input.value = "";
@@ -445,10 +445,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
     removeContent(index);
     setContentPreviews((prev) => prev.filter((_, i) => i !== index));
     contentUploadedFilesRef.current = contentUploadedFilesRef.current.filter(
-      (_, i) => i !== index,
+      (_, i) => i !== index
     );
     contentImageAltCacheRef.current = contentImageAltCacheRef.current.filter(
-      (_, i) => i !== index,
+      (_, i) => i !== index
     );
   };
 
@@ -506,7 +506,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
       if (thumbnailFile) {
         const extension = getFileExtension(thumbnailFile.name);
-        const storagePath = `${prefix}${baseName || "news-item"}-thumbnail-${Date.now()}.${extension}`;
+        const storagePath = `${prefix}${
+          baseName || "news-item"
+        }-thumbnail-${Date.now()}.${extension}`;
 
         const { error: uploadError } = await adminSupabase.storage
           .from(newsBucket)
@@ -519,8 +521,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           setError(
             uploadError.message?.includes("Bucket not found")
               ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
-              : (uploadError.message ??
-                  "サムネイル画像のアップロードに失敗しました"),
+              : uploadError.message ??
+                  "サムネイル画像のアップロードに失敗しました"
           );
           setLoading(false);
           return;
@@ -561,7 +563,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
         if (pendingFile) {
           const extension = getFileExtension(pendingFile.name);
-          const storagePath = `${prefix}${baseName || "news-item"}-section-${index + 1}-${Date.now()}.${extension}`;
+          const storagePath = `${prefix}${baseName || "news-item"}-section-${
+            index + 1
+          }-${Date.now()}.${extension}`;
 
           const { error: uploadError } = await adminSupabase.storage
             .from(newsBucket)
@@ -574,8 +578,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
             setError(
               uploadError.message?.includes("Bucket not found")
                 ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
-                : (uploadError.message ??
-                    "段落画像のアップロードに失敗しました"),
+                : uploadError.message ?? "段落画像のアップロードに失敗しました"
             );
             setLoading(false);
             return;
@@ -604,8 +607,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           cachedAlt && cachedAlt.trim().length > 0
             ? cachedAlt.trim()
             : block.title.trim().length > 0
-              ? block.title.trim()
-              : normalizedTitle;
+            ? block.title.trim()
+            : normalizedTitle;
 
         contentImageAltCacheRef.current[index] = computedAlt;
 
@@ -623,9 +626,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
       const contactEmailRaw = data.contactEmail ?? "";
       const contactEmailValue =
-        contactEmailRaw && contactEmailRaw.length > 0
-          ? contactEmailRaw
-          : null;
+        contactEmailRaw && contactEmailRaw.length > 0 ? contactEmailRaw : null;
 
       const finalLink = `/news/${normalizedId}`;
       const newsData = {
@@ -935,7 +936,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
                           className="rounded-lg border border-neutral-300 px-4 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100"
                           onClick={() => {
                             const input = document.getElementById(
-                              `content-image-${index}`,
+                              `content-image-${index}`
                             ) as HTMLInputElement | null;
                             input?.click();
                           }}
@@ -982,7 +983,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
               {errors.content.message}
             </p>
           )}
-          <div className="mt-4">
+          <div className="py-5 mt-4 flex justify-end">
             <button
               type="button"
               onClick={appendContentSection}
@@ -1036,7 +1037,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
             </p>
           )}
           <p className="mt-1 text-xs text-neutral-500">
-            記事の末尾に「この記事に関してのお問い合わせは: メールアドレス」を表示します（任意）
+            記事の末尾に「この記事に関してのお問い合わせは:
+            メールアドレス」を表示します（任意）
           </p>
         </div>
 
