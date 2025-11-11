@@ -13,7 +13,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
   return (
     <section
       id="careers"
-      className="snap-start snap-always flex min-h-screen justify-center bg-[#f8f7f4]"
+      className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
     >
       <div className="grid w-full max-w-5xl grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
         <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-black/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
@@ -22,7 +22,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
         <div className="flex flex-1 flex-col justify-center gap-10 md:gap-12 lg:gap-16">
           <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-12 lg:gap-16 md:items-start">
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
-              <h2 className="font-serif text-xl leading-snug text-black sm:text-2xl md:text-3xl lg:text-4xl lg:leading-[1.1] xl:text-5xl">
+              <h2 className="font-serif text-xl leading-snug text-black sm:text-2xl md:text-3xl lg:text-[3.25rem] lg:leading-[1.1] xl:text-[3.75rem]">
                 Atlasに、温度のある視点を持ち込んでください。
               </h2>
               <p className="text-xs leading-relaxed text-black/65 sm:text-sm md:text-base">
