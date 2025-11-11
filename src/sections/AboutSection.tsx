@@ -374,8 +374,7 @@ export function AboutSection({
             </p>
             <div className="flex flex-1 flex-col justify-center gap-6 sm:gap-8 md:gap-10">
               <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-                信頼できるパートナーとともに、Atlas
-                の記憶レイヤーは産業全体へと浸透します。
+                信頼できるパートナーとともに、Atlasの技術で記憶レイヤの主権を個人に取り戻します。
               </h2>
               <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
                 {categorizedSupporters.map((supporter) => (
