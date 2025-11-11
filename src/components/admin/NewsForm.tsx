@@ -36,47 +36,32 @@ const sanitizeForFileName = (value: string) =>
 const resolveStoragePrefix = (bucket: string, folder?: string) =>
   folder && folder.length > 0 && folder !== bucket ? `${folder}/` : "";
 
-const contentBlockSchema = z
-  .object({
-    title: z.string().trim().min(1, "段落タイトルを入力してください"),
-    text: z.string().trim().min(1, "段落の内容を入力してください"),
-    imageSrc: z.string().optional(),
-    imageAlt: z.string().optional(),
-  })
-  .superRefine((value, ctx) => {
-    const hasImageSrc = !!value.imageSrc && value.imageSrc.trim().length > 0;
-    const hasImageAlt = !!value.imageAlt && value.imageAlt.trim().length > 0;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (hasImageSrc && !hasImageAlt) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "画像の説明を入力してください",
-        path: ["imageAlt"],
-      });
-    }
-
-    if (!hasImageSrc && hasImageAlt) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "画像をアップロードしてください",
-        path: ["imageSrc"],
-      });
-    }
-  });
+const contentBlockSchema = z.object({
+  title: z.string().trim().min(1, "段落タイトルを入力してください"),
+  text: z.string().trim().min(1, "段落の内容を入力してください"),
+  imageSrc: z.string().optional(),
+});
 
 const newsSchema = z.object({
   id: z.string().min(1, "IDは必須です"),
-  title: z.string().min(1, "タイトルは必須です"),
+  title: z.string().trim().min(1, "タイトルは必須です"),
   subtitle: z.string().optional(),
   date: z.string().min(1, "日付は必須です"),
   thumbnailSrc: z.string().min(1, "サムネイル画像は必須です"),
-  thumbnailAlt: z.string().min(1, "画像の説明は必須です"),
-  link: z.string().min(1, "リンクは必須です"),
   content: z
     .array(contentBlockSchema)
     .min(1, "少なくとも1つの段落を追加してください"),
   summary: z.string().optional(),
-  tag: z.string().optional(),
+  contactEmail: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (value) => !value || value.length === 0 || emailRegex.test(value),
+      "正しいメールアドレスを入力してください",
+    ),
 });
 
 type NewsFormData = z.infer<typeof newsSchema>;
@@ -92,7 +77,7 @@ type NewsFormProps = {
     link: string;
     content?: ContentBlock[];
     summary?: string | null;
-    tag?: string | null;
+    contact_email?: string | null;
   };
 };
 
@@ -126,12 +111,19 @@ export function NewsForm({ initialData }: NewsFormProps) {
     initialData?.content && initialData.content.length > 0
       ? initialData.content.map((block) => block.image?.src ?? "")
       : [""];
+  const initialContentImageAlts =
+    initialData?.content && initialData.content.length > 0
+      ? initialData.content.map((block) => block.image?.alt ?? "")
+      : new Array(initialContentPreviews.length).fill("");
 
   const [contentPreviews, setContentPreviews] = useState<string[]>(
     initialContentPreviews,
   );
   const contentUploadedFilesRef = useRef<(File | null)[]>(
     new Array(initialContentPreviews.length).fill(null),
+  );
+  const contentImageAltCacheRef = useRef<string[]>(
+    [...initialContentImageAlts],
   );
   const contentFileToCropRef = useRef<File | null>(null);
   const [contentCropModalIndex, setContentCropModalIndex] = useState<
@@ -161,19 +153,16 @@ export function NewsForm({ initialData }: NewsFormProps) {
           subtitle: initialData.subtitle ?? "",
           date: initialData.date,
           thumbnailSrc: initialData.thumbnail_src,
-          thumbnailAlt: initialData.thumbnail_alt,
-          link: initialData.link,
           content:
             initialData.content && initialData.content.length > 0
               ? initialData.content.map((block) => ({
                   title: block.title ?? "",
                   text: block.text ?? "",
                   imageSrc: block.image?.src ?? "",
-                  imageAlt: block.image?.alt ?? "",
                 }))
-              : [{ title: "", text: "", imageSrc: "", imageAlt: "" }],
+              : [{ title: "", text: "", imageSrc: "" }],
           summary: initialData.summary ?? "",
-          tag: initialData.tag ?? "",
+          contactEmail: initialData.contact_email ?? "",
         }
       : {
           id: "",
@@ -181,13 +170,14 @@ export function NewsForm({ initialData }: NewsFormProps) {
           subtitle: "",
           date: "",
           thumbnailSrc: "",
-          thumbnailAlt: "",
-          link: "",
-          content: [{ title: "", text: "", imageSrc: "", imageAlt: "" }],
+          content: [{ title: "", text: "", imageSrc: "" }],
           summary: "",
-          tag: "",
+          contactEmail: "",
         },
   });
+
+  const watchedId = watch("id");
+  const normalizedIdForDisplay = watchedId?.trim() ?? "";
 
   const {
     fields: contentFields,
@@ -212,6 +202,13 @@ export function NewsForm({ initialData }: NewsFormProps) {
       contentUploadedFilesRef.current.push(null);
     }
     contentUploadedFilesRef.current = contentUploadedFilesRef.current.slice(
+      0,
+      length,
+    );
+    while (contentImageAltCacheRef.current.length < length) {
+      contentImageAltCacheRef.current.push("");
+    }
+    contentImageAltCacheRef.current = contentImageAltCacheRef.current.slice(
       0,
       length,
     );
@@ -398,6 +395,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       setValue(`content.${index}.imageSrc`, previewUrl, {
         shouldValidate: true,
       });
+      contentImageAltCacheRef.current[index] = "";
     } catch (cropError) {
       console.error(cropError);
       setError("画像の切り抜きに失敗しました");
@@ -419,7 +417,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       return next;
     });
     setValue(`content.${index}.imageSrc`, "", { shouldValidate: true });
-    setValue(`content.${index}.imageAlt`, "", { shouldValidate: true });
+    contentImageAltCacheRef.current[index] = "";
 
     const input = document.getElementById(
       `content-image-${index}`,
@@ -430,7 +428,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
   };
 
   const appendContentSection = () => {
-    appendContent({ title: "", text: "", imageSrc: "", imageAlt: "" });
+    appendContent({ title: "", text: "", imageSrc: "" });
     ensureContentStateLength(contentFields.length + 1);
   };
 
@@ -449,6 +447,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
     contentUploadedFilesRef.current = contentUploadedFilesRef.current.filter(
       (_, i) => i !== index,
     );
+    contentImageAltCacheRef.current = contentImageAltCacheRef.current.filter(
+      (_, i) => i !== index,
+    );
   };
 
   const moveContentSection = (from: number, to: number) => {
@@ -462,6 +463,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
     const files = contentUploadedFilesRef.current;
     const [movedFile] = files.splice(from, 1);
     files.splice(to, 0, movedFile);
+    const alts = contentImageAltCacheRef.current;
+    const [movedAlt] = alts.splice(from, 1);
+    alts.splice(to, 0, movedAlt);
   };
 
   const onSubmit = async (data: NewsFormData) => {
@@ -484,6 +488,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
       const prefix = resolveStoragePrefix(newsBucket, newsFolder);
 
       const normalizedId = data.id.trim();
+      const trimmedTitle = data.title.trim();
+      const normalizedTitle =
+        trimmedTitle.length > 0 ? trimmedTitle : normalizedId;
       const baseName = sanitizeForFileName(normalizedId);
 
       if (!normalizedId) {
@@ -542,6 +549,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
       }
 
       const formattedContent: ContentBlock[] = [];
+      const thumbnailAltValue =
+        (initialData?.thumbnail_alt?.trim().length
+          ? initialData.thumbnail_alt.trim()
+          : "") || normalizedTitle;
 
       for (let index = 0; index < data.content.length; index += 1) {
         const block = data.content[index];
@@ -588,29 +599,46 @@ export function NewsForm({ initialData }: NewsFormProps) {
           contentUploadedFilesRef.current[index] = null;
         }
 
+        const cachedAlt = contentImageAltCacheRef.current[index] ?? "";
+        const computedAlt =
+          cachedAlt && cachedAlt.trim().length > 0
+            ? cachedAlt.trim()
+            : block.title.trim().length > 0
+              ? block.title.trim()
+              : normalizedTitle;
+
+        contentImageAltCacheRef.current[index] = computedAlt;
+
         formattedContent.push({
           title: block.title.trim(),
           text: block.text,
           image: imageSrc
             ? {
                 src: imageSrc,
-                alt: (block.imageAlt ?? "").trim(),
+                alt: computedAlt,
               }
             : null,
         });
       }
 
+      const contactEmailRaw = data.contactEmail ?? "";
+      const contactEmailValue =
+        contactEmailRaw && contactEmailRaw.length > 0
+          ? contactEmailRaw
+          : null;
+
+      const finalLink = `/news/${normalizedId}`;
       const newsData = {
         id: normalizedId,
-        title: data.title,
+        title: normalizedTitle,
         subtitle: data.subtitle?.trim() ? data.subtitle.trim() : null,
         date: data.date,
         thumbnail_src: finalThumbnailSrc,
-        thumbnail_alt: data.thumbnailAlt.trim(),
-        link: data.link.trim(),
+        thumbnail_alt: thumbnailAltValue,
+        link: finalLink,
         content: formattedContent,
         summary: data.summary?.trim() ? data.summary.trim() : null,
-        tag: data.tag?.trim() ? data.tag.trim() : null,
+        contact_email: contactEmailValue,
       };
 
       if (initialData) {
@@ -674,6 +702,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
           <p className="mt-1 text-xs text-neutral-500">
             URLに使用されるID（英数字とハイフンのみ、編集時は変更不可）
           </p>
+          <p className="mt-1 text-xs text-neutral-500">
+            公開URL:{" "}
+            {normalizedIdForDisplay
+              ? `/news/${normalizedIdForDisplay}`
+              : "/news/<id>"}
+          </p>
         </div>
 
         <div>
@@ -714,42 +748,22 @@ export function NewsForm({ initialData }: NewsFormProps) {
           )}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="date"
-              className="mb-2 block text-sm font-medium text-neutral-700"
-            >
-              日付 <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="date"
-              {...register("date")}
-              className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-              placeholder="2025.09.12"
-            />
-            {errors.date && (
-              <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="tag"
-              className="mb-2 block text-sm font-medium text-neutral-700"
-            >
-              タグ
-            </label>
-            <input
-              id="tag"
-              {...register("tag")}
-              className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-              placeholder="Product Update"
-            />
-            {errors.tag && (
-              <p className="mt-1 text-sm text-red-600">{errors.tag.message}</p>
-            )}
-          </div>
+        <div>
+          <label
+            htmlFor="date"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
+            日付 <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="date"
+            {...register("date")}
+            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+            placeholder="2025.09.12"
+          />
+          {errors.date && (
+            <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
+          )}
         </div>
 
         <input type="hidden" {...register("thumbnailSrc")} />
@@ -806,56 +820,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
         </div>
 
         <div>
-          <label
-            htmlFor="thumbnailAlt"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            サムネイル画像の説明 <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="thumbnailAlt"
-            {...register("thumbnailAlt")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="Atlas OS v2 product interface preview"
-          />
-          {errors.thumbnailAlt && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.thumbnailAlt.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="link"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            リンク <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="link"
-            {...register("link")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="/news/atlas-os-v2-release"
-          />
-          {errors.link && (
-            <p className="mt-1 text-sm text-red-600">{errors.link.message}</p>
-          )}
-        </div>
-
-        <div>
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm font-medium text-neutral-700">
-              段落 <span className="text-red-500">*</span>
-            </p>
-            <button
-              type="button"
-              onClick={appendContentSection}
-              className="text-sm text-neutral-600 underline"
-            >
-              + 段落を追加
-            </button>
-          </div>
+          <p className="mb-2 text-sm font-medium text-neutral-700">
+            段落 <span className="text-red-500">*</span>
+          </p>
           <div className="space-y-6">
             {contentFields.map((field, index) => {
               const imageSrc = watch(`content.${index}.imageSrc`);
@@ -940,10 +907,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
                           {contentPreviews[index] ? (
                             <Image
                               src={contentPreviews[index]}
-                              alt={
-                                watch(`content.${index}.imageAlt`) ||
-                                `段落${index + 1}の画像`
-                              }
+                              alt={`段落${index + 1}の画像プレビュー`}
                               fill
                               sizes="100%"
                               className="object-cover"
@@ -998,26 +962,6 @@ export function NewsForm({ initialData }: NewsFormProps) {
                           disabled={loading}
                         />
                       </div>
-                      <div>
-                        <label
-                          htmlFor={`content-image-alt-${index}`}
-                          className="mb-1 block text-xs font-medium text-neutral-600"
-                        >
-                          画像の説明
-                        </label>
-                        <input
-                          id={`content-image-alt-${index}`}
-                          {...register(`content.${index}.imageAlt` as const)}
-                          disabled={!hasImage}
-                          className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:bg-neutral-100"
-                          placeholder="画像の説明を入力してください"
-                        />
-                        {errors.content?.[index]?.imageAlt && (
-                          <p className="mt-1 text-sm text-red-600">
-                            {errors.content[index]?.imageAlt?.message}
-                          </p>
-                        )}
-                      </div>
                       <input
                         type="hidden"
                         {...register(`content.${index}.imageSrc` as const)}
@@ -1038,6 +982,15 @@ export function NewsForm({ initialData }: NewsFormProps) {
               {errors.content.message}
             </p>
           )}
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={appendContentSection}
+              className="text-sm text-neutral-600 underline"
+            >
+              + 段落を追加
+            </button>
+          </div>
         </div>
 
         <div>
@@ -1061,6 +1014,29 @@ export function NewsForm({ initialData }: NewsFormProps) {
           )}
           <p className="mt-1 text-xs text-neutral-500">
             ニュース一覧ページで表示される短い概要です（オプション）
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="contactEmail"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
+            お問い合わせメールアドレス
+          </label>
+          <input
+            id="contactEmail"
+            {...register("contactEmail")}
+            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+            placeholder="press@atlas.inc"
+          />
+          {errors.contactEmail && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.contactEmail.message}
+            </p>
+          )}
+          <p className="mt-1 text-xs text-neutral-500">
+            記事の末尾に「この記事に関してのお問い合わせは: メールアドレス」を表示します（任意）
           </p>
         </div>
 

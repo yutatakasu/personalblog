@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS news (
     summary TEXT,
     subtitle TEXT,
     content JSONB NOT NULL DEFAULT '[]'::jsonb,
-    tag TEXT,
+    contact_email TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -64,8 +64,6 @@ CREATE TABLE IF NOT EXISTS investor_groups (
 
 -- インデックスの作成
 CREATE INDEX IF NOT EXISTS idx_news_date ON news (date DESC);
-
-CREATE INDEX IF NOT EXISTS idx_news_tag ON news (tag);
 
 CREATE INDEX IF NOT EXISTS idx_positions_department ON positions (department);
 
