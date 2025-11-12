@@ -65,13 +65,8 @@ export default async function NewsDetailPage({
             {item.subtitle && (
               <p className="text-lg text-neutral-600">{item.subtitle}</p>
             )}
-            {item.tag ? (
-              <span className="inline-block rounded-full border border-neutral-200 px-3 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500">
-                {item.tag}
-              </span>
-            ) : null}
           </header>
-          <div className="mt-10 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
+          <div className="mt-10 overflow-hidden border border-neutral-200 bg-neutral-100">
             <div className="relative h-64 w-full sm:h-80">
               <Image
                 src={item.thumbnailSrc}
@@ -101,7 +96,7 @@ export default async function NewsDetailPage({
                     <p className="text-base leading-relaxed">{block.text}</p>
                   ) : null}
                   {block.image ? (
-                    <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
+                    <div className="overflow-hidden border border-neutral-200 bg-neutral-100">
                       <div className="relative h-64 w-full sm:h-80">
                         <Image
                           src={block.image.src}
@@ -117,6 +112,19 @@ export default async function NewsDetailPage({
               );
             })}
           </article>
+          {item.contactEmail ? (
+            <div className="mt-12 border-t border-neutral-200 pt-6">
+              <p className="text-sm text-neutral-600">
+                この記事に関してのお問い合わせは:{" "}
+                <a
+                  href={`mailto:${item.contactEmail}`}
+                  className="underline transition hover:text-neutral-900"
+                >
+                  {item.contactEmail}
+                </a>
+              </p>
+            </div>
+          ) : null}
           <div className="mt-12">
             <Link
               href="/news"

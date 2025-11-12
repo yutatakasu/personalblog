@@ -25,7 +25,7 @@ export type NewsItem = {
   link: string;
   content: ContentBlock[];
   summary?: string;
-  tag?: string;
+  contactEmail?: string;
 };
 
 type LegacyParagraphBlock = {
@@ -217,7 +217,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
-    tag: "Product Update",
+    contactEmail: "press@atlas.inc",
   },
   {
     id: "mitsui-collaboration",
@@ -235,7 +235,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
-    tag: "Partnership",
+    contactEmail: "press@atlas.inc",
   },
   {
     id: "series-a-funding",
@@ -253,7 +253,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
-    tag: "Funding",
+    contactEmail: "investor-relations@atlas.inc",
   },
   {
     id: "memory-layer-roadmap",
@@ -271,7 +271,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
-    tag: "Product",
+    contactEmail: "press@atlas.inc",
   },
   {
     id: "kyoto-research-lab",
@@ -289,7 +289,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
-    tag: "R&D",
+    contactEmail: "press@atlas.inc",
   },
   {
     id: "ai-governance-forum",
@@ -307,7 +307,7 @@ export const defaultNewsItems: NewsItem[] = [
     ],
     summary:
       "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
-    tag: "Event",
+    contactEmail: "press@atlas.inc",
   },
 ];
 

@@ -6,16 +6,17 @@ type CareersSectionProps = {
   positions: Position[];
 };
 
-const HIGHLIGHTED_POSITIONS_COUNT = 3;
+const VISIBLE_POSITIONS_COUNT = 2;
 
 export function CareersSection({ positions }: CareersSectionProps) {
-  const highlightedPositions = positions.slice(0, HIGHLIGHTED_POSITIONS_COUNT);
+  const visiblePositions = positions.slice(0, VISIBLE_POSITIONS_COUNT);
+  const hasMorePositions = positions.length > VISIBLE_POSITIONS_COUNT;
   return (
     <section
       id="careers"
       className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
     >
-      <div className="grid w-full max-w-5xl grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
+      <div className="grid w-full max-w-5xl flex-1 grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
         <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-black/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
           Careers
         </p>
@@ -49,16 +50,10 @@ export function CareersSection({ positions }: CareersSectionProps) {
             <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
               <div className="flex items-center justify-between text-[0.65rem] uppercase tracking-[0.25em] text-black/45 sm:text-xs sm:tracking-[0.3em]">
                 <span className="font-mono">Open positions</span>
-                <Link
-                  href="/positions#open-roles"
-                  className="text-[0.6rem] lowercase tracking-[0.15em] text-black/40 transition hover:text-black/80 sm:text-[0.7rem] sm:tracking-[0.2em]"
-                >
-                  view all
-                </Link>
               </div>
               <div className="border-t border-black/10" />
               <ul className="space-y-0 divide-y divide-black/10">
-                {highlightedPositions.map((role) => (
+                {visiblePositions.map((role) => (
                   <li key={role.id} className="py-3 sm:py-4 md:py-5">
                     <Link
                       href={`/positions#${role.id}`}
@@ -80,6 +75,20 @@ export function CareersSection({ positions }: CareersSectionProps) {
                   </li>
                 ))}
               </ul>
+              {hasMorePositions ? (
+                <Link
+                  href="/positions#open-roles"
+                  className="group mt-3 inline-flex items-center justify-between rounded-full border border-black/15 px-4 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-black/50 transition hover:border-black/30 hover:text-black/80 sm:mt-4 sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.25em]"
+                >
+                  <span className="font-mono">View all positions</span>
+                  <span
+                    aria-hidden
+                    className="text-[0.7rem] transition-transform group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>

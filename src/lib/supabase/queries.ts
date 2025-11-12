@@ -28,7 +28,7 @@ export async function getAllNews(): Promise<NewsItem[]> {
       link: item.link,
       content: normalizeNewsContent(item.content),
       summary: item.summary ?? undefined,
-      tag: item.tag ?? undefined,
+      contactEmail: item.contact_email ?? undefined,
     })) ?? []
   );
 }
@@ -63,7 +63,7 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
     link: data.link,
     content: normalizeNewsContent(data.content),
     summary: data.summary ?? undefined,
-    tag: data.tag ?? undefined,
+    contactEmail: data.contact_email ?? undefined,
   };
 }
 

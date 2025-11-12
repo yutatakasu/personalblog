@@ -14,7 +14,7 @@ type NewsItem = {
   thumbnail_alt: string;
   link: string;
   summary?: string;
-  tag?: string;
+  contact_email?: string | null;
 };
 
 export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
@@ -79,9 +79,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
                     <h3 className="font-serif text-lg text-neutral-900">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-sm text-neutral-600">
-                      {item.date} {item.tag && `・ ${item.tag}`}
-                    </p>
+                    <p className="mt-1 text-sm text-neutral-600">{item.date}</p>
                     {item.summary && (
                       <p className="mt-2 text-sm text-neutral-500 line-clamp-2">
                         {item.summary}

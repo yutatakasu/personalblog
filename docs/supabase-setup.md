@@ -147,12 +147,18 @@ Supabase Dashboard の Table Editor から、各テーブルに初期データ�
 
 ### investor_groups テーブル
 
-`src/models/backed_by.ts` の `defaultInvestorGroups` を参考に、以下の形式でデータを投入：
+`src/models/backed_by.ts` の `defaultInvestorGroups` を参考に、以下の形式でデータを投入します。  
+初期状態では 3 枠すべてが「coming soon...」プレースホルダーになっています。
 
 ```json
 {
   "category": "Lead Investors",
-  "supporters": ["North Star Ventures", "FutureFabric Capital", "Tokyo Frontier Fund"]
+  "supporters": [
+    {
+      "name": "Coming Soon",
+      "focus": "coming soon..."
+    }
+  ]
 }
 ```
 
