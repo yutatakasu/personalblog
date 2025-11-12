@@ -5,7 +5,9 @@ const productPositions = [
 ];
 
 const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-6 sm:left-8 md:left-10 lg:left-12 top-16 sm:top-24 md:top-28 lg:top-32";
+  "pointer-events-none absolute left-32 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
+const SECTION_LABEL_SHARED_CLASSES =
+  "font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
 const SECTION_CONTENT_OFFSET =
   "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
@@ -53,10 +55,10 @@ export function ProductsSection() {
   return (
     <section
       id="products"
-      className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
+      className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background"
     >
       <p
-        className={`${SECTION_LABEL_POSITION} font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] text-[#2a2a2a]/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+        className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-[#2a2a2a]/40`}
       >
         Products
       </p>

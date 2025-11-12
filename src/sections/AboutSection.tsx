@@ -204,12 +204,13 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   );
 }
 
+const SECTION_LABEL_SHARED_CLASSES =
+  "font-mono uppercase tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
+const SECTION_LABEL_POSITION =
+  "pointer-events-none absolute left-32 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
+const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
-const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-6 sm:left-8 md:left-10 lg:left-12 top-16 sm:top-24 md:top-28 lg:top-32";
-const SECTION_CONTENT_OFFSET =
-  "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
 type AboutSectionProps = {
   newsItems: NewsItem[];
@@ -226,7 +227,7 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-[#f8f7f4] p-2.5 transition hover:border-neutral-300 hover:bg-[#f5f4f1] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:gap-4 sm:rounded-2xl sm:p-3"
+      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-2xl sm:p-3"
     >
       <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:h-16 sm:w-24 sm:rounded-xl">
         <Image
@@ -288,22 +289,21 @@ export function AboutSection({
           <div className="absolute inset-0 bg-black/40" aria-hidden />
         </div>
         <p
-          className={`${SECTION_LABEL_POSITION} z-20 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-white/60 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+          className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} z-20 text-white/60`}
         >
           About
         </p>
-        <div
-          className={`relative z-10 flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
-        >
-          <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 text-left sm:gap-6 md:gap-8 lg:gap-10">
-            <h2 className="font-serif text-xl leading-snug sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+        <div className="relative z-10 flex w-full min-h-dvh items-center justify-center px-4 py-24 sm:px-6 sm:py-28 md:px-8 md:py-32 lg:px-10 lg:py-36 xl:py-40">
+          <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-6 md:gap-8 lg:gap-10">
+            <h2 className="font-serif text-xl leading-tight sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
               <span className="block">心躍る、ワクワクするAIを作ろう</span>
               <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
                 Atlasは Memory as a Service の会社です
               </span>
             </h2>
-            <p className="text-xs leading-relaxed text-white/75 sm:text-sm md:text-base">
-              分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
+            <p className="max-w-3xl text-xs leading-relaxed text-white/75 sm:text-sm md:text-base">
+              分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas
+              は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
             </p>
           </div>
         </div>
@@ -311,10 +311,10 @@ export function AboutSection({
 
       <section
         id="about-team"
-        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background text-neutral-900"
       >
         <p
-          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+          className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-neutral-400`}
         >
           Team
         </p>
@@ -331,7 +331,7 @@ export function AboutSection({
                   type="button"
                   onClick={() => setIsTeamExpanded((previous) => !previous)}
                   aria-expanded={isTeamExpanded}
-                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-[#f8f7f4] text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
+                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-background text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
                 >
                   <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
                   <span className="sr-only">
@@ -372,10 +372,10 @@ export function AboutSection({
 
       <section
         id="about-backed"
-        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background text-neutral-900"
       >
         <p
-          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+          className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-neutral-400`}
         >
           Backed By
         </p>
@@ -417,10 +417,10 @@ export function AboutSection({
 
       <section
         id="about-news"
-        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background text-neutral-900"
       >
         <p
-          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+          className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-neutral-400`}
         >
           Current News
         </p>
