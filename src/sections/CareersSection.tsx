@@ -20,7 +20,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
         <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-black/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
           Careers
         </p>
-        <div className="flex flex-1 flex-col justify-center gap-10 md:gap-12 lg:gap-16">
+        <div className="flex w-full max-w-5xl flex-1 flex-col justify-center gap-10 md:gap-12 lg:gap-16">
           <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-12 lg:gap-16 md:items-start">
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
               <h2 className="font-serif text-xl leading-snug text-black sm:text-2xl md:text-3xl lg:text-[3.25rem] lg:leading-[1.1] xl:text-[3.75rem]">
