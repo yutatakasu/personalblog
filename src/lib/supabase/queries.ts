@@ -152,6 +152,8 @@ export async function getAllTeamMembers(): Promise<TeamMember[]> {
     return [];
   }
 
+  console.info("[queries/getAllTeamMembers] raw response:", data);
+
   return (
     data?.map((item) => ({
       id: item.id,

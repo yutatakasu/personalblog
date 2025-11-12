@@ -206,6 +206,10 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
+const SECTION_LABEL_POSITION =
+  "pointer-events-none absolute left-6 sm:left-8 md:left-10 lg:left-12 top-16 sm:top-24 md:top-28 lg:top-32";
+const SECTION_CONTENT_OFFSET =
+  "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
 type AboutSectionProps = {
   newsItems: NewsItem[];
@@ -283,87 +287,84 @@ export function AboutSection({
           />
           <div className="absolute inset-0 bg-black/40" aria-hidden />
         </div>
-        <div className="relative z-10 flex w-full justify-center px-4 pb-12 pt-16 sm:px-6 sm:pb-14 sm:pt-24 md:px-8 md:pb-16 md:pt-28 lg:px-10 lg:pb-16 lg:pt-24 xl:pb-16 xl:pt-24 2xl:pb-16 2xl:pt-24">
-          <div className="grid w-full max-w-4xl flex-1 grid-rows-[auto_1fr] gap-6 text-left sm:gap-8 md:gap-10">
-            <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-white/60 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
-              About
+        <p
+          className={`${SECTION_LABEL_POSITION} z-20 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-white/60 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+        >
+          About
+        </p>
+        <div
+          className={`relative z-10 flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+        >
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 text-left sm:gap-6 md:gap-8 lg:gap-10">
+            <h2 className="font-serif text-xl leading-snug sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+              <span className="block">心躍る、ワクワクするAIを作ろう</span>
+              <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
+                Atlasは Memory as a Service の会社です
+              </span>
+            </h2>
+            <p className="text-xs leading-relaxed text-white/75 sm:text-sm md:text-base">
+              分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
             </p>
-            <div className="flex flex-1">
-              <div className="my-auto flex w-full flex-col gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                <h2 className="font-serif text-xl leading-snug sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-                  <span className="block">心躍る、ワクワクするAIを作ろう</span>
-                  <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
-                    Atlasは Memory as a Service の会社です
-                  </span>
-                </h2>
-                <p className="text-xs leading-relaxed text-white/75 sm:text-sm md:text-base">
-                  分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas
-                  は、
-                  これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、
-                  チーム全体の意思決定を加速させます。
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       <section
         id="about-team"
-        className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="flex w-full justify-center px-4 pb-12 pt-16 sm:px-6 sm:pb-14 sm:pt-24 md:px-8 md:pb-16 md:pt-28 lg:px-10 lg:pb-16 lg:pt-24 xl:pb-16 xl:pt-24 2xl:pb-16 2xl:pt-24">
-          <div className="grid w-full max-w-6xl flex-1 grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
-            <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
-              Team
-            </p>
-            <div className="flex h-full">
-              <div className="my-auto flex w-full flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-                <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:gap-x-4 sm:gap-y-5 md:hidden">
-                  {mobileVisibleMembers.map((member) => (
-                    <TeamCard key={member.id} member={member} />
-                  ))}
-                  {hasAdditionalMembers ? (
-                    <button
-                      type="button"
-                      onClick={() => setIsTeamExpanded((previous) => !previous)}
-                      aria-expanded={isTeamExpanded}
-                      className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-[#f8f7f4] text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
-                    >
-                      <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
-                      <span className="sr-only">
-                        {isTeamExpanded
-                          ? "チームメンバーを折りたたむ"
-                          : "すべてのチームメンバーを表示"}
-                      </span>
-                    </button>
-                  ) : null}
-                </div>
+        <p
+          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+        >
+          Team
+        </p>
+        <div
+          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+        >
+          <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
+            <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:gap-x-4 sm:gap-y-5 md:hidden">
+              {mobileVisibleMembers.map((member) => (
+                <TeamCard key={member.id} member={member} />
+              ))}
+              {hasAdditionalMembers ? (
+                <button
+                  type="button"
+                  onClick={() => setIsTeamExpanded((previous) => !previous)}
+                  aria-expanded={isTeamExpanded}
+                  className="col-span-2 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-[#f8f7f4] text-base text-neutral-400 transition hover:border-neutral-300 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f7f4] sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl"
+                >
+                  <span aria-hidden>{isTeamExpanded ? "X" : "..."}</span>
+                  <span className="sr-only">
+                    {isTeamExpanded
+                      ? "チームメンバーを折りたたむ"
+                      : "すべてのチームメンバーを表示"}
+                  </span>
+                </button>
+              ) : null}
+            </div>
 
-                <div className="hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-8 md:gap-y-8">
-                  {teamMembers.map((member) => (
-                    <TeamCard
-                      key={member.id}
-                      member={member}
-                      className="max-w-none"
-                    />
-                  ))}
-                </div>
+            <div className="hidden w-full md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-8 lg:hidden">
+              {teamMembers.map((member) => (
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  className="max-w-none"
+                />
+              ))}
+            </div>
 
-                <div className="hidden w-full lg:grid mx-auto max-w-7xl grid-cols-5 grid-rows-3 gap-x-10 gap-y-10 xl:gap-x-12 xl:gap-y-12">
-                  {teamMembers.map((member) => (
-                    <TeamCard
-                      key={member.id}
-                      member={member}
-                      style={{
-                        gridColumnStart: member.position.column,
-                        gridRowStart: member.position.row,
-                        marginTop: member.position.offsetY,
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+            <div className="mx-auto hidden w-full max-w-7xl grid-cols-5 grid-rows-3 gap-x-10 gap-y-10 lg:grid xl:gap-x-12 xl:gap-y-12">
+              {teamMembers.map((member) => (
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  style={{
+                    gridColumnStart: member.position.column,
+                    gridRowStart: member.position.row,
+                    marginTop: member.position.offsetY,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -371,44 +372,44 @@ export function AboutSection({
 
       <section
         id="about-backed"
-        className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="flex w-full justify-center px-4 pb-12 pt-16 sm:px-6 sm:pb-14 sm:pt-24 md:px-8 md:pb-16 md:pt-28 lg:px-10 lg:pb-16 lg:pt-24 xl:pb-16 xl:pt-24 2xl:pb-16 2xl:pt-24">
-          <div className="grid w-full max-w-6xl flex-1 grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
-            <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
-              Backed By
-            </p>
-            <div className="flex h-full">
-              <div className="my-auto flex w-full flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-                <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-                  信頼できるパートナーとともに、Atlasの技術で記憶レイヤの主権を個人に取り戻します。
-                </h2>
-                <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
-                  {categorizedSupporters.map((supporter) => (
-                    <SupporterCard
-                      key={`${supporter.category}-${supporter.name}`}
-                      supporter={supporter}
-                    />
-                  ))}
-                </div>
-                <div className="hidden w-full md:grid lg:hidden md:grid-cols-2 md:gap-x-8 md:gap-y-8">
-                  {categorizedSupporters.map((supporter) => (
-                    <SupporterCard
-                      key={`${supporter.category}-${supporter.name}`}
-                      supporter={supporter}
-                      className="max-w-none"
-                    />
-                  ))}
-                </div>
-                <div className="hidden w-full lg:grid mx-auto max-w-7xl grid-cols-5 gap-x-10 gap-y-10 justify-items-center xl:gap-x-12 xl:gap-y-12">
-                  {categorizedSupporters.map((supporter) => (
-                    <SupporterCard
-                      key={`${supporter.category}-${supporter.name}`}
-                      supporter={supporter}
-                    />
-                  ))}
-                </div>
-              </div>
+        <p
+          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+        >
+          Backed By
+        </p>
+        <div
+          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+        >
+          <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
+            <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+              信頼できるパートナーとともに、Atlasの技術で記憶レイヤの主権を個人に取り戻します。
+            </h2>
+            <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
+              {categorizedSupporters.map((supporter) => (
+                <SupporterCard
+                  key={`${supporter.category}-${supporter.name}`}
+                  supporter={supporter}
+                />
+              ))}
+            </div>
+            <div className="hidden w-full md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-8 lg:hidden">
+              {categorizedSupporters.map((supporter) => (
+                <SupporterCard
+                  key={`${supporter.category}-${supporter.name}`}
+                  supporter={supporter}
+                  className="max-w-none"
+                />
+              ))}
+            </div>
+            <div className="mx-auto hidden w-full max-w-7xl grid-cols-5 gap-x-10 gap-y-10 justify-items-center lg:grid xl:gap-x-12 xl:gap-y-12">
+              {categorizedSupporters.map((supporter) => (
+                <SupporterCard
+                  key={`${supporter.category}-${supporter.name}`}
+                  supporter={supporter}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -416,37 +417,37 @@ export function AboutSection({
 
       <section
         id="about-news"
-        className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4] text-neutral-900"
       >
-        <div className="flex w-full justify-center px-4 pb-12 pt-16 sm:px-6 sm:pb-14 sm:pt-24 md:px-8 md:pb-16 md:pt-28 lg:px-10 lg:pb-16 lg:pt-24 xl:pb-16 xl:pt-24 2xl:pb-16 2xl:pt-24">
-          <div className="grid w-full max-w-5xl flex-1 grid-rows-[auto_1fr] gap-6 sm:gap-8 md:gap-10">
-            <p className="shrink-0 font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
-              Current News
-            </p>
-            <div className="flex flex-1">
-              <div className="my-auto flex w-full flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-                <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-                  プロダクトの進化とパートナーシップの最新情報をお届けします。
-                </h2>
-                <div className="space-y-2 sm:space-y-3 md:space-y-4">
-                  {previewNewsItems.map((news) => (
-                    <NewsPreviewCard key={news.id} item={news} />
-                  ))}
-                </div>
-                {hasAdditionalNews ? (
-                  <div>
-                    <Link
-                      href="/news"
-                      prefetch={false}
-                      className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5 sm:py-2 sm:text-sm"
-                    >
-                      ニュース一覧へ
-                      <span aria-hidden>&gt;</span>
-                    </Link>
-                  </div>
-                ) : null}
-              </div>
+        <p
+          className={`${SECTION_LABEL_POSITION} font-mono uppercase tracking-[0.25em] text-[0.6rem] text-neutral-400 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+        >
+          Current News
+        </p>
+        <div
+          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+        >
+          <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
+            <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+              プロダクトの進化とパートナーシップの最新情報をお届けします。
+            </h2>
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
+              {previewNewsItems.map((news) => (
+                <NewsPreviewCard key={news.id} item={news} />
+              ))}
             </div>
+            {hasAdditionalNews ? (
+              <div>
+                <Link
+                  href="/news"
+                  prefetch={false}
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5 sm:py-2 sm:text-sm"
+                >
+                  ニュース一覧へ
+                  <span aria-hidden>&gt;</span>
+                </Link>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

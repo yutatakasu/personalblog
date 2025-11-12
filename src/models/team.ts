@@ -176,12 +176,19 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
+    console.warn(
+      "[models/team] Supabase環境変数が設定されていないためデフォルトデータを返します。",
+    );
     return defaultTeamMembers;
   }
 
   try {
     const { getAllTeamMembers } = await import("@/lib/supabase/queries");
     const items = await getAllTeamMembers();
+    console.info(
+      "[models/team] Supabaseから取得したチームメンバー数:",
+      items.length,
+    );
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
     return items.length > 0 ? items : defaultTeamMembers;
   } catch (error) {
@@ -194,9 +201,9 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
             stack: error.stack,
           }
         : error;
-    console.error(
-      "Failed to fetch team members from Supabase, using default data:",
-      errorInfo,
+    console.error("[models/team] Supabaseからの取得に失敗:", errorInfo);
+    console.info(
+      "[models/team] 取得失敗のためデフォルトデータを返します。",
     );
     return defaultTeamMembers;
   }

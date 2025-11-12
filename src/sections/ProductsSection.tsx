@@ -4,6 +4,11 @@ const productPositions = [
   { column: 3, row: 1, offsetY: "-40px" },
 ];
 
+const SECTION_LABEL_POSITION =
+  "pointer-events-none absolute left-6 sm:left-8 md:left-10 lg:left-12 top-16 sm:top-24 md:top-28 lg:top-32";
+const SECTION_CONTENT_OFFSET =
+  "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+
 const productMobileLayoutClasses = [
   "-mt-1 sm:mt-0 justify-self-start",
   "mt-10 sm:mt-12 justify-self-end",
@@ -48,35 +53,37 @@ export function ProductsSection() {
   return (
     <section
       id="products"
-      className="snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
+      className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-[#f8f7f4]"
     >
-      <div className="grid w-full max-w-4xl flex-1 grid-rows-[auto_1fr] px-4 pb-8 pt-16 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 md:pb-16 md:pt-32 lg:px-10 lg:pb-20 lg:pt-36 xl:pb-28 xl:pt-40 2xl:pb-32 2xl:pt-44">
-        <p className="shrink-0 font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] text-[#2a2a2a]/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm">
-          Products
-        </p>
-        <div className="flex flex-1">
-          <div className="my-auto flex w-full flex-col items-start gap-6 text-left sm:gap-8 md:gap-10">
-            <h2 className="font-serif text-xl leading-snug text-[#2a2a2a] sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-              スケールするAIを支えるAtlasのコア技術
-            </h2>
-            <div className="grid w-full grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:hidden">
-              {[1, 2, 3].map((index, mobileIndex) => (
-                <ProductItem
-                  key={index}
-                  index={index}
-                  className={productMobileLayoutClasses[mobileIndex]}
-                />
-              ))}
-            </div>
-            <div className="hidden w-full lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-16 lg:gap-y-12 xl:gap-x-20 xl:gap-y-14">
-              {[1, 2, 3].map((index, i) => (
-                <ProductItem
-                  key={index}
-                  index={index}
-                  position={productPositions[i]}
-                />
-              ))}
-            </div>
+      <p
+        className={`${SECTION_LABEL_POSITION} font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] text-[#2a2a2a]/40 sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-sm`}
+      >
+        Products
+      </p>
+      <div
+        className={`flex w-full justify-center px-4 pb-8 sm:px-6 sm:pb-12 md:px-8 md:pb-16 lg:px-10 lg:pb-20 xl:pb-28 2xl:pb-32 ${SECTION_CONTENT_OFFSET}`}
+      >
+        <div className="mx-auto flex w-full max-w-4xl flex-col items-start gap-6 text-left sm:gap-8 md:gap-10">
+          <h2 className="font-serif text-xl leading-snug text-[#2a2a2a] sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+            スケールするAIを支えるAtlasのコア技術
+          </h2>
+          <div className="grid w-full grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:hidden">
+            {[1, 2, 3].map((index, mobileIndex) => (
+              <ProductItem
+                key={index}
+                index={index}
+                className={productMobileLayoutClasses[mobileIndex]}
+              />
+            ))}
+          </div>
+          <div className="hidden w-full lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-16 lg:gap-y-12 xl:gap-x-20 xl:gap-y-14">
+            {[1, 2, 3].map((index, i) => (
+              <ProductItem
+                key={index}
+                index={index}
+                position={productPositions[i]}
+              />
+            ))}
           </div>
         </div>
       </div>
