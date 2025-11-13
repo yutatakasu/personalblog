@@ -1,5 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
 import type { Metadata } from "next";
+import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
 import { SmoothScrollLink } from "@/components/SmoothScrollLink";
@@ -20,7 +20,6 @@ const workStyleLabel = {
 export default async function PositionsPage() {
   noStore();
   const positions = await getPositions();
-  const firstPositionId = positions[0]?.id ?? "ai-systems-engineer";
 
   return (
     <div className="min-h-screen bg-white text-black">

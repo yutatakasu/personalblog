@@ -112,8 +112,7 @@ export function Header() {
     { id: "careers", label: "Careers", href: "#careers" },
     { id: "contact", label: "Contact", href: "#contact" },
   ];
-  const isSectionDark = (section: string) =>
-    sectionThemes[section] === "dark";
+  const isSectionDark = (section: string) => sectionThemes[section] === "dark";
 
   const isDarkBackground = isSectionDark(surfaceSection);
   const baseHeaderTextClass = isDarkBackground

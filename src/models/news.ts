@@ -112,9 +112,8 @@ const normalizeTitle = (title: unknown): string =>
 
 const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
   raw
-    .filter(
-      (block): block is ContentBlockCandidate =>
-        isNewContentBlockCandidate(block),
+    .filter((block): block is ContentBlockCandidate =>
+      isNewContentBlockCandidate(block),
     )
     .map((block) => ({
       title: normalizeTitle(block.title),

@@ -202,9 +202,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
           }
         : error;
     console.error("[models/team] Supabaseからの取得に失敗:", errorInfo);
-    console.info(
-      "[models/team] 取得失敗のためデフォルトデータを返します。",
-    );
+    console.info("[models/team] 取得失敗のためデフォルトデータを返します。");
     return defaultTeamMembers;
   }
 }

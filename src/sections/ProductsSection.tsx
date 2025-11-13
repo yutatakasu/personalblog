@@ -5,11 +5,10 @@ const productPositions = [
 ];
 
 const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-32 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
+  "pointer-events-none absolute left-12 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
 const SECTION_LABEL_SHARED_CLASSES =
   "font-mono font-medium capitalize tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
-const SECTION_CONTENT_OFFSET =
-  "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
 const productMobileLayoutClasses = [
   "-mt-1 sm:mt-0 justify-self-start",
@@ -18,11 +17,9 @@ const productMobileLayoutClasses = [
 ];
 
 function ProductItem({
-  index,
   position,
   className,
 }: {
-  index: number;
   position?: { column: number; row: number; offsetY: string };
   className?: string;
 }) {
@@ -66,25 +63,20 @@ export function ProductsSection() {
         className={`flex w-full justify-center px-4 pb-8 sm:px-6 sm:pb-12 md:px-8 md:pb-16 lg:px-10 lg:pb-20 xl:pb-28 2xl:pb-32 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-4xl flex-col items-start gap-6 text-left sm:gap-8 md:gap-10">
-          <h2 className="font-serif text-xl leading-snug text-[#2a2a2a] sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+          <h2 className="mb-8 font-serif text-base leading-snug text-[#2a2a2a] sm:mb-10 sm:text-lg md:mb-12 md:text-xl lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
             スケールするAIを支えるAtlasのコア技術
           </h2>
           <div className="grid w-full grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:hidden">
             {[1, 2, 3].map((index, mobileIndex) => (
               <ProductItem
                 key={index}
-                index={index}
                 className={productMobileLayoutClasses[mobileIndex]}
               />
             ))}
           </div>
           <div className="hidden w-full lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-16 lg:gap-y-12 xl:gap-x-20 xl:gap-y-14">
             {[1, 2, 3].map((index, i) => (
-              <ProductItem
-                key={index}
-                index={index}
-                position={productPositions[i]}
-              />
+              <ProductItem key={index} position={productPositions[i]} />
             ))}
           </div>
         </div>

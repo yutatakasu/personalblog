@@ -3,11 +3,10 @@ import Image from "next/image";
 import { Footer } from "@/components/Footer";
 
 const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-32 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
+  "pointer-events-none absolute left-12 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
 const SECTION_LABEL_SHARED_CLASSES =
   "font-mono uppercase tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
-const SECTION_CONTENT_OFFSET =
-  "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
 export function ContactSection() {
   return (
@@ -36,10 +35,10 @@ export function ContactSection() {
         Contact
       </p>
       <div
-        className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-20 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+        className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-8 sm:px-6 sm:pb-10 md:px-8 md:pb-10 lg:px-10 lg:pb-8 xl:pb-8 2xl:pb-8 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
-          <h2 className="font-serif text-lg leading-tight text-white sm:text-xl md:text-2xl lg:text-[2.5rem] lg:leading-[1.1] xl:text-[3rem]">
+          <h2 className="font-serif text-base leading-tight text-white sm:text-lg md:text-xl lg:text-[2.25rem] lg:leading-[1.1] xl:text-[2.75rem]">
             Company Information
           </h2>
           <dl className="border-t border-white/20 text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">
@@ -104,7 +103,7 @@ export function ContactSection() {
           </div>
         </div>
       </div>
-      <Footer className="relative mt-auto" />
+      <Footer className="relative mt-auto mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28 2xl:mb-32" />
     </section>
   );
 }
