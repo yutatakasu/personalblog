@@ -295,15 +295,14 @@ export function AboutSection({
         </p>
         <div className="relative z-10 flex w-full min-h-dvh items-center justify-center px-4 py-24 sm:px-6 sm:py-28 md:px-8 md:py-32 lg:px-10 lg:py-36 xl:py-40">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-6 md:gap-8 lg:gap-10">
-            <h2 className="font-serif text-xl leading-tight sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
-              <span className="block">心躍る、ワクワクするAIを作ろう</span>
+            <h2 className="font-serif text-lg leading-tight sm:text-xl md:text-2xl lg:text-[3rem] lg:leading-[1.1] xl:text-[3.5rem]">
+              <span className="block">Memory as a Sovereignty</span>
               <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
-                Atlasは Memory as a Service の会社です
+                Atlas は MaaS の会社です
               </span>
             </h2>
-            <p className="max-w-3xl text-xs leading-relaxed text-white/75 sm:text-sm md:text-base">
-              分散した知識、複雑化したプロセス、そして変化の激しい市場環境。Atlas
-              は、これらの課題に対して「観測・予測・実行」をつなぐワークフローを再設計し、チーム全体の意思決定を加速させます。
+            <p className="max-w-3xl text-sm leading-relaxed text-white/75 sm:text-base md:text-lg">
+              人類を調和に導くAI社会を作るために、コンテクストと呼ばれる"記憶"の主権を人間に取り戻すことが我が社の使命です。Atlasは、AIの持つ「記憶」を適切に発展させるインフラを開発・提供します。
             </p>
           </div>
         </div>
@@ -383,7 +382,7 @@ export function AboutSection({
           className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-            <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+            <h2 className="-mt-4 mb-8 font-serif text-base leading-snug text-neutral-900 sm:-mt-6 sm:mb-10 sm:text-lg md:-mt-8 md:mb-12 md:text-xl lg:-mt-10 lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
               信頼できるパートナーとともに、Atlasの技術で記憶レイヤの主権を個人に取り戻します。
             </h2>
             <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5 md:hidden">
@@ -428,7 +427,7 @@ export function AboutSection({
           className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-            <h2 className="font-serif text-xl leading-snug text-neutral-900 sm:text-2xl md:text-3xl lg:text-[3.5rem] lg:leading-[1.1] xl:text-[4rem]">
+            <h2 className="-mt-4 mb-8 font-serif text-base leading-snug text-neutral-900 sm:-mt-6 sm:mb-10 sm:text-lg md:-mt-8 md:mb-12 md:text-xl lg:-mt-10 lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
               プロダクトの進化とパートナーシップの最新情報をお届けします。
             </h2>
             <div className="space-y-2 sm:space-y-3 md:space-y-4">

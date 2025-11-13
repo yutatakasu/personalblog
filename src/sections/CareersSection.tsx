@@ -37,7 +37,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
               <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-black/35 sm:text-[0.65rem] md:text-xs">
                 Careers at Atlas
               </span>
-              <h2 className="font-serif text-[1.75rem] leading-tight text-black sm:text-[2.25rem] md:text-[2.75rem] lg:text-[3.25rem] lg:leading-[1.1]">
+              <h2 className="font-serif text-[1.5rem] leading-tight text-black sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]">
                 Atlasに、温度のある視点を持ち込んでください。
               </h2>
               <p className="max-w-xl text-xs leading-relaxed text-black/65 sm:text-sm md:text-base">
