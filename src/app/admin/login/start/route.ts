@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
   const identifier = getLoginRateLimitIdentifier(request);
   const evaluation = checkLoginRateLimit(identifier);
 
-  if (!evaluation.allowed) {
+  if (evaluation.allowed === false) {
     const params = new URLSearchParams({
       error: "rate_limited",
     });
