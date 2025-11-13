@@ -69,9 +69,3 @@ export function normalizeSupporters(raw: unknown): NormalizedSupporter[] {
       (supporter): supporter is NormalizedSupporter => supporter !== null,
     );
 }
-
-
-
-
-
-

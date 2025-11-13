@@ -61,37 +61,43 @@ export function CareersSection({ positions }: CareersSectionProps) {
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col gap-6">
-              <div className="rounded-3xl border border-black/10 bg-white/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:p-7 md:p-8">
-                <div className="flex items-center justify-between text-[0.6rem] uppercase tracking-[0.35em] text-black/35 sm:text-[0.65rem] sm:tracking-[0.4em] md:text-xs">
+            <div className="flex flex-col gap-5">
+              <div>
+                <div className="flex items-baseline justify-between text-[0.55rem] uppercase tracking-[0.35em] text-black/40 sm:text-[0.6rem] sm:tracking-[0.4em] md:text-[0.65rem]">
                   <span className="font-mono">Open roles</span>
                   {hasAnyPositions ? (
-                    <span className="font-mono text-[0.6rem] tracking-[0.35em] text-black/25 sm:text-[0.65rem] md:text-[0.7rem]">
+                    <span className="font-mono text-black/30">
                       {positions.length.toString().padStart(2, "0")}
                     </span>
-                  ) : null}
-                </div>
-                <div className="mt-5 divide-y divide-black/10">
-                  {hasAnyPositions ? (
-                    visiblePositions.map((role) => (
-                      <Link
-                        key={role.id}
-                        href={`/positions#${role.id}`}
-                        className="group flex items-center justify-between gap-4 py-4 text-sm text-black/65 transition hover:text-black sm:text-base"
-                      >
-                        <span className="font-serif text-lg text-black/80 group-hover:text-black">
-                          {role.title}
-                        </span>
-                        <span
-                          aria-hidden
-                          className="font-mono text-sm text-black/30 transition group-hover:translate-x-1 group-hover:text-black/60"
-                        >
-                          →
-                        </span>
-                      </Link>
-                    ))
                   ) : (
-                    <p className="py-4 text-sm text-black/45 sm:text-base">
+                    <span className="font-mono text-black/30">Closed</span>
+                  )}
+                </div>
+                <div className="mt-3 h-px bg-black/10" />
+                <div className="mt-2">
+                  {hasAnyPositions ? (
+                    <ul className="divide-y divide-black/10">
+                      {visiblePositions.map((role) => (
+                        <li key={role.id}>
+                          <Link
+                            href={`/positions#${role.id}`}
+                            className="group grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-4 py-4 text-sm text-black/70 transition hover:text-black sm:gap-6 sm:py-5 sm:text-base"
+                          >
+                            <span className="font-serif text-lg leading-tight text-black/85 group-hover:text-black">
+                              {role.title}
+                            </span>
+                            <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-black/35 sm:text-[0.65rem]">
+                              {role.location}
+                            </span>
+                            <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-black/40 transition group-hover:text-black sm:text-[0.65rem]">
+                              Apply +
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="py-6 text-sm text-black/45 sm:text-base">
                       現在募集中のポジションはありません。
                     </p>
                   )}
@@ -101,7 +107,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
                 <div>
                   <Link
                     href="/positions"
-                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-black/45 transition hover:text-black sm:text-sm sm:tracking-[0.35em]"
+                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-black/55 transition hover:text-black sm:text-sm sm:tracking-[0.35em]"
                   >
                     すべての募集を見る
                     <span aria-hidden>→</span>

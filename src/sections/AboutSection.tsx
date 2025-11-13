@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, HTMLAttributes } from "react";
 import { useEffect, useState } from "react";
 
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
@@ -60,6 +60,15 @@ function TeamCard({ member, className, style }: TeamCardProps) {
     setIsDetailOpen((previous) => !previous);
   };
 
+  const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
+    !supportsHover && canToggleDetail
+      ? {
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
+      : undefined;
+
   return (
     <article
       className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
@@ -68,11 +77,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
           : ""
       } ${className ?? ""}`}
       style={style}
-      role={!supportsHover && canToggleDetail ? "button" : undefined}
-      tabIndex={!supportsHover && canToggleDetail ? 0 : undefined}
-      aria-expanded={
-        !supportsHover && canToggleDetail ? isDetailOpen : undefined
-      }
+      {...(interactiveProps ?? {})}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -106,10 +111,10 @@ function TeamCard({ member, className, style }: TeamCardProps) {
           supportsHover
             ? "opacity-0 group-hover:opacity-100"
             : canToggleDetail
-            ? isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
-            : "opacity-100"
+              ? isDetailOpen
+                ? "opacity-100"
+                : "opacity-0"
+              : "opacity-100"
         }`}
       >
         {member.focus}
@@ -146,14 +151,21 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
     setIsDetailOpen((previous) => !previous);
   };
 
+  const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
+    !supportsHover && hasDetail
+      ? {
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
+      : undefined;
+
   return (
     <article
       className={`group flex w-full max-w-[120px] flex-col items-center gap-1.5 text-center sm:max-w-[140px] sm:gap-2 md:max-w-[160px] md:gap-3 lg:max-w-[180px] ${
         !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
       } ${className ?? ""}`}
-      role={!supportsHover && hasDetail ? "button" : undefined}
-      tabIndex={!supportsHover && hasDetail ? 0 : undefined}
-      aria-expanded={!supportsHover && hasDetail ? isDetailOpen : undefined}
+      {...(interactiveProps ?? {})}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -190,8 +202,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           <span className="block font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-400 sm:text-[0.5rem] sm:tracking-[0.3em]">
@@ -267,7 +279,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      }))
+      })),
   );
 
   return (

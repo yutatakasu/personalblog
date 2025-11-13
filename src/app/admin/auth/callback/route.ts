@@ -1,12 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import { isAdminSession } from "@/lib/supabase/admin-auth";
 import {
-  getLoginRateLimitIdentifier,
+  checkEmailRateLimit,
   recordLoginFailureByEmail,
   resetEmailRateLimit,
-  checkEmailRateLimit,
 } from "@/lib/security/login-rate-limit";
+import { isAdminSession } from "@/lib/supabase/admin-auth";
 
 type CookieOperation = {
   name: string;
@@ -134,8 +133,7 @@ export async function GET(request: NextRequest) {
         error: "rate_limited",
         error_description: encodeURIComponent(
           `このアカウントはログイン試行回数が上限に達しました。${Math.ceil(
-            Math.max(emailRateLimitCheck.blockedUntil - Date.now(), 0) /
-              60000,
+            Math.max(emailRateLimitCheck.blockedUntil - Date.now(), 0) / 60000,
           )}分後に再試行してください。`,
         ),
       });

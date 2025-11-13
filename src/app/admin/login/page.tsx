@@ -2,10 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import {
-  getAdminSupabaseClient,
-  isSupabaseConfigured,
-} from "@/lib/supabase/admin";
+import { isSupabaseConfigured } from "@/lib/supabase/admin";
 
 function AdminLoginPageInner() {
   const router = useRouter();

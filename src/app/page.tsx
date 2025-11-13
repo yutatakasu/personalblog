@@ -14,13 +14,9 @@ import { ProductsSection } from "@/sections/ProductsSection";
 
 export default async function Home() {
   noStore();
-  const [newsItems, teamMembers, investorGroups, positions] =
-    await Promise.all([
-      getNewsItems(),
-      getTeamMembers(),
-      getInvestorGroups(),
-      getPositions(),
-    ]);
+  const [newsItems, teamMembers, investorGroups, positions] = await Promise.all(
+    [getNewsItems(), getTeamMembers(), getInvestorGroups(), getPositions()],
+  );
 
   return (
     <div className="min-h-screen">

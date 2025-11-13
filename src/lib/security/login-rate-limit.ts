@@ -227,11 +227,13 @@ export function recordLoginFailureByEmail(
   }
 
   // 30分以上連続で失敗しているかチェック
+  const lastFailure = record?.lastFailure;
+  const initialFirstAttempt = record?.firstAttempt;
   const isContinuousFailure =
-    record &&
-    record.lastFailure &&
-    now - record.lastFailure <= CONTINUOUS_FAILURE_THRESHOLD_MS &&
-    now - record.firstAttempt >= CONTINUOUS_FAILURE_THRESHOLD_MS;
+    lastFailure !== undefined &&
+    initialFirstAttempt !== undefined &&
+    now - lastFailure <= CONTINUOUS_FAILURE_THRESHOLD_MS &&
+    now - initialFirstAttempt >= CONTINUOUS_FAILURE_THRESHOLD_MS;
 
   if (!record) {
     emailRateLimitStore.set(normalizedEmail, {

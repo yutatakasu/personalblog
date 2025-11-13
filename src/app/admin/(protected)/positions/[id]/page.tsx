@@ -35,9 +35,3 @@ export default async function AdminPositionEditPage({
     </div>
   );
 }
-
-
-
-
-
-

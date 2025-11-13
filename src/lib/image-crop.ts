@@ -53,9 +53,3 @@ export async function getCroppedImageBlob(
     );
   });
 }
-
-
-
-
-
-

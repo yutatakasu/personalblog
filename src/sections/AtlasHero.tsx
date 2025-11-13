@@ -9,18 +9,19 @@ export function AtlasHero() {
       <div className="flex w-full max-w-4xl flex-col px-6 pb-16 sm:px-8 sm:pb-20 md:px-12 md:pb-24 lg:px-16 lg:pb-32">
         <div className="space-y-6 sm:space-y-8 md:space-y-10">
           <p className="font-serif text-base leading-relaxed text-black sm:text-lg md:text-xl lg:text-2xl">
-            <span className="italic">Atlas</span> is a research lab working to shift the power structure of the AI age from corporations back to individuals by building the Memory Layer for AI.
+            <span className="italic">Atlas</span> is a research lab working to
+            shift the power structure of the AI age from corporations back to
+            individuals by building the Memory Layer for AI.
           </p>
-          
           <p className="font-serif text-base leading-relaxed text-black sm:text-lg md:text-xl lg:text-2xl">
-            We believe your memories belong solely to you. Our researchers, engineers, and designers are inventing the infrastructure that returns data sovereignty to every person.
+            We believe your memories belong solely to you. Our researchers,
+            engineers, and designers are inventing the infrastructure that
+            returns data sovereignty to every person.
           </p>
-          
           <p className="font-serif text-base leading-relaxed text-black sm:text-lg md:text-xl lg:text-2xl">
             This is the way AI should always have been.
           </p>
         </div>
-        
         <div className="mt-4 flex w-full justify-end">
           <Link
             href="/positions#open-roles"

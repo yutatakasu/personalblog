@@ -17,11 +17,9 @@ const productMobileLayoutClasses = [
 ];
 
 function ProductItem({
-  index,
   position,
   className,
 }: {
-  index: number;
   position?: { column: number; row: number; offsetY: string };
   className?: string;
 }) {
@@ -72,18 +70,13 @@ export function ProductsSection() {
             {[1, 2, 3].map((index, mobileIndex) => (
               <ProductItem
                 key={index}
-                index={index}
                 className={productMobileLayoutClasses[mobileIndex]}
               />
             ))}
           </div>
           <div className="hidden w-full lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-16 lg:gap-y-12 xl:gap-x-20 xl:gap-y-14">
             {[1, 2, 3].map((index, i) => (
-              <ProductItem
-                key={index}
-                index={index}
-                position={productPositions[i]}
-              />
+              <ProductItem key={index} position={productPositions[i]} />
             ))}
           </div>
         </div>

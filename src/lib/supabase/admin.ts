@@ -24,7 +24,7 @@ export function getAdminSupabaseClient(): SupabaseClient {
           sameSite: "lax",
           path: "/",
         },
-      }
+      },
     );
   }
 

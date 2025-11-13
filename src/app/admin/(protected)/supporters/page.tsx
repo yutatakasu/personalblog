@@ -36,9 +36,3 @@ export default async function AdminSupportersPage() {
     </div>
   );
 }
-
-
-
-
-
-
