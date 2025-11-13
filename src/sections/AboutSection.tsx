@@ -111,10 +111,10 @@ function TeamCard({ member, className, style }: TeamCardProps) {
           supportsHover
             ? "opacity-0 group-hover:opacity-100"
             : canToggleDetail
-              ? isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
-              : "opacity-100"
+            ? isDetailOpen
+              ? "opacity-100"
+              : "opacity-0"
+            : "opacity-100"
         }`}
       >
         {member.focus}
@@ -202,8 +202,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           <span className="block font-mono text-[0.45rem] uppercase tracking-[0.25em] text-neutral-400 sm:text-[0.5rem] sm:tracking-[0.3em]">
@@ -279,7 +279,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      })),
+      }))
   );
 
   return (
