@@ -6,7 +6,7 @@ export function AtlasHero() {
       id="atlas"
       className="relative snap-start snap-always flex min-h-screen min-h-dvh items-end justify-center"
     >
-      <div className="flex w-full max-w-4xl flex-col px-6 pb-16 sm:px-8 sm:pb-20 md:px-12 md:pb-24 lg:px-16 lg:pb-32">
+      <div className="flex w-full max-w-4xl flex-col px-6 pb-28 sm:px-8 sm:pb-24 md:px-12 md:pb-24 lg:px-16 lg:pb-32">
         <div className="space-y-6 sm:space-y-8 md:space-y-10">
           <p className="font-serif text-base leading-relaxed text-black sm:text-lg md:text-xl lg:text-2xl">
             <span className="italic">Atlas</span> is a research lab working to
