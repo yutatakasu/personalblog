@@ -207,7 +207,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 const SECTION_LABEL_SHARED_CLASSES =
   "font-mono uppercase tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
 const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-32 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
+  "pointer-events-none absolute left-12 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
