@@ -10,7 +10,7 @@ import { AboutSection } from "@/sections/AboutSection";
 import { AtlasHero } from "@/sections/AtlasHero";
 import { CareersSection } from "@/sections/CareersSection";
 import { ContactSection } from "@/sections/ContactSection";
-import { ProductsSection } from "@/sections/ProductsSection";
+// import { ProductsSection } from "@/sections/ProductsSection";
 
 export default async function Home() {
   noStore();
@@ -24,7 +24,7 @@ export default async function Home() {
       <Header />
       <main className="h-screen h-dvh overflow-y-scroll overscroll-y-contain snap-y snap-mandatory scroll-smooth">
         <AtlasHero />
-        <ProductsSection />
+        {/* <ProductsSection /> */}
         <AboutSection
           newsItems={newsItems}
           teamMembers={teamMembers}
