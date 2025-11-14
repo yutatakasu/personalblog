@@ -66,26 +66,28 @@ export default async function NewsDetailPage({
               <p className="text-lg text-neutral-600">{item.subtitle}</p>
             )}
           </header>
-          <div className="mt-10 overflow-hidden border border-neutral-200 bg-neutral-100">
-            <div className="relative h-64 w-full sm:h-80">
-              <Image
-                src={item.thumbnailSrc}
-                alt={item.thumbnailAlt}
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority
-              />
+          {item.thumbnailSrc && (
+            <div className="mt-10 overflow-hidden border border-neutral-200 bg-neutral-100">
+              <div className="relative h-64 w-full sm:h-80">
+                <Image
+                  src={item.thumbnailSrc}
+                  alt={item.thumbnailAlt}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
             </div>
-          </div>
+          )}
           <article className="mt-12 space-y-12 text-neutral-700">
             {item.content.map((block, index) => {
               const blockKey =
                 block.image?.src ??
-                `${block.title}-${block.text.slice(0, 24)}-${index}`;
+                `${block.title ?? ""}-${block.text.slice(0, 24)}-${index}`;
               return (
                 <section key={blockKey} className="space-y-6">
-                  {block.title.trim().length > 0 ? (
+                  {block.title && block.title.trim().length > 0 ? (
                     <header>
                       <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl">
                         {block.title}
