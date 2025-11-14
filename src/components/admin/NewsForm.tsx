@@ -39,7 +39,7 @@ const resolveStoragePrefix = (bucket: string, folder?: string) =>
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const contentBlockSchema = z.object({
-  title: z.string().trim().min(1, "段落タイトルを入力してください"),
+  title: z.string().trim().optional(),
   text: z.string().trim().min(1, "段落の内容を入力してください"),
   imageSrc: z.string().optional(),
 });
@@ -49,7 +49,7 @@ const newsSchema = z.object({
   title: z.string().trim().min(1, "タイトルは必須です"),
   subtitle: z.string().optional(),
   date: z.string().min(1, "日付は必須です"),
-  thumbnailSrc: z.string().min(1, "サムネイル画像は必須です"),
+  thumbnailSrc: z.string().optional(),
   content: z
     .array(contentBlockSchema)
     .min(1, "少なくとも1つの段落を追加してください"),
@@ -544,11 +544,6 @@ export function NewsForm({ initialData }: NewsFormProps) {
         thumbnailFileRef.current = null;
       }
 
-      if (!finalThumbnailSrc) {
-        setError("サムネイル画像を設定してください");
-        setLoading(false);
-        return;
-      }
 
       const formattedContent: ContentBlock[] = [];
       const thumbnailAltValue =
@@ -607,14 +602,14 @@ export function NewsForm({ initialData }: NewsFormProps) {
         const computedAlt =
           cachedAlt && cachedAlt.trim().length > 0
             ? cachedAlt.trim()
-            : block.title.trim().length > 0
+            : block.title && block.title.trim().length > 0
               ? block.title.trim()
               : normalizedTitle;
 
         contentImageAltCacheRef.current[index] = computedAlt;
 
         formattedContent.push({
-          title: block.title.trim(),
+          title: block.title?.trim() ?? "",
           text: block.text,
           image: imageSrc
             ? {
@@ -635,8 +630,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
         title: normalizedTitle,
         subtitle: data.subtitle?.trim() ? data.subtitle.trim() : null,
         date: data.date,
-        thumbnail_src: finalThumbnailSrc,
-        thumbnail_alt: thumbnailAltValue,
+        thumbnail_src: finalThumbnailSrc || null,
+        thumbnail_alt: finalThumbnailSrc ? thumbnailAltValue : "",
         link: finalLink,
         content: formattedContent,
         summary: data.summary?.trim() ? data.summary.trim() : null,
@@ -772,7 +767,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
         <div>
           <p className="mb-2 text-sm font-medium text-neutral-700">
-            サムネイル画像 <span className="text-red-500">*</span>
+            サムネイル画像
           </p>
           <div className="space-y-3">
             <div className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50">
@@ -875,7 +870,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
                         htmlFor={`content-title-${index}`}
                         className="mb-1 block text-xs font-medium text-neutral-600"
                       >
-                        段落タイトル <span className="text-red-500">*</span>
+                        段落タイトル
                       </label>
                       <input
                         id={`content-title-${index}`}

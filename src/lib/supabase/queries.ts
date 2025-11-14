@@ -23,7 +23,7 @@ export async function getAllNews(): Promise<NewsItem[]> {
       title: item.title,
       subtitle: item.subtitle ?? undefined,
       date: item.date,
-      thumbnailSrc: item.thumbnail_src,
+      thumbnailSrc: item.thumbnail_src ?? undefined,
       thumbnailAlt: item.thumbnail_alt,
       link: item.link,
       content: normalizeNewsContent(item.content),

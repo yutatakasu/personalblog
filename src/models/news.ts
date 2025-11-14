@@ -4,7 +4,7 @@ export type NewsContentImage = {
 };
 
 export type ContentBlock = {
-  title: string;
+  title?: string;
   text: string;
   image?: NewsContentImage | null;
 };
@@ -20,7 +20,7 @@ export type NewsItem = {
   title: string;
   subtitle?: string;
   date: string;
-  thumbnailSrc: string;
+  thumbnailSrc?: string;
   thumbnailAlt: string;
   link: string;
   content: ContentBlock[];
@@ -115,17 +115,20 @@ const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
     .filter((block): block is ContentBlockCandidate =>
       isNewContentBlockCandidate(block),
     )
-    .map((block) => ({
-      title: normalizeTitle(block.title),
-      text: normalizeText(block.text),
-      image:
-        block.image === undefined
-          ? null
-          : (normalizeImage(block.image) ?? null),
-    }))
+    .map((block) => {
+      const normalizedTitle = normalizeTitle(block.title);
+      return {
+        title: normalizedTitle.length > 0 ? normalizedTitle : undefined,
+        text: normalizeText(block.text),
+        image:
+          block.image === undefined
+            ? null
+            : (normalizeImage(block.image) ?? null),
+      };
+    })
     .filter(
       (block) =>
-        block.title.trim().length > 0 ||
+        (block.title && block.title.trim().length > 0) ||
         block.text.trim().length > 0 ||
         block.image,
     );
@@ -140,7 +143,6 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
       const next = raw[index + 1];
       if (isLegacyImageBlock(next)) {
         normalized.push({
-          title: "",
           text: normalizeText(current.text),
           image: {
             src: next.src,
@@ -150,7 +152,6 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
         index += 1;
       } else {
         normalized.push({
-          title: "",
           text: normalizeText(current.text),
           image: null,
         });
@@ -160,7 +161,6 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
 
     if (isLegacyImageBlock(current)) {
       normalized.push({
-        title: "",
         text: "",
         image: {
           src: current.src,

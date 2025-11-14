@@ -64,6 +64,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
         {newsItems.map((item) => (
           <div key={item.id} className="p-6 hover:bg-neutral-50">
             <div className="flex items-start gap-4">
+              {item.thumbnail_src ? (
               <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
                 <Image
                   src={item.thumbnail_src}
@@ -73,6 +74,11 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
                   className="object-cover"
                 />
               </div>
+            ) : (
+              <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100 flex items-center justify-center">
+                <span className="text-xs text-neutral-400">画像なし</span>
+              </div>
+            )}
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div>

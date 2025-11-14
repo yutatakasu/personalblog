@@ -305,7 +305,7 @@ export function AboutSection({
         >
           About
         </p>
-        <div className="relative z-10 flex w-full min-h-dvh items-center justify-center px-4 py-24 sm:px-6 sm:py-28 md:px-8 md:py-32 lg:px-10 lg:py-36 xl:py-40">
+        <div className="relative z-10 flex w-full min-h-dvh items-center justify-center px-4 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-6 md:gap-8 lg:gap-10">
             <h2 className="font-serif text-lg leading-tight sm:text-xl md:text-2xl lg:text-[3rem] lg:leading-[1.1] xl:text-[3.5rem]">
               <span className="block">Memory as a Sovereignty</span>
@@ -330,7 +330,7 @@ export function AboutSection({
           Team
         </p>
         <div
-          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+          className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
             <div className="grid w-full grid-cols-2 justify-items-center gap-x-3 gap-y-4 sm:gap-x-4 sm:gap-y-5 md:hidden">
@@ -391,7 +391,7 @@ export function AboutSection({
           Backed By
         </p>
         <div
-          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+          className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
             <h2 className="-mt-4 mb-8 font-serif text-base leading-snug text-neutral-900 sm:-mt-6 sm:mb-10 sm:text-lg md:-mt-8 md:mb-12 md:text-xl lg:-mt-10 lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
@@ -436,7 +436,7 @@ export function AboutSection({
           Current News
         </p>
         <div
-          className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-14 md:px-8 md:pb-16 lg:px-10 lg:pb-16 xl:pb-16 2xl:pb-16 ${SECTION_CONTENT_OFFSET}`}
+          className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
             <h2 className="-mt-4 mb-8 font-serif text-base leading-snug text-neutral-900 sm:-mt-6 sm:mb-10 sm:text-lg md:-mt-8 md:mb-12 md:text-xl lg:-mt-10 lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
