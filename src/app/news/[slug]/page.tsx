@@ -46,7 +46,10 @@ export default async function NewsDetailPage({
     <main className="min-h-svh bg-white text-neutral-900">
       <section className="px-6 py-16 sm:px-8 sm:py-20 md:px-12 md:py-24 lg:px-0 lg:py-28">
         <div className="mx-auto w-full max-w-3xl px-0 lg:px-12">
-          <nav aria-label="パンくずリスト" className="text-sm text-neutral-500">
+          <nav
+            aria-label="パンくずリスト"
+            className="text-left text-sm text-neutral-500"
+          >
             <Link href="/news" className="underline-offset-4 hover:underline">
               News
             </Link>
@@ -55,7 +58,7 @@ export default async function NewsDetailPage({
               {item.title}
             </span>
           </nav>
-          <header className="mt-8 space-y-4">
+          <header className="mt-8 space-y-4 text-left">
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">
               {item.date}
             </span>
@@ -80,13 +83,13 @@ export default async function NewsDetailPage({
               </div>
             </div>
           )}
-          <article className="mt-12 space-y-12 text-neutral-700">
+          <article className="mt-12 space-y-12 text-left text-neutral-700">
             {item.content.map((block, index) => {
               const blockKey =
                 block.image?.src ??
                 `${block.title ?? ""}-${block.text.slice(0, 24)}-${index}`;
               return (
-                <section key={blockKey} className="space-y-6">
+                <section key={blockKey} className="space-y-6 text-left">
                   {block.title && block.title.trim().length > 0 ? (
                     <header>
                       <h2 className="font-serif text-2xl leading-snug text-neutral-900 sm:text-3xl">
@@ -115,7 +118,7 @@ export default async function NewsDetailPage({
             })}
           </article>
           {item.contactEmail ? (
-            <div className="mt-12 border-t border-neutral-200 pt-6">
+            <div className="mt-12 border-t border-neutral-200 pt-6 text-left">
               <p className="text-sm text-neutral-600">
                 この記事に関してのお問い合わせは:{" "}
                 <a
