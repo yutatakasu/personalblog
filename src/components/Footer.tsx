@@ -55,7 +55,7 @@ export function Footer({ className = "" }: FooterProps) {
     <footer
       className={`w-full z-120 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] ${className}`}
     >
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-6 py-4 text-center font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-start gap-3 px-6 py-4 font-sans font-medium text-[11px] tracking-[0.12em] text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={() => setIsPrivacyOpen(true)}
@@ -109,7 +109,7 @@ export function Footer({ className = "" }: FooterProps) {
                 私たちは、Atlas のプロダクトを安心して利用いただくために、
                 データの取り扱いを徹底して透明化します。
               </h2>
-              <div className="mt-8 space-y-5 text-center font-sans text-sm leading-relaxed text-white/85 md:text-base">
+              <div className="mt-8 space-y-5 text-left font-sans text-sm leading-relaxed text-white/85 md:text-base">
                 <p>
                   -
                   個人情報は、サービス提供とコミュニケーションの目的のみに利用し、第三者へは適切な同意なく提供しません。

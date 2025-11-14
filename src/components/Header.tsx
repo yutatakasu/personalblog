@@ -107,7 +107,7 @@ export function Header() {
 
   const navItems = [
     { id: "atlas", label: "Atlas", href: "#atlas" },
-    { id: "products", label: "Products", href: "#products" },
+    // { id: "products", label: "Products", href: "#products" },
     { id: "about", label: "About", href: "#about" },
     { id: "careers", label: "Careers", href: "#careers" },
     { id: "contact", label: "Contact", href: "#contact" },
