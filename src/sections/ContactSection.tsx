@@ -37,11 +37,11 @@ export function ContactSection() {
       <div
         className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
-        <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
+        <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-center sm:gap-8 md:gap-10">
           <h2 className="font-serif text-base leading-tight text-white sm:text-lg md:text-xl lg:text-[2.25rem] lg:leading-[1.1] xl:text-[2.75rem]">
             Company Information
           </h2>
-          <dl className="border-t border-white/20 text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">
+          <dl className="border-t border-white/20 text-center text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 会社名
@@ -89,7 +89,7 @@ export function ContactSection() {
               </dd>
             </div>
           </dl>
-          <div className="space-y-2.5 text-xs font-medium text-white/85 sm:space-y-3 md:space-y-3.5 md:text-sm lg:text-base">
+          <div className="space-y-2.5 text-center text-xs font-medium text-white/85 sm:space-y-3 md:space-y-3.5 md:text-sm lg:text-base">
             <p>
               メール：
               <a

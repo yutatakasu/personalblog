@@ -59,10 +59,16 @@ export function ProductsSection() {
       >
         Products
       </p>
+      <p
+        className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-[#2a2a2a]/40`}
+        style={{ top: "calc(16rem + 1rem)" }}
+      >
+        careers at atlas
+      </p>
       <div
         className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-16 md:px-8 md:pb-20 lg:px-10 lg:pb-24 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
-        <div className="mx-auto flex w-full max-w-4xl flex-col items-start gap-6 text-left sm:gap-8 md:gap-10">
+        <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 text-center sm:gap-8 md:gap-10">
           <h2 className="mb-8 font-serif text-base leading-snug text-[#2a2a2a] sm:mb-10 sm:text-lg md:mb-12 md:text-xl lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
             スケールするAIを支えるAtlasのコア技術
           </h2>
