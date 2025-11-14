@@ -178,6 +178,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
   const watchedId = watch("id");
   const normalizedIdForDisplay = watchedId?.trim() ?? "";
+  const watchedThumbnailSrc = watch("thumbnailSrc");
+  const hasThumbnailValue =
+    typeof watchedThumbnailSrc === "string" && watchedThumbnailSrc.trim().length > 0;
 
   const {
     fields: contentFields,
@@ -311,6 +314,26 @@ export function NewsForm({ initialData }: NewsFormProps) {
     } finally {
       handleThumbnailCropCancel();
     }
+  };
+
+  const handleRemoveThumbnail = () => {
+    if (thumbnailObjectUrl) {
+      URL.revokeObjectURL(thumbnailObjectUrl);
+      setThumbnailObjectUrl(null);
+    } else if (thumbnailPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(thumbnailPreview);
+    }
+
+    setThumbnailPreview(null);
+    setThumbnailImageForCrop(null);
+    setThumbnailCropAreaPixels(null);
+    setThumbnailSelectedFileName(null);
+    thumbnailFileRef.current = null;
+    thumbnailFileToCropRef.current = null;
+    if (thumbnailFileInputRef.current) {
+      thumbnailFileInputRef.current.value = "";
+    }
+    setValue("thumbnailSrc", "", { shouldValidate: true });
   };
 
   const handleContentFileSelect =
@@ -799,6 +822,16 @@ export function NewsForm({ initialData }: NewsFormProps) {
                   ? "サムネイルを変更"
                   : "サムネイルをアップロード"}
               </button>
+              {hasThumbnailValue ? (
+                <button
+                  type="button"
+                  className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+                  onClick={handleRemoveThumbnail}
+                  disabled={loading}
+                >
+                  サムネイルを削除
+                </button>
+              ) : null}
               <input
                 ref={thumbnailFileInputRef}
                 type="file"
