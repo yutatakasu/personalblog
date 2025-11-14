@@ -59,12 +59,6 @@ export function ProductsSection() {
       >
         Products
       </p>
-      <p
-        className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-[#2a2a2a]/40`}
-        style={{ top: "calc(16rem + 1rem)" }}
-      >
-        careers at atlas
-      </p>
       <div
         className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-16 md:px-8 md:pb-20 lg:px-10 lg:pb-24 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >

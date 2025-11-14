@@ -26,7 +26,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
       <p
         className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-black/40`}
       >
-        Careers
+        careers at atlas
       </p>
       <div
         className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
@@ -34,9 +34,6 @@ export function CareersSection({ positions }: CareersSectionProps) {
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-14 md:gap-16 lg:gap-20">
           <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center lg:gap-16">
             <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
-              <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-black/35 sm:text-[0.65rem] md:text-xs">
-                Careers at Atlas
-              </span>
               <h2 className="font-serif text-[1.5rem] leading-tight text-black sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]">
                 Atlasに、温度のある視点を持ち込んでください。
               </h2>
@@ -121,3 +118,4 @@ export function CareersSection({ positions }: CareersSectionProps) {
     </section>
   );
 }
+
