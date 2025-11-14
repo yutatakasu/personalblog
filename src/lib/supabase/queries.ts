@@ -43,28 +43,50 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
   if (error) {
     if (error.code === "PGRST116") {
       // Not found
+      console.log(`[getNewsById] News item not found: ${id}`);
       return null;
     }
-    console.error("Error fetching news item:", error);
+    console.error(`[getNewsById] Error fetching news item ${id}:`, error);
     throw error;
   }
 
   if (!data) {
+    console.log(`[getNewsById] No data returned for id: ${id}`);
     return null;
   }
 
-  return {
-    id: data.id,
-    title: data.title,
-    subtitle: data.subtitle ?? undefined,
-    date: data.date,
-    thumbnailSrc: data.thumbnail_src,
-    thumbnailAlt: data.thumbnail_alt,
-    link: data.link,
-    content: normalizeNewsContent(data.content),
-    summary: data.summary ?? undefined,
-    contactEmail: data.contact_email ?? undefined,
-  };
+  try {
+    const normalizedContent = normalizeNewsContent(data.content);
+    console.log(`[getNewsById] Successfully fetched news item: ${id}, content blocks: ${normalizedContent.length}`);
+    
+    return {
+      id: data.id,
+      title: data.title,
+      subtitle: data.subtitle ?? undefined,
+      date: data.date,
+      thumbnailSrc: data.thumbnail_src ?? undefined,
+      thumbnailAlt: data.thumbnail_alt,
+      link: data.link,
+      content: normalizedContent,
+      summary: data.summary ?? undefined,
+      contactEmail: data.contact_email ?? undefined,
+    };
+  } catch (normalizeError) {
+    console.error(`[getNewsById] Error normalizing content for ${id}:`, normalizeError);
+    // エラーが発生しても、contentを空配列にして返す
+    return {
+      id: data.id,
+      title: data.title,
+      subtitle: data.subtitle ?? undefined,
+      date: data.date,
+      thumbnailSrc: data.thumbnail_src ?? undefined,
+      thumbnailAlt: data.thumbnail_alt,
+      link: data.link,
+      content: [],
+      summary: data.summary ?? undefined,
+      contactEmail: data.contact_email ?? undefined,
+    };
+  }
 }
 
 /**
