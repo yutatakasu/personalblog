@@ -35,7 +35,7 @@ export function ContactSection() {
         Contact
       </p>
       <div
-        className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-8 sm:px-6 sm:pb-10 md:px-8 md:pb-10 lg:px-10 lg:pb-8 xl:pb-8 2xl:pb-8 ${SECTION_CONTENT_OFFSET}`}
+        className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
           <h2 className="font-serif text-base leading-tight text-white sm:text-lg md:text-xl lg:text-[2.25rem] lg:leading-[1.1] xl:text-[2.75rem]">
@@ -103,7 +103,7 @@ export function ContactSection() {
           </div>
         </div>
       </div>
-      <Footer className="relative mt-auto mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28 2xl:mb-32" />
+      <Footer className="relative mt-auto mb-16 sm:mb-20 md:mb-24 lg:mb-28 xl:mb-32 2xl:mb-36" />
     </section>
   );
 }

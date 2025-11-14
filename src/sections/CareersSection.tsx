@@ -29,7 +29,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
         Careers
       </p>
       <div
-        className={`flex w-full justify-center px-4 pb-12 sm:px-6 sm:pb-16 md:px-8 md:pb-20 lg:px-10 lg:pb-24 xl:pb-28 2xl:pb-32 ${SECTION_CONTENT_OFFSET}`}
+        className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-14 md:gap-16 lg:gap-20">
           <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center lg:gap-16">
