@@ -73,7 +73,9 @@ function TeamCard({ member, className, style }: TeamCardProps) {
     <article
       className={`group flex w-full flex-col items-center gap-1.5 text-center ${
         className ?? ""
-      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""}`}
+      } ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      }`}
       style={style}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
@@ -110,8 +112,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {member.focus}
@@ -162,7 +164,9 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
     <article
       className={`group flex w-full flex-col items-center gap-1.5 text-center ${
         className ?? ""
-      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""}`}
+      } ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      }`}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -198,8 +202,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -209,7 +213,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   );
 }
 
-const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
@@ -278,7 +282,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      })),
+      }))
   );
 
   return (
@@ -318,7 +322,7 @@ export function AboutSection({
         id="about-team"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-background text-neutral-900"
       >
-        <div className="flex w-full flex-col items-center justify-center px-6 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24 lg:px-10 lg:py-28">
+        <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
             <h2
               className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
@@ -381,7 +385,7 @@ export function AboutSection({
         id="about-backed"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-background text-neutral-900"
       >
-        <div className="flex w-full flex-col items-center justify-center px-6 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24 lg:px-10 lg:py-28">
+        <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
             <h2
               className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
@@ -422,7 +426,7 @@ export function AboutSection({
         className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background text-neutral-900"
       >
         <div
-          className={`flex w-full justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
+          className={`flex w-full justify-center px-6 pb-20 sm:px-6 sm:pb-24 md:px-8 md:pb-28 lg:px-10 lg:pb-32 xl:pb-36 2xl:pb-40 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
             <h2
