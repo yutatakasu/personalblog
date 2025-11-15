@@ -268,7 +268,7 @@ export function Header() {
           )}
 
           {/* モバイル: セクション名と menu */}
-          <div className="flex items-center justify-center gap-5 md:hidden text-base font-serif font-medium">
+          <div className="flex items-center justify-center gap-3 md:hidden text-base font-serif font-medium">
             <button
               type="button"
               onClick={handleScrollToAtlas}
