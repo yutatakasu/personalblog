@@ -218,7 +218,6 @@ const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
-const DESKTOP_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
 
 type AboutSectionProps = {
@@ -263,18 +262,13 @@ export function AboutSection({
   teamMembers,
   investorGroups,
 }: AboutSectionProps) {
-  const [isTeamExpanded, setIsTeamExpanded] = useState(false);
   const [isTeamExpandedMobile, setIsTeamExpandedMobile] = useState(false);
   const mobileVisibleMembers = isTeamExpandedMobile
     ? teamMembers
     : teamMembers.slice(0, MOBILE_TEAM_VISIBLE_COUNT);
-  const desktopVisibleMembers = isTeamExpanded
-    ? teamMembers
-    : teamMembers.slice(0, DESKTOP_TEAM_VISIBLE_COUNT);
+  const desktopVisibleMembers = teamMembers;
   const hasAdditionalMembersMobile =
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
-  const hasAdditionalMembersDesktop =
-    teamMembers.length > DESKTOP_TEAM_VISIBLE_COUNT;
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
   const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
@@ -362,20 +356,6 @@ export function AboutSection({
                   <TeamCard key={member.id} member={member} />
                 ))}
               </div>
-              {hasAdditionalMembersDesktop ? (
-                <div className="mt-10 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsTeamExpanded((previous) => !previous)}
-                    aria-expanded={isTeamExpanded}
-                    className="rounded-full border border-neutral-300 bg-background px-8 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
-                    {isTeamExpanded
-                      ? "Show Less"
-                      : `Show All (${teamMembers.length})`}
-                  </button>
-                </div>
-              ) : null}
             </div>
           </div>
         </div>

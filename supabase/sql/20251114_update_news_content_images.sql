@@ -73,3 +73,4 @@ WHERE news.content IS NOT NULL;
 COMMIT;
 
 
+
