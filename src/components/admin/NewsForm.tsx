@@ -70,7 +70,7 @@ const newsSchema = z.object({
     ),
 });
 
-type NewsFormData = z.infer<typeof newsSchema>;
+type NewsFormData = z.input<typeof newsSchema>;
 
 type NewsFormProps = {
   initialData?: {
