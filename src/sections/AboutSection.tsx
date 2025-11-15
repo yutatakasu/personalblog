@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CSSProperties, HTMLAttributes } from "react";
 import { useEffect, useState } from "react";
 
+import { NewsThumbnail } from "@/components/NewsThumbnail";
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
@@ -217,7 +218,6 @@ const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
-const DESKTOP_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
 
 type AboutSectionProps = {
@@ -231,21 +231,20 @@ type NewsPreviewCardProps = {
 };
 
 function NewsPreviewCard({ item }: NewsPreviewCardProps) {
+  const thumbnailSrc = item.thumbnailSrc ?? "/favicon.svg";
   return (
     <Link
       href={item.link}
       prefetch={false}
       className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-2xl sm:p-3"
     >
-      <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:h-16 sm:w-24 sm:rounded-xl">
-        <Image
-          src={item.thumbnailSrc}
-          alt={item.thumbnailAlt}
-          fill
-          sizes="(min-width: 640px) 96px, 80px"
-          className="h-full w-full object-cover"
-        />
-      </div>
+      <NewsThumbnail
+        src={thumbnailSrc}
+        alt={item.thumbnailAlt}
+        sizes="(min-width: 640px) 96px, 80px"
+        fallbackAspectRatio={16 / 9}
+        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl"
+      />
       <div className="flex min-w-0 flex-col">
         <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
           {item.date}
@@ -263,18 +262,13 @@ export function AboutSection({
   teamMembers,
   investorGroups,
 }: AboutSectionProps) {
-  const [isTeamExpanded, setIsTeamExpanded] = useState(false);
   const [isTeamExpandedMobile, setIsTeamExpandedMobile] = useState(false);
   const mobileVisibleMembers = isTeamExpandedMobile
     ? teamMembers
     : teamMembers.slice(0, MOBILE_TEAM_VISIBLE_COUNT);
-  const desktopVisibleMembers = isTeamExpanded
-    ? teamMembers
-    : teamMembers.slice(0, DESKTOP_TEAM_VISIBLE_COUNT);
+  const desktopVisibleMembers = teamMembers;
   const hasAdditionalMembersMobile =
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
-  const hasAdditionalMembersDesktop =
-    teamMembers.length > DESKTOP_TEAM_VISIBLE_COUNT;
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
   const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
@@ -362,20 +356,6 @@ export function AboutSection({
                   <TeamCard key={member.id} member={member} />
                 ))}
               </div>
-              {hasAdditionalMembersDesktop ? (
-                <div className="mt-10 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsTeamExpanded((previous) => !previous)}
-                    aria-expanded={isTeamExpanded}
-                    className="rounded-full border border-neutral-300 bg-background px-8 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
-                    {isTeamExpanded
-                      ? "Show Less"
-                      : `Show All (${teamMembers.length})`}
-                  </button>
-                </div>
-              ) : null}
             </div>
           </div>
         </div>
