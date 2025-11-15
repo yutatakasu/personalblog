@@ -58,8 +58,10 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
 
   try {
     const normalizedContent = normalizeNewsContent(data.content);
-    console.log(`[getNewsById] Successfully fetched news item: ${id}, content blocks: ${normalizedContent.length}`);
-    
+    console.log(
+      `[getNewsById] Successfully fetched news item: ${id}, content blocks: ${normalizedContent.length}`,
+    );
+
     return {
       id: data.id,
       title: data.title,
@@ -74,7 +76,10 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
       contactEmail: data.contact_email ?? undefined,
     };
   } catch (normalizeError) {
-    console.error(`[getNewsById] Error normalizing content for ${id}:`, normalizeError);
+    console.error(
+      `[getNewsById] Error normalizing content for ${id}:`,
+      normalizeError,
+    );
     // エラーが発生しても、contentを空配列にして返す
     return {
       id: data.id,

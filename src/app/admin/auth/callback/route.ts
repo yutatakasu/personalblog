@@ -16,7 +16,7 @@ type CookieOperation = {
 function buildRedirect(
   origin: string,
   path: string,
-  params?: Record<string, string>
+  params?: Record<string, string>,
 ) {
   const url = new URL(path, origin);
   if (params) {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
           });
         },
       },
-    }
+    },
   );
 
   const {
@@ -98,10 +98,10 @@ export async function GET(request: NextRequest) {
                   ? `ログイン試行回数が上限に達しました。${Math.ceil(
                       Math.max(
                         rateLimitEvaluation.blockedUntil - Date.now(),
-                        0
-                      ) / 60000
+                        0,
+                      ) / 60000,
                     )}分後に再試行してください。`
-                  : "ログイン試行回数が上限に達しました。しばらくしてから再試行してください。"
+                  : "ログイン試行回数が上限に達しました。しばらくしてから再試行してください。",
               ),
             }
           : {}),
@@ -133,8 +133,8 @@ export async function GET(request: NextRequest) {
         error: "rate_limited",
         error_description: encodeURIComponent(
           `このアカウントはログイン試行回数が上限に達しました。${Math.ceil(
-            Math.max(emailRateLimitCheck.blockedUntil - Date.now(), 0) / 60000
-          )}分後に再試行してください。`
+            Math.max(emailRateLimitCheck.blockedUntil - Date.now(), 0) / 60000,
+          )}分後に再試行してください。`,
         ),
       });
       const response = NextResponse.redirect(redirectUrl);
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
       const redirectUrl = buildRedirect(requestUrl.origin, "/admin/login", {
         error: "unauthorized",
         error_description: encodeURIComponent(
-          "管理者として登録されていないGoogleアカウントです。"
+          "管理者として登録されていないGoogleアカウントです。",
         ),
         ...(rateLimitEvaluation.allowed === false
           ? {
@@ -162,10 +162,10 @@ export async function GET(request: NextRequest) {
                   ? `ログイン試行回数が上限に達しました。${Math.ceil(
                       Math.max(
                         rateLimitEvaluation.blockedUntil - Date.now(),
-                        0
-                      ) / 60000
+                        0,
+                      ) / 60000,
                     )}分後に再試行してください。`
-                  : "ログイン試行回数が上限に達しました。しばらくしてから再試行してください。"
+                  : "ログイン試行回数が上限に達しました。しばらくしてから再試行してください。",
               ),
             }
           : {}),
@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
     const redirectUrl = buildRedirect(requestUrl.origin, "/admin/login", {
       error: "unauthorized",
       error_description: encodeURIComponent(
-        "管理者として登録されていないGoogleアカウントです。"
+        "管理者として登録されていないGoogleアカウントです。",
       ),
     });
     const response = NextResponse.redirect(redirectUrl);

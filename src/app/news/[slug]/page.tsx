@@ -133,9 +133,7 @@ export default async function NewsDetailPage({
                   ◆本件に関するお問い合わせ
                 </p>
                 <p>Atlas株式会社</p>
-                {item.contactPerson ? (
-                  <p>担当：{item.contactPerson}</p>
-                ) : null}
+                {item.contactPerson ? <p>担当：{item.contactPerson}</p> : null}
                 {item.contactEmail ? (
                   <p>
                     Mail：

@@ -203,7 +203,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const normalizedIdForDisplay = watchedId?.trim() ?? "";
   const watchedThumbnailSrc = watch("thumbnailSrc");
   const hasThumbnailValue =
-    typeof watchedThumbnailSrc === "string" && watchedThumbnailSrc.trim().length > 0;
+    typeof watchedThumbnailSrc === "string" &&
+    watchedThumbnailSrc.trim().length > 0;
 
   const {
     fields: contentFields,
@@ -252,9 +253,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
       }
       contentPreviews.forEach((blockPreviews) => {
         blockPreviews.forEach((preview) => {
-        if (preview?.startsWith("blob:")) {
-          URL.revokeObjectURL(preview);
-        }
+          if (preview?.startsWith("blob:")) {
+            URL.revokeObjectURL(preview);
+          }
         });
       });
     };
@@ -478,8 +479,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       contentImageAltCacheRef.current[blockIndex] = blockAlts;
 
       if (imageIndex === null) {
-        const currentImages =
-          getValues(`content.${blockIndex}.images`) ?? [];
+        const currentImages = getValues(`content.${blockIndex}.images`) ?? [];
         const nextImages = [
           ...currentImages,
           {
@@ -488,19 +488,15 @@ export function NewsForm({ initialData }: NewsFormProps) {
           },
         ];
         setValue(`content.${blockIndex}.images`, nextImages, {
-        shouldValidate: true,
-      });
+          shouldValidate: true,
+        });
       } else {
-        setValue(
-          `content.${blockIndex}.images.${imageIndex}.src`,
-          previewUrl,
-          { shouldValidate: true },
-        );
-        setValue(
-          `content.${blockIndex}.images.${imageIndex}.alt`,
-          "",
-          { shouldValidate: false },
-        );
+        setValue(`content.${blockIndex}.images.${imageIndex}.src`, previewUrl, {
+          shouldValidate: true,
+        });
+        setValue(`content.${blockIndex}.images.${imageIndex}.alt`, "", {
+          shouldValidate: false,
+        });
       }
     } catch (cropError) {
       console.error(cropError);
@@ -664,14 +660,17 @@ export function NewsForm({ initialData }: NewsFormProps) {
         thumbnailFileRef.current = null;
       }
 
-
       const formattedContent: ContentBlock[] = [];
       const thumbnailAltValue =
         (initialData?.thumbnail_alt?.trim().length
           ? initialData.thumbnail_alt.trim()
           : "") || normalizedTitle;
 
-      for (let blockIndex = 0; blockIndex < data.content.length; blockIndex += 1) {
+      for (
+        let blockIndex = 0;
+        blockIndex < data.content.length;
+        blockIndex += 1
+      ) {
         const block = data.content[blockIndex];
         const blockTitle = block.title?.trim() ?? "";
         const blockImages = Array.isArray(block.images) ? block.images : [];
@@ -718,41 +717,41 @@ export function NewsForm({ initialData }: NewsFormProps) {
           const pendingFile =
             contentUploadedFilesRef.current[blockIndex]?.[imageIndex] ?? null;
 
-        if (pendingFile) {
-          const extension = getFileExtension(pendingFile.name);
-          const storagePath = `${prefix}${baseName || "news-item"}-section-${
+          if (pendingFile) {
+            const extension = getFileExtension(pendingFile.name);
+            const storagePath = `${prefix}${baseName || "news-item"}-section-${
               blockIndex + 1
             }-${imageIndex + 1}-${Date.now()}.${extension}`;
 
-          const { error: uploadError } = await adminSupabase.storage
-            .from(newsBucket)
-            .upload(storagePath, pendingFile, {
-              cacheControl: "3600",
-              upsert: true,
-            });
+            const { error: uploadError } = await adminSupabase.storage
+              .from(newsBucket)
+              .upload(storagePath, pendingFile, {
+                cacheControl: "3600",
+                upsert: true,
+              });
 
-          if (uploadError) {
-            setError(
-              uploadError.message?.includes("Bucket not found")
-                ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
-                : (uploadError.message ??
-                    "段落画像のアップロードに失敗しました"),
-            );
-            setLoading(false);
-            return;
-          }
+            if (uploadError) {
+              setError(
+                uploadError.message?.includes("Bucket not found")
+                  ? `画像保存用バケット "${newsBucket}" が存在しません。Supabase Storage で作成するか、NEXT_PUBLIC_SUPABASE_NEWS_BUCKET を既存バケット名に設定してください。`
+                  : (uploadError.message ??
+                      "段落画像のアップロードに失敗しました"),
+              );
+              setLoading(false);
+              return;
+            }
 
-          const { data: publicUrlData } = adminSupabase.storage
-            .from(newsBucket)
-            .getPublicUrl(storagePath);
+            const { data: publicUrlData } = adminSupabase.storage
+              .from(newsBucket)
+              .getPublicUrl(storagePath);
 
-          imageSrc = publicUrlData?.publicUrl ?? "";
+            imageSrc = publicUrlData?.publicUrl ?? "";
 
-          if (!imageSrc) {
-            setError("段落画像の公開URLの取得に失敗しました");
-            setLoading(false);
-            return;
-          }
+            if (!imageSrc) {
+              setError("段落画像の公開URLの取得に失敗しました");
+              setLoading(false);
+              return;
+            }
 
             setValue(
               `content.${blockIndex}.images.${imageIndex}.src`,
@@ -769,15 +768,13 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
           const altCache = contentImageAltCacheRef.current[blockIndex] ?? [];
           const cachedAlt =
-            altCache[imageIndex]?.trim() ??
-            imageEntry?.alt?.trim() ??
-            "";
-        const computedAlt =
+            altCache[imageIndex]?.trim() ?? imageEntry?.alt?.trim() ?? "";
+          const computedAlt =
             cachedAlt && cachedAlt.length > 0
               ? cachedAlt
               : blockTitle && blockTitle.length > 0
                 ? blockTitle
-              : normalizedTitle;
+                : normalizedTitle;
 
           altCache[imageIndex] = computedAlt;
           contentImageAltCacheRef.current[blockIndex] = altCache;
@@ -789,8 +786,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           );
 
           normalizedImages.push({
-                src: imageSrc,
-                alt: computedAlt,
+            src: imageSrc,
+            alt: computedAlt,
           });
         }
 
@@ -1128,7 +1125,10 @@ export function NewsForm({ initialData }: NewsFormProps) {
                                     type="button"
                                     className="text-xs text-red-600 underline"
                                     onClick={() =>
-                                      handleRemoveContentImage(index, imageIndex)
+                                      handleRemoveContentImage(
+                                        index,
+                                        imageIndex,
+                                      )
                                     }
                                     disabled={loading}
                                   >

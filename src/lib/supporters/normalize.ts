@@ -24,7 +24,7 @@ function toOptionalString(value: unknown): string | undefined {
 }
 
 export function normalizeSupporterEntry(
-  entry: RawSupporterEntry
+  entry: RawSupporterEntry,
 ): NormalizedSupporter | null {
   if (typeof entry === "string") {
     const name = entry.trim();
@@ -64,6 +64,6 @@ export function normalizeSupporters(raw: unknown): NormalizedSupporter[] {
   return raw
     .map((entry) => normalizeSupporterEntry(entry as RawSupporterEntry))
     .filter(
-      (supporter): supporter is NormalizedSupporter => supporter !== null
+      (supporter): supporter is NormalizedSupporter => supporter !== null,
     );
 }

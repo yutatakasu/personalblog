@@ -106,7 +106,7 @@ export function Header() {
         if (visible[0]) {
           const nextId = visible[0].target.id || "atlas";
           const nextLabel = getSectionLabel(nextId);
-          
+
           // ラベルが変更される場合のみアニメーション
           if (nextLabel !== displayLabelRef.current) {
             setIsLabelChanging(true);
@@ -117,7 +117,7 @@ export function Header() {
               setIsLabelChanging(false);
             }, 150); // フェードアウトの半分の時間
           }
-          
+
           setSurfaceSection(nextId);
           setActiveSection(normalizeSectionId(nextId));
         }

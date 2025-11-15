@@ -111,4 +111,3 @@ export function CareersSection({ positions }: CareersSectionProps) {
     </section>
   );
 }
-
