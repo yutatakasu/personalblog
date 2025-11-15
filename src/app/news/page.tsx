@@ -31,13 +31,23 @@ export default async function NewsPage() {
                 >
                   <div className="grid gap-6 p-6 sm:grid-cols-[minmax(0,160px)_1fr] sm:p-8">
                     <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:h-full">
-                      <Image
-                        src={news.thumbnailSrc}
-                        alt={news.thumbnailAlt}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 160px"
-                        className="h-full w-full object-cover"
-                      />
+                      {news.thumbnailSrc ? (
+                        <Image
+                          src={news.thumbnailSrc}
+                          alt={
+                            news.thumbnailAlt && news.thumbnailAlt.length > 0
+                              ? news.thumbnailAlt
+                              : `${news.title} thumbnail`
+                          }
+                          fill
+                          sizes="(max-width: 640px) 100vw, 160px"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
+                          画像なし
+                        </div>
+                      )}
                     </div>
                     <div className="flex min-w-0 flex-col justify-center gap-3">
                       <span className="font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">
