@@ -12,13 +12,14 @@ CREATE TABLE IF NOT EXISTS news (
     summary TEXT,
     subtitle TEXT,
     content JSONB NOT NULL DEFAULT '[]'::jsonb,
+    contact_person TEXT,
     contact_email TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- コンテンツ構造の説明
-COMMENT ON COLUMN news.content IS '段落ごとの配列。各要素は { title: string, text: string, image?: { src: string, alt: string } | null } の形式';
+COMMENT ON COLUMN news.content IS '段落ごとの配列。各要素は { title?: string, text: string, images: { src: string, alt: string }[] } の形式（旧データでは image プロパティを持つ場合あり）';
 
 -- Positions テーブル
 CREATE TABLE IF NOT EXISTS positions (

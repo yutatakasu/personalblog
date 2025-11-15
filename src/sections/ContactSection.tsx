@@ -2,10 +2,6 @@ import Image from "next/image";
 
 import { Footer } from "@/components/Footer";
 
-const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-12 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
-const SECTION_LABEL_SHARED_CLASSES =
-  "font-mono uppercase tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 
 export function ContactSection() {
@@ -29,13 +25,8 @@ export function ContactSection() {
           aria-hidden
         />
       </div>
-      <p
-        className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} z-20 font-medium text-white/70`}
-      >
-        Contact
-      </p>
       <div
-        className={`relative z-10 flex w-full flex-1 justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
+        className={`relative z-10 flex w-full flex-1 justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
           <h2 className="font-serif text-base leading-tight text-white sm:text-lg md:text-xl lg:text-[2.25rem] lg:leading-[1.1] xl:text-[2.75rem]">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const sectionIds = [
   "atlas",
@@ -32,11 +32,37 @@ const normalizeSectionId = (sectionId: string) => {
   return sectionId;
 };
 
+// セクションIDからモバイル表示用のラベルを取得
+const getSectionLabel = (sectionId: string): string => {
+  if (sectionId === "atlas") {
+    return "Atlas";
+  }
+  if (sectionId === "products") {
+    return "Products";
+  }
+  if (sectionId.startsWith("about-")) {
+    return "About";
+  }
+  if (sectionId === "about") {
+    return "About";
+  }
+  if (sectionId === "careers") {
+    return "Careers";
+  }
+  if (sectionId === "contact") {
+    return "Contact";
+  }
+  return "Atlas"; // デフォルト
+};
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>("");
   const [surfaceSection, setSurfaceSection] = useState<string>("atlas");
   const [activeSection, setActiveSection] = useState<string>("atlas");
+  const [displayLabel, setDisplayLabel] = useState<string>("Atlas");
+  const [isLabelChanging, setIsLabelChanging] = useState(false);
+  const displayLabelRef = useRef<string>("Atlas");
 
   useEffect(() => {
     const updateTime = () => {
@@ -79,6 +105,19 @@ export function Header() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) {
           const nextId = visible[0].target.id || "atlas";
+          const nextLabel = getSectionLabel(nextId);
+          
+          // ラベルが変更される場合のみアニメーション
+          if (nextLabel !== displayLabelRef.current) {
+            setIsLabelChanging(true);
+            // フェードアウト後にラベルを更新
+            setTimeout(() => {
+              setDisplayLabel(nextLabel);
+              displayLabelRef.current = nextLabel;
+              setIsLabelChanging(false);
+            }, 150); // フェードアウトの半分の時間
+          }
+          
           setSurfaceSection(nextId);
           setActiveSection(normalizeSectionId(nextId));
         }
@@ -160,6 +199,14 @@ export function Header() {
       window.location.hash = "#atlas";
     }
 
+    const atlasLabel = "Atlas";
+    setIsLabelChanging(true);
+    setTimeout(() => {
+      setDisplayLabel(atlasLabel);
+      displayLabelRef.current = atlasLabel;
+      setIsLabelChanging(false);
+    }, 150);
+
     setSurfaceSection("atlas");
     setActiveSection("atlas");
     setIsMenuOpen(false);
@@ -220,15 +267,21 @@ export function Header() {
             </div>
           )}
 
-          {/* モバイル: Atlas と menu */}
+          {/* モバイル: セクション名と menu */}
           <div className="flex items-center justify-center gap-5 md:hidden text-base font-serif font-medium">
             <button
               type="button"
               onClick={handleScrollToAtlas}
-              className={`${mobileNavTextClass} transition-colors duration-300`}
-              aria-label="Atlasセクションへ移動"
+              className={`${mobileNavTextClass} transition-colors duration-300 relative min-w-[80px] text-center`}
+              aria-label={`${displayLabel}セクションへ移動`}
             >
-              (Atlas)
+              <span
+                className={`section-label inline-block transition-opacity duration-300 ease-in-out ${
+                  isLabelChanging ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                ({displayLabel})
+              </span>
             </button>
             <button
               type="button"

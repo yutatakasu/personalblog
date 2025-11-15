@@ -38,10 +38,15 @@ const resolveStoragePrefix = (bucket: string, folder?: string) =>
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const contentImageSchema = z.object({
+  src: z.string().trim().min(1),
+  alt: z.string().trim().optional(),
+});
+
 const contentBlockSchema = z.object({
   title: z.string().trim().optional(),
   text: z.string().trim().min(1, "段落の内容を入力してください"),
-  imageSrc: z.string().optional(),
+  images: z.array(contentImageSchema).default([]),
 });
 
 const newsSchema = z.object({
@@ -54,6 +59,7 @@ const newsSchema = z.object({
     .array(contentBlockSchema)
     .min(1, "少なくとも1つの段落を追加してください"),
   summary: z.string().optional(),
+  contactPerson: z.string().trim().optional(),
   contactEmail: z
     .string()
     .trim()
@@ -77,6 +83,7 @@ type NewsFormProps = {
     link: string;
     content?: ContentBlock[];
     summary?: string | null;
+    contact_person?: string | null;
     contact_email?: string | null;
   };
 };
@@ -109,26 +116,33 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
   const initialContentPreviews =
     initialData?.content && initialData.content.length > 0
-      ? initialData.content.map((block) => block.image?.src ?? "")
-      : [""];
+      ? initialData.content.map((block) =>
+          (block.images ?? []).map((image) => image.src ?? ""),
+        )
+      : [[]];
   const initialContentImageAlts =
     initialData?.content && initialData.content.length > 0
-      ? initialData.content.map((block) => block.image?.alt ?? "")
-      : new Array(initialContentPreviews.length).fill("");
+      ? initialData.content.map((block) =>
+          (block.images ?? []).map((image) => image.alt ?? ""),
+        )
+      : initialContentPreviews.map(() => []);
 
-  const [contentPreviews, setContentPreviews] = useState<string[]>(
+  const [contentPreviews, setContentPreviews] = useState<string[][]>(
     initialContentPreviews,
   );
-  const contentUploadedFilesRef = useRef<(File | null)[]>(
-    new Array(initialContentPreviews.length).fill(null),
+  const contentUploadedFilesRef = useRef<(File | null)[][]>(
+    initialContentPreviews.map((blockPreviews) =>
+      blockPreviews.map(() => null),
+    ),
   );
-  const contentImageAltCacheRef = useRef<string[]>([
-    ...initialContentImageAlts,
-  ]);
+  const contentImageAltCacheRef = useRef<string[][]>(
+    initialContentImageAlts.map((alts) => [...alts]),
+  );
   const contentFileToCropRef = useRef<File | null>(null);
-  const [contentCropModalIndex, setContentCropModalIndex] = useState<
-    number | null
-  >(null);
+  const [contentCropTarget, setContentCropTarget] = useState<{
+    blockIndex: number;
+    imageIndex: number | null;
+  } | null>(null);
   const [contentImageForCrop, setContentImageForCrop] = useState<string | null>(
     null,
   );
@@ -144,6 +158,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
     formState: { errors },
     watch,
     setValue,
+    getValues,
   } = useForm<NewsFormData>({
     resolver: zodResolver(newsSchema),
     defaultValues: initialData
@@ -158,10 +173,17 @@ export function NewsForm({ initialData }: NewsFormProps) {
               ? initialData.content.map((block) => ({
                   title: block.title ?? "",
                   text: block.text ?? "",
-                  imageSrc: block.image?.src ?? "",
+                  images:
+                    block.images && block.images.length > 0
+                      ? block.images.map((image) => ({
+                          src: image.src,
+                          alt: image.alt,
+                        }))
+                      : [],
                 }))
-              : [{ title: "", text: "", imageSrc: "" }],
+              : [{ title: "", text: "", images: [] }],
           summary: initialData.summary ?? "",
+          contactPerson: initialData.contact_person ?? "",
           contactEmail: initialData.contact_email ?? "",
         }
       : {
@@ -170,8 +192,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
           subtitle: "",
           date: "",
           thumbnailSrc: "",
-          content: [{ title: "", text: "", imageSrc: "" }],
+          content: [{ title: "", text: "", images: [] }],
           summary: "",
+          contactPerson: "",
           contactEmail: "",
         },
   });
@@ -196,20 +219,21 @@ export function NewsForm({ initialData }: NewsFormProps) {
     setContentPreviews((prev) => {
       const next = [...prev];
       while (next.length < length) {
-        next.push("");
+        next.push([]);
       }
       return next.slice(0, length);
     });
 
     while (contentUploadedFilesRef.current.length < length) {
-      contentUploadedFilesRef.current.push(null);
+      contentUploadedFilesRef.current.push([]);
     }
     contentUploadedFilesRef.current = contentUploadedFilesRef.current.slice(
       0,
       length,
     );
+
     while (contentImageAltCacheRef.current.length < length) {
-      contentImageAltCacheRef.current.push("");
+      contentImageAltCacheRef.current.push([]);
     }
     contentImageAltCacheRef.current = contentImageAltCacheRef.current.slice(
       0,
@@ -226,10 +250,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
       if (thumbnailObjectUrl) {
         URL.revokeObjectURL(thumbnailObjectUrl);
       }
-      contentPreviews.forEach((preview) => {
+      contentPreviews.forEach((blockPreviews) => {
+        blockPreviews.forEach((preview) => {
         if (preview?.startsWith("blob:")) {
           URL.revokeObjectURL(preview);
         }
+        });
       });
     };
   }, [thumbnailObjectUrl, contentPreviews]);
@@ -337,7 +363,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
   };
 
   const handleContentFileSelect =
-    (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    (blockIndex: number, imageIndex: number | null) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (!file) {
         return;
@@ -354,7 +381,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         setContentCrop({ x: 0, y: 0 });
         setContentZoom(1);
         setContentCropAreaPixels(null);
-        setContentCropModalIndex(index);
+        setContentCropTarget({ blockIndex, imageIndex });
       };
       reader.readAsDataURL(file);
 
@@ -362,15 +389,17 @@ export function NewsForm({ initialData }: NewsFormProps) {
     };
 
   const handleContentCropCancel = () => {
-    const targetIndex = contentCropModalIndex;
-    setContentCropModalIndex(null);
+    const target = contentCropTarget;
+    setContentCropTarget(null);
     setContentImageForCrop(null);
     setContentCropAreaPixels(null);
     contentFileToCropRef.current = null;
-    if (typeof targetIndex === "number") {
-      const input = document.getElementById(
-        `content-image-${targetIndex}`,
-      ) as HTMLInputElement | null;
+    if (target) {
+      const inputId =
+        target.imageIndex === null
+          ? `content-image-${target.blockIndex}-new`
+          : `content-image-${target.blockIndex}-${target.imageIndex}`;
+      const input = document.getElementById(inputId) as HTMLInputElement | null;
       if (input) {
         input.value = "";
       }
@@ -379,7 +408,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
   const handleContentCropConfirm = async () => {
     if (
-      contentCropModalIndex === null ||
+      !contentCropTarget ||
       !contentImageForCrop ||
       !contentCropAreaPixels ||
       !contentFileToCropRef.current
@@ -388,7 +417,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       return;
     }
 
-    const index = contentCropModalIndex;
+    const { blockIndex, imageIndex } = contentCropTarget;
 
     try {
       const blob = await getCroppedImageBlob(
@@ -403,22 +432,76 @@ export function NewsForm({ initialData }: NewsFormProps) {
         type: blob.type || "image/jpeg",
       });
 
-      const previousPreview = contentPreviews[index];
+      const previousPreview =
+        imageIndex !== null
+          ? contentPreviews[blockIndex]?.[imageIndex]
+          : undefined;
       if (previousPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(previousPreview);
       }
 
-      contentUploadedFilesRef.current[index] = file;
       const previewUrl = URL.createObjectURL(file);
+
       setContentPreviews((prev) => {
-        const next = [...prev];
-        next[index] = previewUrl;
+        const next = prev.map((blockPreviews) => [...blockPreviews]);
+        if (!next[blockIndex]) {
+          next[blockIndex] = [];
+        }
+        if (imageIndex === null) {
+          next[blockIndex].push(previewUrl);
+        } else {
+          next[blockIndex][imageIndex] = previewUrl;
+        }
         return next;
       });
-      setValue(`content.${index}.imageSrc`, previewUrl, {
+
+      while (contentUploadedFilesRef.current.length <= blockIndex) {
+        contentUploadedFilesRef.current.push([]);
+      }
+      const blockFiles = contentUploadedFilesRef.current[blockIndex] ?? [];
+      if (imageIndex === null) {
+        blockFiles.push(file);
+      } else {
+        blockFiles[imageIndex] = file;
+      }
+      contentUploadedFilesRef.current[blockIndex] = blockFiles;
+
+      while (contentImageAltCacheRef.current.length <= blockIndex) {
+        contentImageAltCacheRef.current.push([]);
+      }
+      const blockAlts = contentImageAltCacheRef.current[blockIndex] ?? [];
+      if (imageIndex === null) {
+        blockAlts.push("");
+      } else {
+        blockAlts[imageIndex] = "";
+      }
+      contentImageAltCacheRef.current[blockIndex] = blockAlts;
+
+      if (imageIndex === null) {
+        const currentImages =
+          getValues(`content.${blockIndex}.images`) ?? [];
+        const nextImages = [
+          ...currentImages,
+          {
+            src: previewUrl,
+            alt: "",
+          },
+        ];
+        setValue(`content.${blockIndex}.images`, nextImages, {
         shouldValidate: true,
       });
-      contentImageAltCacheRef.current[index] = "";
+      } else {
+        setValue(
+          `content.${blockIndex}.images.${imageIndex}.src`,
+          previewUrl,
+          { shouldValidate: true },
+        );
+        setValue(
+          `content.${blockIndex}.images.${imageIndex}.alt`,
+          "",
+          { shouldValidate: false },
+        );
+      }
     } catch (cropError) {
       console.error(cropError);
       setError("画像の切り抜きに失敗しました");
@@ -427,23 +510,35 @@ export function NewsForm({ initialData }: NewsFormProps) {
     }
   };
 
-  const handleRemoveContentImage = (index: number) => {
-    const currentPreview = contentPreviews[index];
-    if (currentPreview?.startsWith("blob:")) {
-      URL.revokeObjectURL(currentPreview);
+  const handleRemoveContentImage = (blockIndex: number, imageIndex: number) => {
+    const blockPreviews = contentPreviews[blockIndex] ?? [];
+    const targetPreview = blockPreviews[imageIndex];
+    if (targetPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(targetPreview);
     }
 
-    contentUploadedFilesRef.current[index] = null;
     setContentPreviews((prev) => {
-      const next = [...prev];
-      next[index] = "";
+      const next = prev.map((images) => [...images]);
+      next[blockIndex]?.splice(imageIndex, 1);
       return next;
     });
-    setValue(`content.${index}.imageSrc`, "", { shouldValidate: true });
-    contentImageAltCacheRef.current[index] = "";
+
+    const blockFiles = contentUploadedFilesRef.current[blockIndex] ?? [];
+    blockFiles.splice(imageIndex, 1);
+    contentUploadedFilesRef.current[blockIndex] = blockFiles;
+
+    const blockAlts = contentImageAltCacheRef.current[blockIndex] ?? [];
+    blockAlts.splice(imageIndex, 1);
+    contentImageAltCacheRef.current[blockIndex] = blockAlts;
+
+    const currentImages = getValues(`content.${blockIndex}.images`) ?? [];
+    const nextImages = currentImages.filter((_, idx) => idx !== imageIndex);
+    setValue(`content.${blockIndex}.images`, nextImages, {
+      shouldValidate: true,
+    });
 
     const input = document.getElementById(
-      `content-image-${index}`,
+      `content-image-${blockIndex}-${imageIndex}`,
     ) as HTMLInputElement | null;
     if (input) {
       input.value = "";
@@ -451,7 +546,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
   };
 
   const appendContentSection = () => {
-    appendContent({ title: "", text: "", imageSrc: "" });
+    appendContent({ title: "", text: "", images: [] });
     ensureContentStateLength(contentFields.length + 1);
   };
 
@@ -460,10 +555,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
       return;
     }
 
-    const removedPreview = contentPreviews[index];
-    if (removedPreview?.startsWith("blob:")) {
-      URL.revokeObjectURL(removedPreview);
-    }
+    const removedPreviews = contentPreviews[index] ?? [];
+    removedPreviews.forEach((preview) => {
+      if (preview?.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    });
 
     removeContent(index);
     setContentPreviews((prev) => prev.filter((_, i) => i !== index));
@@ -484,11 +581,11 @@ export function NewsForm({ initialData }: NewsFormProps) {
       return next;
     });
     const files = contentUploadedFilesRef.current;
-    const [movedFile] = files.splice(from, 1);
-    files.splice(to, 0, movedFile);
+    const [movedFiles] = files.splice(from, 1);
+    files.splice(to, 0, movedFiles);
     const alts = contentImageAltCacheRef.current;
-    const [movedAlt] = alts.splice(from, 1);
-    alts.splice(to, 0, movedAlt);
+    const [movedAlts] = alts.splice(from, 1);
+    alts.splice(to, 0, movedAlts);
   };
 
   const onSubmit = async (data: NewsFormData) => {
@@ -574,16 +671,58 @@ export function NewsForm({ initialData }: NewsFormProps) {
           ? initialData.thumbnail_alt.trim()
           : "") || normalizedTitle;
 
-      for (let index = 0; index < data.content.length; index += 1) {
-        const block = data.content[index];
-        let imageSrc = block.imageSrc?.trim() ?? "";
-        const pendingFile = contentUploadedFilesRef.current[index];
+      for (let blockIndex = 0; blockIndex < data.content.length; blockIndex += 1) {
+        const block = data.content[blockIndex];
+        const blockTitle = block.title?.trim() ?? "";
+        const blockImages = Array.isArray(block.images) ? block.images : [];
+
+        if (!contentUploadedFilesRef.current[blockIndex]) {
+          contentUploadedFilesRef.current[blockIndex] = new Array(
+            blockImages.length,
+          ).fill(null);
+        } else {
+          const files = contentUploadedFilesRef.current[blockIndex];
+          while (files.length < blockImages.length) {
+            files.push(null);
+          }
+          contentUploadedFilesRef.current[blockIndex] = files.slice(
+            0,
+            blockImages.length,
+          );
+        }
+
+        if (!contentImageAltCacheRef.current[blockIndex]) {
+          contentImageAltCacheRef.current[blockIndex] = new Array(
+            blockImages.length,
+          ).fill("");
+        } else {
+          const cache = contentImageAltCacheRef.current[blockIndex];
+          while (cache.length < blockImages.length) {
+            cache.push("");
+          }
+          contentImageAltCacheRef.current[blockIndex] = cache.slice(
+            0,
+            blockImages.length,
+          );
+        }
+
+        const normalizedImages: ContentBlock["images"] = [];
+
+        for (
+          let imageIndex = 0;
+          imageIndex < blockImages.length;
+          imageIndex += 1
+        ) {
+          const imageEntry = blockImages[imageIndex];
+          let imageSrc = imageEntry?.src?.trim() ?? "";
+          const pendingFile =
+            contentUploadedFilesRef.current[blockIndex]?.[imageIndex] ?? null;
 
         if (pendingFile) {
           const extension = getFileExtension(pendingFile.name);
           const storagePath = `${prefix}${baseName || "news-item"}-section-${
-            index + 1
-          }-${Date.now()}.${extension}`;
+              blockIndex + 1
+            }-${imageIndex + 1}-${Date.now()}.${extension}`;
 
           const { error: uploadError } = await adminSupabase.storage
             .from(newsBucket)
@@ -615,37 +754,61 @@ export function NewsForm({ initialData }: NewsFormProps) {
             return;
           }
 
-          setValue(`content.${index}.imageSrc`, imageSrc, {
-            shouldValidate: true,
-          });
-          contentUploadedFilesRef.current[index] = null;
-        }
+            setValue(
+              `content.${blockIndex}.images.${imageIndex}.src`,
+              imageSrc,
+              { shouldValidate: true },
+            );
+            contentUploadedFilesRef.current[blockIndex][imageIndex] = null;
+            blockImages[imageIndex].src = imageSrc;
+          }
 
-        const cachedAlt = contentImageAltCacheRef.current[index] ?? "";
+          if (!imageSrc) {
+            continue;
+          }
+
+          const altCache = contentImageAltCacheRef.current[blockIndex] ?? [];
+          const cachedAlt =
+            altCache[imageIndex]?.trim() ??
+            imageEntry?.alt?.trim() ??
+            "";
         const computedAlt =
-          cachedAlt && cachedAlt.trim().length > 0
-            ? cachedAlt.trim()
-            : block.title && block.title.trim().length > 0
-              ? block.title.trim()
+            cachedAlt && cachedAlt.length > 0
+              ? cachedAlt
+              : blockTitle && blockTitle.length > 0
+                ? blockTitle
               : normalizedTitle;
 
-        contentImageAltCacheRef.current[index] = computedAlt;
+          altCache[imageIndex] = computedAlt;
+          contentImageAltCacheRef.current[blockIndex] = altCache;
 
-        formattedContent.push({
-          title: block.title?.trim() ?? "",
-          text: block.text,
-          image: imageSrc
-            ? {
+          setValue(
+            `content.${blockIndex}.images.${imageIndex}.alt`,
+            computedAlt,
+            { shouldValidate: false },
+          );
+
+          normalizedImages.push({
                 src: imageSrc,
                 alt: computedAlt,
-              }
-            : null,
+          });
+        }
+
+        formattedContent.push({
+          title: blockTitle.length > 0 ? blockTitle : undefined,
+          text: block.text,
+          images: normalizedImages,
         });
       }
 
       const contactEmailRaw = data.contactEmail ?? "";
       const contactEmailValue =
         contactEmailRaw && contactEmailRaw.length > 0 ? contactEmailRaw : null;
+      const contactPersonRaw = data.contactPerson ?? "";
+      const contactPersonValue =
+        contactPersonRaw && contactPersonRaw.length > 0
+          ? contactPersonRaw
+          : null;
 
       const finalLink = `/news/${normalizedId}`;
       const newsData = {
@@ -658,6 +821,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         link: finalLink,
         content: formattedContent,
         summary: data.summary?.trim() ? data.summary.trim() : null,
+        contact_person: contactPersonValue,
         contact_email: contactEmailValue,
       };
 
@@ -855,8 +1019,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
           </p>
           <div className="space-y-6">
             {contentFields.map((field, index) => {
-              const imageSrc = watch(`content.${index}.imageSrc`);
-              const hasImage = !!imageSrc && imageSrc.trim().length > 0;
+              const images = watch(`content.${index}.images`) ?? [];
 
               return (
                 <div
@@ -931,76 +1094,133 @@ export function NewsForm({ initialData }: NewsFormProps) {
                       )}
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="relative overflow-hidden rounded-2xl border border-dashed border-neutral-300 bg-neutral-50">
-                        <div className="relative aspect-[16/9] w-full">
-                          {contentPreviews[index] ? (
-                            <Image
-                              src={contentPreviews[index]}
-                              alt={`段落${index + 1}の画像プレビュー`}
-                              fill
-                              sizes="100%"
-                              className="object-cover"
-                              onError={() => {
-                                setContentPreviews((prev) => {
-                                  const next = [...prev];
-                                  next[index] = "";
-                                  return next;
-                                });
-                                setValue(`content.${index}.imageSrc`, "", {
-                                  shouldValidate: true,
-                                });
-                              }}
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
-                              画像プレビューなし
+                    <div className="space-y-4">
+                      {images.length > 0 ? (
+                        images.map((image, imageIndex) => {
+                          const previewSrc =
+                            contentPreviews[index]?.[imageIndex] ??
+                            image?.src ??
+                            "";
+                          return (
+                            <div
+                              key={`${field.id}-image-${imageIndex}`}
+                              className="rounded-xl border border-neutral-200 bg-white p-3"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-400">
+                                  Image {imageIndex + 1}
+                                </span>
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    className="text-xs text-neutral-600 underline"
+                                    onClick={() => {
+                                      const input = document.getElementById(
+                                        `content-image-${index}-${imageIndex}`,
+                                      ) as HTMLInputElement | null;
+                                      input?.click();
+                                    }}
+                                    disabled={loading}
+                                  >
+                                    画像を変更
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="text-xs text-red-600 underline"
+                                    onClick={() =>
+                                      handleRemoveContentImage(index, imageIndex)
+                                    }
+                                    disabled={loading}
+                                  >
+                                    削除
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
+                                <div className="relative aspect-[16/9] w-full">
+                                  {previewSrc ? (
+                                    <Image
+                                      src={previewSrc}
+                                      alt={`段落${index + 1}の画像${imageIndex + 1}プレビュー`}
+                                      fill
+                                      sizes="100%"
+                                      className="object-cover"
+                                      onError={() => {
+                                        setContentPreviews((prev) => {
+                                          const next = prev.map((block) => [
+                                            ...block,
+                                          ]);
+                                          next[index][imageIndex] = "";
+                                          return next;
+                                        });
+                                        setValue(
+                                          `content.${index}.images.${imageIndex}.src`,
+                                          "",
+                                          { shouldValidate: true },
+                                        );
+                                      }}
+                                    />
+                                  ) : (
+                                    <div className="flex h-full items-center justify-center text-xs text-neutral-400">
+                                      画像プレビューなし
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <input
+                                id={`content-image-${index}-${imageIndex}`}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleContentFileSelect(
+                                  index,
+                                  imageIndex,
+                                )}
+                                disabled={loading}
+                              />
+                              <input
+                                type="hidden"
+                                {...register(
+                                  `content.${index}.images.${imageIndex}.src` as const,
+                                )}
+                              />
+                              <input
+                                type="hidden"
+                                {...register(
+                                  `content.${index}.images.${imageIndex}.alt` as const,
+                                )}
+                              />
                             </div>
-                          )}
+                          );
+                        })
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-xs text-neutral-400">
+                          画像が追加されていません
                         </div>
-                      </div>
+                      )}
                       <div className="flex flex-wrap items-center gap-3">
                         <button
                           type="button"
                           className="rounded-lg border border-neutral-300 px-4 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100"
                           onClick={() => {
                             const input = document.getElementById(
-                              `content-image-${index}`,
+                              `content-image-${index}-new`,
                             ) as HTMLInputElement | null;
                             input?.click();
                           }}
                           disabled={loading}
                         >
-                          {hasImage ? "画像を変更" : "画像を追加"}
+                          + 画像を追加
                         </button>
-                        {hasImage && (
-                          <button
-                            type="button"
-                            className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50"
-                            onClick={() => handleRemoveContentImage(index)}
-                            disabled={loading}
-                          >
-                            画像を削除
-                          </button>
-                        )}
                         <input
-                          id={`content-image-${index}`}
+                          id={`content-image-${index}-new`}
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={handleContentFileSelect(index)}
+                          onChange={handleContentFileSelect(index, null)}
                           disabled={loading}
                         />
                       </div>
-                      <input
-                        type="hidden"
-                        {...register(`content.${index}.imageSrc` as const)}
-                      />
-                      {errors.content?.[index]?.imageSrc && (
-                        <p className="text-sm text-red-600">
-                          {errors.content[index]?.imageSrc?.message}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -1049,6 +1269,24 @@ export function NewsForm({ initialData }: NewsFormProps) {
 
         <div>
           <label
+            htmlFor="contactPerson"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
+            お問い合わせ担当者
+          </label>
+          <input
+            id="contactPerson"
+            {...register("contactPerson")}
+            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+            placeholder="熊谷 流気（プロジェクト担当）"
+          />
+          <p className="mt-1 text-xs text-neutral-500">
+            記事末尾に担当者名として表示されます（任意）
+          </p>
+        </div>
+
+        <div>
+          <label
             htmlFor="contactEmail"
             className="mb-2 block text-sm font-medium text-neutral-700"
           >
@@ -1066,8 +1304,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
             </p>
           )}
           <p className="mt-1 text-xs text-neutral-500">
-            記事の末尾に「この記事に関してのお問い合わせは:
-            メールアドレス」を表示します（任意）
+            記事末尾に担当者名とメールアドレスを表示します（任意）
           </p>
         </div>
 
@@ -1145,7 +1382,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         </div>
       ) : null}
 
-      {contentCropModalIndex !== null && contentImageForCrop ? (
+      {contentCropTarget !== null && contentImageForCrop ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl">
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-900">

@@ -6,13 +6,14 @@ export type NewsContentImage = {
 export type ContentBlock = {
   title?: string;
   text: string;
-  image?: NewsContentImage | null;
+  images: NewsContentImage[];
 };
 
 type ContentBlockCandidate = {
-  title?: string;
-  text: string;
-  image?: NewsContentImage | null | undefined;
+  title?: unknown;
+  text?: unknown;
+  image?: unknown;
+  images?: unknown;
 };
 
 export type NewsItem = {
@@ -25,6 +26,7 @@ export type NewsItem = {
   link: string;
   content: ContentBlock[];
   summary?: string;
+  contactPerson?: string;
   contactEmail?: string;
 };
 
@@ -73,6 +75,15 @@ const isNewContentBlockCandidate = (
     return false;
   }
 
+  if (
+    "images" in record &&
+    record.images !== null &&
+    record.images !== undefined &&
+    !Array.isArray(record.images)
+  ) {
+    return false;
+  }
+
   return true;
 };
 
@@ -90,18 +101,25 @@ const isLegacyImageBlock = (value: unknown): value is LegacyImageBlock =>
   typeof value.alt === "string";
 
 const normalizeImage = (image: unknown): NewsContentImage | null => {
-  if (!image) {
+  if (!isRecord(image)) {
     return null;
   }
 
-  if (isNewsContentImage(image)) {
-    return {
-      src: image.src,
-      alt: image.alt,
-    };
+  const srcValue = image.src;
+  if (typeof srcValue !== "string") {
+    return null;
+  }
+  const normalizedSrc = srcValue.trim();
+  if (!normalizedSrc) {
+    return null;
   }
 
-  return null;
+  const altValue = typeof image.alt === "string" ? image.alt.trim() : "";
+
+  return {
+    src: normalizedSrc,
+    alt: altValue,
+  };
 };
 
 const normalizeText = (text: unknown): string =>
@@ -110,6 +128,24 @@ const normalizeText = (text: unknown): string =>
 const normalizeTitle = (title: unknown): string =>
   typeof title === "string" ? title : "";
 
+const normalizeImagesArray = (
+  imagesCandidate: unknown,
+  fallbackImage?: unknown,
+): NewsContentImage[] => {
+  const normalizedFromArray = Array.isArray(imagesCandidate)
+    ? imagesCandidate
+        .map((candidate) => normalizeImage(candidate))
+        .filter((image): image is NewsContentImage => image !== null)
+    : [];
+
+  if (normalizedFromArray.length > 0) {
+    return normalizedFromArray;
+  }
+
+  const singleImage = normalizeImage(fallbackImage);
+  return singleImage ? [singleImage] : [];
+};
+
 const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
   raw
     .filter((block): block is ContentBlockCandidate =>
@@ -117,20 +153,19 @@ const normalizeNewContentBlocks = (raw: unknown[]): ContentBlock[] =>
     )
     .map((block) => {
       const normalizedTitle = normalizeTitle(block.title);
+      const normalizedText = normalizeText(block.text);
+      const normalizedImages = normalizeImagesArray(block.images, block.image);
       return {
         title: normalizedTitle.length > 0 ? normalizedTitle : undefined,
-        text: normalizeText(block.text),
-        image:
-          block.image === undefined
-            ? null
-            : (normalizeImage(block.image) ?? null),
+        text: normalizedText,
+        images: normalizedImages,
       };
     })
     .filter(
       (block) =>
         (block.title && block.title.trim().length > 0) ||
         block.text.trim().length > 0 ||
-        block.image,
+        block.images.length > 0,
     );
 
 const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
@@ -144,16 +179,18 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
       if (isLegacyImageBlock(next)) {
         normalized.push({
           text: normalizeText(current.text),
-          image: {
-            src: next.src,
-            alt: next.alt,
-          },
+          images: [
+            {
+              src: next.src,
+              alt: next.alt,
+            },
+          ],
         });
         index += 1;
       } else {
         normalized.push({
           text: normalizeText(current.text),
-          image: null,
+          images: [],
         });
       }
       continue;
@@ -162,10 +199,12 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
     if (isLegacyImageBlock(current)) {
       normalized.push({
         text: "",
-        image: {
-          src: current.src,
-          alt: current.alt,
-        },
+        images: [
+          {
+            src: current.src,
+            alt: current.alt,
+          },
+        ],
       });
     }
   }
@@ -173,7 +212,7 @@ const normalizeLegacyContentBlocks = (raw: unknown[]): ContentBlock[] => {
   return normalized.filter(
     (block) =>
       block.text.trim().length > 0 ||
-      (block.image && block.image.src.trim().length > 0),
+      block.images.some((image) => image.src.trim().length > 0),
   );
 };
 
@@ -206,12 +245,12 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "アップデート概要",
         text: "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
-        image: null,
+        images: [],
       },
       {
         title: "Atlas が提供する価値",
         text: "Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。",
-        image: null,
+        images: [],
       },
     ],
     summary:
@@ -229,7 +268,7 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "共同プロジェクトの概要",
         text: "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
-        image: null,
+        images: [],
       },
     ],
     summary:
@@ -247,7 +286,7 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "資金調達の目的",
         text: "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
-        image: null,
+        images: [],
       },
     ],
     summary:
@@ -265,7 +304,7 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "ロードマップ公開の背景",
         text: "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
-        image: null,
+        images: [],
       },
     ],
     summary:
@@ -283,7 +322,7 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "京都ラボ設立の狙い",
         text: "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
-        image: null,
+        images: [],
       },
     ],
     summary:
@@ -301,7 +340,7 @@ export const defaultNewsItems: NewsItem[] = [
       {
         title: "フォーラム登壇の内容",
         text: "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
-        image: null,
+        images: [],
       },
     ],
     summary:
