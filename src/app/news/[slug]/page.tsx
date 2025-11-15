@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { NewsThumbnail } from "@/components/NewsThumbnail";
 import { getNewsItemById } from "@/models/news";
 
 type NewsDetailPageParams = {
@@ -71,16 +72,14 @@ export default async function NewsDetailPage({
           </header>
           {item.thumbnailSrc && (
             <div className="mt-10 overflow-hidden border border-neutral-200 bg-neutral-100">
-              <div className="relative h-64 w-full sm:h-80">
-                <Image
-                  src={item.thumbnailSrc}
-                  alt={item.thumbnailAlt}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                  priority
-                />
-              </div>
+              <NewsThumbnail
+                src={item.thumbnailSrc}
+                alt={item.thumbnailAlt}
+                sizes="100vw"
+                priority
+                fallbackAspectRatio={16 / 9}
+                className="w-full"
+              />
             </div>
           )}
           <article className="mt-12 space-y-12 text-left text-neutral-700">

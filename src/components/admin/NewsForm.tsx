@@ -10,12 +10,9 @@ import {
   useRef,
   useState,
 } from "react";
-import type { Area } from "react-easy-crop";
-import Cropper from "react-easy-crop";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getCroppedImageBlob } from "@/lib/image-crop";
 import { getAdminSupabaseClient } from "@/lib/supabase/admin";
 import type { ContentBlock } from "@/models";
 
@@ -99,20 +96,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const [thumbnailObjectUrl, setThumbnailObjectUrl] = useState<string | null>(
     null,
   );
-  const [thumbnailCropModalOpen, setThumbnailCropModalOpen] = useState(false);
-  const [thumbnailImageForCrop, setThumbnailImageForCrop] = useState<
-    string | null
-  >(null);
-  const [thumbnailCrop, setThumbnailCrop] = useState({ x: 0, y: 0 });
-  const [thumbnailZoom, setThumbnailZoom] = useState(1);
-  const [thumbnailCropAreaPixels, setThumbnailCropAreaPixels] =
-    useState<Area | null>(null);
-  const [thumbnailSelectedFileName, setThumbnailSelectedFileName] = useState<
-    string | null
-  >(null);
   const thumbnailFileRef = useRef<File | null>(null);
-  const thumbnailFileToCropRef = useRef<File | null>(null);
   const thumbnailFileInputRef = useRef<HTMLInputElement | null>(null);
+  const thumbnailObjectUrlRef = useRef<string | null>(null);
 
   const initialContentPreviews =
     initialData?.content && initialData.content.length > 0
@@ -130,6 +116,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const [contentPreviews, setContentPreviews] = useState<string[][]>(
     initialContentPreviews,
   );
+  const contentPreviewsRef = useRef<string[][]>(initialContentPreviews);
   const contentUploadedFilesRef = useRef<(File | null)[][]>(
     initialContentPreviews.map((blockPreviews) =>
       blockPreviews.map(() => null),
@@ -138,18 +125,6 @@ export function NewsForm({ initialData }: NewsFormProps) {
   const contentImageAltCacheRef = useRef<string[][]>(
     initialContentImageAlts.map((alts) => [...alts]),
   );
-  const contentFileToCropRef = useRef<File | null>(null);
-  const [contentCropTarget, setContentCropTarget] = useState<{
-    blockIndex: number;
-    imageIndex: number | null;
-  } | null>(null);
-  const [contentImageForCrop, setContentImageForCrop] = useState<string | null>(
-    null,
-  );
-  const [contentCrop, setContentCrop] = useState({ x: 0, y: 0 });
-  const [contentZoom, setContentZoom] = useState(1);
-  const [contentCropAreaPixels, setContentCropAreaPixels] =
-    useState<Area | null>(null);
 
   const {
     register,
@@ -247,11 +222,16 @@ export function NewsForm({ initialData }: NewsFormProps) {
   }, [contentFields.length, ensureContentStateLength]);
 
   useEffect(() => {
+    contentPreviewsRef.current = contentPreviews;
+  }, [contentPreviews]);
+
+  useEffect(() => {
     return () => {
-      if (thumbnailObjectUrl) {
-        URL.revokeObjectURL(thumbnailObjectUrl);
+      const currentThumbnail = thumbnailObjectUrlRef.current;
+      if (currentThumbnail) {
+        URL.revokeObjectURL(currentThumbnail);
       }
-      contentPreviews.forEach((blockPreviews) => {
+      contentPreviewsRef.current.forEach((blockPreviews) => {
         blockPreviews.forEach((preview) => {
           if (preview?.startsWith("blob:")) {
             URL.revokeObjectURL(preview);
@@ -259,15 +239,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
         });
       });
     };
-  }, [thumbnailObjectUrl, contentPreviews]);
-
-  const handleThumbnailCropComplete = (_: Area, areaPixels: Area) => {
-    setThumbnailCropAreaPixels(areaPixels);
-  };
-
-  const handleContentCropComplete = (_: Area, areaPixels: Area) => {
-    setContentCropAreaPixels(areaPixels);
-  };
+  }, []);
 
   const handleThumbnailFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -280,67 +252,19 @@ export function NewsForm({ initialData }: NewsFormProps) {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setThumbnailImageForCrop(reader.result as string);
-      setThumbnailCrop({ x: 0, y: 0 });
-      setThumbnailZoom(1);
-      setThumbnailCropAreaPixels(null);
-      setThumbnailCropModalOpen(true);
-    };
-    reader.readAsDataURL(file);
+    const previewUrl = URL.createObjectURL(file);
 
-    thumbnailFileToCropRef.current = file;
-    setThumbnailSelectedFileName(file.name);
-  };
-
-  const handleThumbnailCropCancel = () => {
-    setThumbnailCropModalOpen(false);
-    setThumbnailImageForCrop(null);
-    setThumbnailCropAreaPixels(null);
-    thumbnailFileToCropRef.current = null;
-    setThumbnailSelectedFileName(null);
-    if (thumbnailFileInputRef.current) {
-      thumbnailFileInputRef.current.value = "";
-    }
-  };
-
-  const handleThumbnailCropConfirm = async () => {
-    if (!thumbnailImageForCrop || !thumbnailCropAreaPixels) {
-      setError("サムネイル画像の切り抜き範囲を決定できませんでした");
-      return;
+    if (thumbnailObjectUrl) {
+      URL.revokeObjectURL(thumbnailObjectUrl);
+    } else if (thumbnailPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(thumbnailPreview);
     }
 
-    try {
-      const blob = await getCroppedImageBlob(
-        thumbnailImageForCrop,
-        thumbnailCropAreaPixels,
-      );
-      const sourceFileName =
-        thumbnailFileToCropRef.current?.name ??
-        thumbnailSelectedFileName ??
-        "thumbnail.jpg";
-      const extension = getFileExtension(sourceFileName);
-      const fileName = `thumbnail-${Date.now()}.${extension}`;
-      const file = new File([blob], fileName, {
-        type: blob.type || "image/jpeg",
-      });
-
-      if (thumbnailObjectUrl) {
-        URL.revokeObjectURL(thumbnailObjectUrl);
-      }
-
-      thumbnailFileRef.current = file;
-      const previewUrl = URL.createObjectURL(file);
-      setThumbnailPreview(previewUrl);
-      setThumbnailObjectUrl(previewUrl);
-      setValue("thumbnailSrc", previewUrl, { shouldValidate: true });
-    } catch (cropError) {
-      console.error(cropError);
-      setError("サムネイル画像の切り抜きに失敗しました");
-    } finally {
-      handleThumbnailCropCancel();
-    }
+    thumbnailFileRef.current = file;
+    setThumbnailPreview(previewUrl);
+    setThumbnailObjectUrl(previewUrl);
+    thumbnailObjectUrlRef.current = previewUrl;
+    setValue("thumbnailSrc", previewUrl, { shouldValidate: true });
   };
 
   const handleRemoveThumbnail = () => {
@@ -352,15 +276,12 @@ export function NewsForm({ initialData }: NewsFormProps) {
     }
 
     setThumbnailPreview(null);
-    setThumbnailImageForCrop(null);
-    setThumbnailCropAreaPixels(null);
-    setThumbnailSelectedFileName(null);
     thumbnailFileRef.current = null;
-    thumbnailFileToCropRef.current = null;
     if (thumbnailFileInputRef.current) {
       thumbnailFileInputRef.current.value = "";
     }
     setValue("thumbnailSrc", "", { shouldValidate: true });
+    thumbnailObjectUrlRef.current = null;
   };
 
   const handleContentFileSelect =
@@ -376,77 +297,19 @@ export function NewsForm({ initialData }: NewsFormProps) {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        setContentImageForCrop(reader.result as string);
-        setContentCrop({ x: 0, y: 0 });
-        setContentZoom(1);
-        setContentCropAreaPixels(null);
-        setContentCropTarget({ blockIndex, imageIndex });
-      };
-      reader.readAsDataURL(file);
-
-      contentFileToCropRef.current = file;
-    };
-
-  const handleContentCropCancel = () => {
-    const target = contentCropTarget;
-    setContentCropTarget(null);
-    setContentImageForCrop(null);
-    setContentCropAreaPixels(null);
-    contentFileToCropRef.current = null;
-    if (target) {
-      const inputId =
-        target.imageIndex === null
-          ? `content-image-${target.blockIndex}-new`
-          : `content-image-${target.blockIndex}-${target.imageIndex}`;
-      const input = document.getElementById(inputId) as HTMLInputElement | null;
-      if (input) {
-        input.value = "";
-      }
-    }
-  };
-
-  const handleContentCropConfirm = async () => {
-    if (
-      !contentCropTarget ||
-      !contentImageForCrop ||
-      !contentCropAreaPixels ||
-      !contentFileToCropRef.current
-    ) {
-      setError("画像の切り抜き範囲を決定できませんでした");
-      return;
-    }
-
-    const { blockIndex, imageIndex } = contentCropTarget;
-
-    try {
-      const blob = await getCroppedImageBlob(
-        contentImageForCrop,
-        contentCropAreaPixels,
-      );
-      const sourceFileName =
-        contentFileToCropRef.current.name ?? "section-image.jpg";
-      const extension = getFileExtension(sourceFileName);
-      const fileName = `section-${Date.now()}.${extension}`;
-      const file = new File([blob], fileName, {
-        type: blob.type || "image/jpeg",
-      });
-
-      const previousPreview =
-        imageIndex !== null
-          ? contentPreviews[blockIndex]?.[imageIndex]
-          : undefined;
-      if (previousPreview?.startsWith("blob:")) {
-        URL.revokeObjectURL(previousPreview);
-      }
-
       const previewUrl = URL.createObjectURL(file);
+      const existingPreview =
+        imageIndex === null
+          ? undefined
+          : contentPreviews[blockIndex]?.[imageIndex];
+      if (existingPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(existingPreview);
+      }
 
       setContentPreviews((prev) => {
-        const next = prev.map((blockPreviews) => [...blockPreviews]);
-        if (!next[blockIndex]) {
-          next[blockIndex] = [];
+        const next = prev.map((block) => [...block]);
+        while (next.length <= blockIndex) {
+          next.push([]);
         }
         if (imageIndex === null) {
           next[blockIndex].push(previewUrl);
@@ -459,7 +322,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       while (contentUploadedFilesRef.current.length <= blockIndex) {
         contentUploadedFilesRef.current.push([]);
       }
-      const blockFiles = contentUploadedFilesRef.current[blockIndex] ?? [];
+      const blockFiles = contentUploadedFilesRef.current[blockIndex];
       if (imageIndex === null) {
         blockFiles.push(file);
       } else {
@@ -470,7 +333,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
       while (contentImageAltCacheRef.current.length <= blockIndex) {
         contentImageAltCacheRef.current.push([]);
       }
-      const blockAlts = contentImageAltCacheRef.current[blockIndex] ?? [];
+      const blockAlts = contentImageAltCacheRef.current[blockIndex];
       if (imageIndex === null) {
         blockAlts.push("");
       } else {
@@ -498,13 +361,9 @@ export function NewsForm({ initialData }: NewsFormProps) {
           shouldValidate: false,
         });
       }
-    } catch (cropError) {
-      console.error(cropError);
-      setError("画像の切り抜きに失敗しました");
-    } finally {
-      handleContentCropCancel();
-    }
-  };
+
+      event.target.value = "";
+    };
 
   const handleRemoveContentImage = (blockIndex: number, imageIndex: number) => {
     const blockPreviews = contentPreviews[blockIndex] ?? [];
@@ -855,586 +714,465 @@ export function NewsForm({ initialData }: NewsFormProps) {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-            {error}
-          </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          {error}
+        </div>
+      )}
+
+      <div>
+        <label
+          htmlFor="id"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          ID <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="id"
+          {...register("id")}
+          disabled={!!initialData}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:bg-neutral-100"
+          placeholder="atlas-os-v2-release"
+        />
+        {errors.id && (
+          <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>
         )}
+        <p className="mt-1 text-xs text-neutral-500">
+          URLに使用されるID（英数字とハイフンのみ、編集時は変更不可）
+        </p>
+        <p className="mt-1 text-xs text-neutral-500">
+          公開URL:{" "}
+          {normalizedIdForDisplay
+            ? `/news/${normalizedIdForDisplay}`
+            : "/news/<id>"}
+        </p>
+      </div>
 
-        <div>
-          <label
-            htmlFor="id"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            ID <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="id"
-            {...register("id")}
-            disabled={!!initialData}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:bg-neutral-100"
-            placeholder="atlas-os-v2-release"
-          />
-          {errors.id && (
-            <p className="mt-1 text-sm text-red-600">{errors.id.message}</p>
-          )}
-          <p className="mt-1 text-xs text-neutral-500">
-            URLに使用されるID（英数字とハイフンのみ、編集時は変更不可）
-          </p>
-          <p className="mt-1 text-xs text-neutral-500">
-            公開URL:{" "}
-            {normalizedIdForDisplay
-              ? `/news/${normalizedIdForDisplay}`
-              : "/news/<id>"}
-          </p>
-        </div>
+      <div>
+        <label
+          htmlFor="title"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          タイトル <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="title"
+          {...register("title")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="Atlas OS v2 を正式リリース"
+        />
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+        )}
+      </div>
 
-        <div>
-          <label
-            htmlFor="title"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            タイトル <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="title"
-            {...register("title")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="Atlas OS v2 を正式リリース"
-          />
-          {errors.title && (
-            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-          )}
-        </div>
+      <div>
+        <label
+          htmlFor="subtitle"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          サブタイトル
+        </label>
+        <input
+          id="subtitle"
+          {...register("subtitle")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="長期記憶に最適化した新機能を追加"
+        />
+        {errors.subtitle && (
+          <p className="mt-1 text-sm text-red-600">{errors.subtitle.message}</p>
+        )}
+      </div>
 
-        <div>
-          <label
-            htmlFor="subtitle"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            サブタイトル
-          </label>
-          <input
-            id="subtitle"
-            {...register("subtitle")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="長期記憶に最適化した新機能を追加"
-          />
-          {errors.subtitle && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.subtitle.message}
+      <div>
+        <label
+          htmlFor="date"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          日付 <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="date"
+          {...register("date")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="2025.09.12"
+        />
+        {errors.date && (
+          <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
+        )}
+      </div>
+
+      <input type="hidden" {...register("thumbnailSrc")} />
+
+      <div>
+        <p className="mb-2 text-sm font-medium text-neutral-700">
+          サムネイル画像
+        </p>
+        <div className="space-y-3">
+          <div className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50">
+            <div className="relative aspect-[16/9] w-full">
+              {thumbnailPreview ? (
+                <Image
+                  src={thumbnailPreview}
+                  alt="サムネイルプレビュー"
+                  fill
+                  sizes="100%"
+                  className="object-cover"
+                  onError={() => setThumbnailPreview(null)}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
+                  プレビューなし
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+              onClick={() => thumbnailFileInputRef.current?.click()}
+              disabled={loading}
+            >
+              {thumbnailPreview
+                ? "サムネイルを変更"
+                : "サムネイルをアップロード"}
+            </button>
+            {hasThumbnailValue ? (
+              <button
+                type="button"
+                className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+                onClick={handleRemoveThumbnail}
+                disabled={loading}
+              >
+                サムネイルを削除
+              </button>
+            ) : null}
+            <input
+              ref={thumbnailFileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleThumbnailFileSelect}
+              disabled={loading}
+            />
+          </div>
+          {errors.thumbnailSrc && (
+            <p className="text-sm text-red-600">
+              {errors.thumbnailSrc.message}
             </p>
           )}
         </div>
+      </div>
 
-        <div>
-          <label
-            htmlFor="date"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            日付 <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="date"
-            {...register("date")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="2025.09.12"
-          />
-          {errors.date && (
-            <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
-          )}
-        </div>
+      <div>
+        <p className="mb-2 text-sm font-medium text-neutral-700">
+          段落 <span className="text-red-500">*</span>
+        </p>
+        <div className="space-y-6">
+          {contentFields.map((field, index) => {
+            const images = watch(`content.${index}.images`) ?? [];
 
-        <input type="hidden" {...register("thumbnailSrc")} />
-
-        <div>
-          <p className="mb-2 text-sm font-medium text-neutral-700">
-            サムネイル画像
-          </p>
-          <div className="space-y-3">
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50">
-              <div className="relative aspect-[16/9] w-full">
-                {thumbnailPreview ? (
-                  <Image
-                    src={thumbnailPreview}
-                    alt="サムネイルプレビュー"
-                    fill
-                    sizes="100%"
-                    className="object-cover"
-                    onError={() => setThumbnailPreview(null)}
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
-                    プレビューなし
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
-                onClick={() => thumbnailFileInputRef.current?.click()}
-                disabled={loading}
+            return (
+              <div
+                key={field.id}
+                className="rounded-xl border border-neutral-200 p-4 sm:p-5"
               >
-                {thumbnailPreview
-                  ? "サムネイルを変更"
-                  : "サムネイルをアップロード"}
-              </button>
-              {hasThumbnailValue ? (
-                <button
-                  type="button"
-                  className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50"
-                  onClick={handleRemoveThumbnail}
-                  disabled={loading}
-                >
-                  サムネイルを削除
-                </button>
-              ) : null}
-              <input
-                ref={thumbnailFileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleThumbnailFileSelect}
-                disabled={loading}
-              />
-            </div>
-            {errors.thumbnailSrc && (
-              <p className="text-sm text-red-600">
-                {errors.thumbnailSrc.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <p className="mb-2 text-sm font-medium text-neutral-700">
-            段落 <span className="text-red-500">*</span>
-          </p>
-          <div className="space-y-6">
-            {contentFields.map((field, index) => {
-              const images = watch(`content.${index}.images`) ?? [];
-
-              return (
-                <div
-                  key={field.id}
-                  className="rounded-xl border border-neutral-200 p-4 sm:p-5"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-400">
-                      Section {index + 1}
-                    </span>
-                    <div className="flex gap-2">
-                      {index > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => moveContentSection(index, index - 1)}
-                          className="text-xs text-neutral-600 underline"
-                        >
-                          上へ
-                        </button>
-                      )}
-                      {index < contentFields.length - 1 && (
-                        <button
-                          type="button"
-                          onClick={() => moveContentSection(index, index + 1)}
-                          className="text-xs text-neutral-600 underline"
-                        >
-                          下へ
-                        </button>
-                      )}
-                      {contentFields.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeContentSection(index)}
-                          className="text-xs text-red-600 underline"
-                        >
-                          削除
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-4 space-y-4">
-                    <div>
-                      <label
-                        htmlFor={`content-title-${index}`}
-                        className="mb-1 block text-xs font-medium text-neutral-600"
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-400">
+                    Section {index + 1}
+                  </span>
+                  <div className="flex gap-2">
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => moveContentSection(index, index - 1)}
+                        className="text-xs text-neutral-600 underline"
                       >
-                        段落タイトル
-                      </label>
-                      <input
-                        id={`content-title-${index}`}
-                        {...register(`content.${index}.title` as const)}
-                        className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                        placeholder="段落タイトルを入力してください"
-                      />
-                      {errors.content?.[index]?.title && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {errors.content[index]?.title?.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <textarea
-                        {...register(`content.${index}.text` as const)}
-                        rows={4}
-                        className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                        placeholder="段落の内容を入力してください"
-                      />
-                      {errors.content?.[index]?.text && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {errors.content[index]?.text?.message}
-                        </p>
-                      )}
-                    </div>
+                        上へ
+                      </button>
+                    )}
+                    {index < contentFields.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => moveContentSection(index, index + 1)}
+                        className="text-xs text-neutral-600 underline"
+                      >
+                        下へ
+                      </button>
+                    )}
+                    {contentFields.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeContentSection(index)}
+                        className="text-xs text-red-600 underline"
+                      >
+                        削除
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <label
+                      htmlFor={`content-title-${index}`}
+                      className="mb-1 block text-xs font-medium text-neutral-600"
+                    >
+                      段落タイトル
+                    </label>
+                    <input
+                      id={`content-title-${index}`}
+                      {...register(`content.${index}.title` as const)}
+                      className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                      placeholder="段落タイトルを入力してください"
+                    />
+                    {errors.content?.[index]?.title && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.content[index]?.title?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <textarea
+                      {...register(`content.${index}.text` as const)}
+                      rows={4}
+                      className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                      placeholder="段落の内容を入力してください"
+                    />
+                    {errors.content?.[index]?.text && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.content[index]?.text?.message}
+                      </p>
+                    )}
+                  </div>
 
-                    <div className="space-y-4">
-                      {images.length > 0 ? (
-                        images.map((image, imageIndex) => {
-                          const previewSrc =
-                            contentPreviews[index]?.[imageIndex] ??
-                            image?.src ??
-                            "";
-                          return (
-                            <div
-                              key={`${field.id}-image-${imageIndex}`}
-                              className="rounded-xl border border-neutral-200 bg-white p-3"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-400">
-                                  Image {imageIndex + 1}
-                                </span>
-                                <div className="flex gap-2">
-                                  <button
-                                    type="button"
-                                    className="text-xs text-neutral-600 underline"
-                                    onClick={() => {
-                                      const input = document.getElementById(
-                                        `content-image-${index}-${imageIndex}`,
-                                      ) as HTMLInputElement | null;
-                                      input?.click();
-                                    }}
-                                    disabled={loading}
-                                  >
-                                    画像を変更
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="text-xs text-red-600 underline"
-                                    onClick={() =>
-                                      handleRemoveContentImage(
-                                        index,
-                                        imageIndex,
-                                      )
-                                    }
-                                    disabled={loading}
-                                  >
-                                    削除
-                                  </button>
-                                </div>
+                  <div className="space-y-4">
+                    {images.length > 0 ? (
+                      images.map((image, imageIndex) => {
+                        const previewSrc =
+                          contentPreviews[index]?.[imageIndex] ??
+                          image?.src ??
+                          "";
+                        return (
+                          <div
+                            key={`${field.id}-image-${imageIndex}`}
+                            className="rounded-xl border border-neutral-200 bg-white p-3"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-400">
+                                Image {imageIndex + 1}
+                              </span>
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  className="text-xs text-neutral-600 underline"
+                                  onClick={() => {
+                                    const input = document.getElementById(
+                                      `content-image-${index}-${imageIndex}`,
+                                    ) as HTMLInputElement | null;
+                                    input?.click();
+                                  }}
+                                  disabled={loading}
+                                >
+                                  画像を変更
+                                </button>
+                                <button
+                                  type="button"
+                                  className="text-xs text-red-600 underline"
+                                  onClick={() =>
+                                    handleRemoveContentImage(index, imageIndex)
+                                  }
+                                  disabled={loading}
+                                >
+                                  削除
+                                </button>
                               </div>
-                              <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
-                                <div className="relative aspect-[16/9] w-full">
-                                  {previewSrc ? (
-                                    <Image
-                                      src={previewSrc}
-                                      alt={`段落${index + 1}の画像${imageIndex + 1}プレビュー`}
-                                      fill
-                                      sizes="100%"
-                                      className="object-cover"
-                                      onError={() => {
-                                        setContentPreviews((prev) => {
-                                          const next = prev.map((block) => [
-                                            ...block,
-                                          ]);
-                                          next[index][imageIndex] = "";
-                                          return next;
-                                        });
-                                        setValue(
-                                          `content.${index}.images.${imageIndex}.src`,
-                                          "",
-                                          { shouldValidate: true },
-                                        );
-                                      }}
-                                    />
-                                  ) : (
-                                    <div className="flex h-full items-center justify-center text-xs text-neutral-400">
-                                      画像プレビューなし
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                              <input
-                                id={`content-image-${index}-${imageIndex}`}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleContentFileSelect(
-                                  index,
-                                  imageIndex,
-                                )}
-                                disabled={loading}
-                              />
-                              <input
-                                type="hidden"
-                                {...register(
-                                  `content.${index}.images.${imageIndex}.src` as const,
-                                )}
-                              />
-                              <input
-                                type="hidden"
-                                {...register(
-                                  `content.${index}.images.${imageIndex}.alt` as const,
-                                )}
-                              />
                             </div>
-                          );
-                        })
-                      ) : (
-                        <div className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-xs text-neutral-400">
-                          画像が追加されていません
-                        </div>
-                      )}
-                      <div className="flex flex-wrap items-center gap-3">
-                        <button
-                          type="button"
-                          className="rounded-lg border border-neutral-300 px-4 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100"
-                          onClick={() => {
-                            const input = document.getElementById(
-                              `content-image-${index}-new`,
-                            ) as HTMLInputElement | null;
-                            input?.click();
-                          }}
-                          disabled={loading}
-                        >
-                          + 画像を追加
-                        </button>
-                        <input
-                          id={`content-image-${index}-new`}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleContentFileSelect(index, null)}
-                          disabled={loading}
-                        />
+                            <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
+                              <div className="relative aspect-[16/9] w-full">
+                                {previewSrc ? (
+                                  <Image
+                                    src={previewSrc}
+                                    alt={`段落${index + 1}の画像${imageIndex + 1}プレビュー`}
+                                    fill
+                                    sizes="100%"
+                                    className="object-cover"
+                                    onError={() => {
+                                      setContentPreviews((prev) => {
+                                        const next = prev.map((block) => [
+                                          ...block,
+                                        ]);
+                                        next[index][imageIndex] = "";
+                                        return next;
+                                      });
+                                      setValue(
+                                        `content.${index}.images.${imageIndex}.src`,
+                                        "",
+                                        { shouldValidate: true },
+                                      );
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="flex h-full items-center justify-center text-xs text-neutral-400">
+                                    画像プレビューなし
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <input
+                              id={`content-image-${index}-${imageIndex}`}
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleContentFileSelect(
+                                index,
+                                imageIndex,
+                              )}
+                              disabled={loading}
+                            />
+                            <input
+                              type="hidden"
+                              {...register(
+                                `content.${index}.images.${imageIndex}.src` as const,
+                              )}
+                            />
+                            <input
+                              type="hidden"
+                              {...register(
+                                `content.${index}.images.${imageIndex}.alt` as const,
+                              )}
+                            />
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-xs text-neutral-400">
+                        画像が追加されていません
                       </div>
+                    )}
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        className="rounded-lg border border-neutral-300 px-4 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100"
+                        onClick={() => {
+                          const input = document.getElementById(
+                            `content-image-${index}-new`,
+                          ) as HTMLInputElement | null;
+                          input?.click();
+                        }}
+                        disabled={loading}
+                      >
+                        + 画像を追加
+                      </button>
+                      <input
+                        id={`content-image-${index}-new`}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleContentFileSelect(index, null)}
+                        disabled={loading}
+                      />
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-          {errors.content && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.content.message}
-            </p>
-          )}
-          <div className="py-5 mt-4 flex justify-end">
-            <button
-              type="button"
-              onClick={appendContentSection}
-              className="text-sm text-neutral-600 underline"
-            >
-              + 段落を追加
-            </button>
-          </div>
+              </div>
+            );
+          })}
         </div>
-
-        <div>
-          <label
-            htmlFor="summary"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            概要（一覧表示用）
-          </label>
-          <textarea
-            id="summary"
-            {...register("summary")}
-            rows={3}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。"
-          />
-          {errors.summary && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.summary.message}
-            </p>
-          )}
-          <p className="mt-1 text-xs text-neutral-500">
-            ニュース一覧ページで表示される短い概要です（オプション）
-          </p>
-        </div>
-
-        <div>
-          <label
-            htmlFor="contactPerson"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            お問い合わせ担当者
-          </label>
-          <input
-            id="contactPerson"
-            {...register("contactPerson")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="熊谷 流気（プロジェクト担当）"
-          />
-          <p className="mt-1 text-xs text-neutral-500">
-            記事末尾に担当者名として表示されます（任意）
-          </p>
-        </div>
-
-        <div>
-          <label
-            htmlFor="contactEmail"
-            className="mb-2 block text-sm font-medium text-neutral-700"
-          >
-            お問い合わせメールアドレス
-          </label>
-          <input
-            id="contactEmail"
-            {...register("contactEmail")}
-            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-            placeholder="press@atlas.inc"
-          />
-          {errors.contactEmail && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.contactEmail.message}
-            </p>
-          )}
-          <p className="mt-1 text-xs text-neutral-500">
-            記事末尾に担当者名とメールアドレスを表示します（任意）
-          </p>
-        </div>
-
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-lg bg-neutral-900 px-6 py-2 font-medium text-white transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? "保存中..." : initialData ? "更新" : "作成"}
-          </button>
+        {errors.content && (
+          <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>
+        )}
+        <div className="py-5 mt-4 flex justify-end">
           <button
             type="button"
-            onClick={() => router.back()}
-            className="rounded-lg border border-neutral-300 px-6 py-2 font-medium text-neutral-700 transition hover:bg-neutral-100"
+            onClick={appendContentSection}
+            className="text-sm text-neutral-600 underline"
           >
-            キャンセル
+            + 段落を追加
           </button>
         </div>
-      </form>
+      </div>
 
-      {thumbnailCropModalOpen && thumbnailImageForCrop ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-900">
-              <Cropper
-                image={thumbnailImageForCrop}
-                crop={thumbnailCrop}
-                zoom={thumbnailZoom}
-                aspect={16 / 9}
-                cropShape="rect"
-                showGrid={false}
-                onCropChange={setThumbnailCrop}
-                onZoomChange={setThumbnailZoom}
-                onCropComplete={handleThumbnailCropComplete}
-              />
-            </div>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label
-                className="text-sm font-medium text-neutral-600"
-                htmlFor="thumbnail-zoom"
-              >
-                ズーム
-              </label>
-              <input
-                id="thumbnail-zoom"
-                type="range"
-                min={1}
-                max={3}
-                step={0.1}
-                value={thumbnailZoom}
-                onChange={(event) =>
-                  setThumbnailZoom(Number(event.target.value))
-                }
-                className="flex-1"
-              />
-              <div className="ml-auto flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
-                  onClick={handleThumbnailCropCancel}
-                >
-                  キャンセル
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
-                  onClick={handleThumbnailCropConfirm}
-                >
-                  この範囲を使用
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <div>
+        <label
+          htmlFor="summary"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          概要（一覧表示用）
+        </label>
+        <textarea
+          id="summary"
+          {...register("summary")}
+          rows={3}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。"
+        />
+        {errors.summary && (
+          <p className="mt-1 text-sm text-red-600">{errors.summary.message}</p>
+        )}
+        <p className="mt-1 text-xs text-neutral-500">
+          ニュース一覧ページで表示される短い概要です（オプション）
+        </p>
+      </div>
 
-      {contentCropTarget !== null && contentImageForCrop ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-900">
-              <Cropper
-                image={contentImageForCrop}
-                crop={contentCrop}
-                zoom={contentZoom}
-                aspect={16 / 9}
-                cropShape="rect"
-                showGrid={false}
-                onCropChange={setContentCrop}
-                onZoomChange={setContentZoom}
-                onCropComplete={handleContentCropComplete}
-              />
-            </div>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <label
-                className="text-sm font-medium text-neutral-600"
-                htmlFor="content-zoom"
-              >
-                ズーム
-              </label>
-              <input
-                id="content-zoom"
-                type="range"
-                min={1}
-                max={3}
-                step={0.1}
-                value={contentZoom}
-                onChange={(event) => setContentZoom(Number(event.target.value))}
-                className="flex-1"
-              />
-              <div className="ml-auto flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
-                  onClick={handleContentCropCancel}
-                >
-                  キャンセル
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
-                  onClick={handleContentCropConfirm}
-                >
-                  この範囲を使用
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </>
+      <div>
+        <label
+          htmlFor="contactPerson"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          お問い合わせ担当者
+        </label>
+        <input
+          id="contactPerson"
+          {...register("contactPerson")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="熊谷 流気（プロジェクト担当）"
+        />
+        <p className="mt-1 text-xs text-neutral-500">
+          記事末尾に担当者名として表示されます（任意）
+        </p>
+      </div>
+
+      <div>
+        <label
+          htmlFor="contactEmail"
+          className="mb-2 block text-sm font-medium text-neutral-700"
+        >
+          お問い合わせメールアドレス
+        </label>
+        <input
+          id="contactEmail"
+          {...register("contactEmail")}
+          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          placeholder="press@atlas.inc"
+        />
+        {errors.contactEmail && (
+          <p className="mt-1 text-sm text-red-600">
+            {errors.contactEmail.message}
+          </p>
+        )}
+        <p className="mt-1 text-xs text-neutral-500">
+          記事末尾に担当者名とメールアドレスを表示します（任意）
+        </p>
+      </div>
+
+      <div className="flex gap-4">
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-lg bg-neutral-900 px-6 py-2 font-medium text-white transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loading ? "保存中..." : initialData ? "更新" : "作成"}
+        </button>
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="rounded-lg border border-neutral-300 px-6 py-2 font-medium text-neutral-700 transition hover:bg-neutral-100"
+        >
+          キャンセル
+        </button>
+      </div>
+    </form>
   );
 }

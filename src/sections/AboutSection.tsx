@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CSSProperties, HTMLAttributes } from "react";
 import { useEffect, useState } from "react";
 
+import { NewsThumbnail } from "@/components/NewsThumbnail";
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
@@ -112,8 +113,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {member.focus}
@@ -202,8 +203,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -231,21 +232,20 @@ type NewsPreviewCardProps = {
 };
 
 function NewsPreviewCard({ item }: NewsPreviewCardProps) {
+  const thumbnailSrc = item.thumbnailSrc ?? "/favicon.svg";
   return (
     <Link
       href={item.link}
       prefetch={false}
       className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-2xl sm:p-3"
     >
-      <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-200 sm:h-16 sm:w-24 sm:rounded-xl">
-        <Image
-          src={item.thumbnailSrc}
-          alt={item.thumbnailAlt}
-          fill
-          sizes="(min-width: 640px) 96px, 80px"
-          className="h-full w-full object-cover"
-        />
-      </div>
+      <NewsThumbnail
+        src={thumbnailSrc}
+        alt={item.thumbnailAlt}
+        sizes="(min-width: 640px) 96px, 80px"
+        fallbackAspectRatio={16 / 9}
+        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl"
+      />
       <div className="flex min-w-0 flex-col">
         <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
           {item.date}
@@ -282,7 +282,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      }))
+      })),
   );
 
   return (
