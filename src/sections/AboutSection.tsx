@@ -274,6 +274,10 @@ export function AboutSection({
   });
   const hasAdditionalMembersMobile =
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
+  const remainingMobileMembers = Math.max(
+    0,
+    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT,
+  );
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
   const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
@@ -347,8 +351,8 @@ export function AboutSection({
                     className="rounded-full border border-neutral-300 bg-background px-6 py-2 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {isTeamExpandedMobile
-                      ? "Show Less"
-                      : `Show All (${teamMembers.length})`}
+                    ? "Show Less"
+                    : `Show All (${remainingMobileMembers})`}
                   </button>
                 </div>
               ) : null}
