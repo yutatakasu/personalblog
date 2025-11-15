@@ -17,7 +17,6 @@ import {
 
 const supporterSchema = z.object({
   name: z.string().min(1, "サポーター名は必須です"),
-  title: z.string().optional(),
   focus: z.string().optional(),
   imageSrc: z.string().min(1, "画像のアップロードは必須です"),
 });
@@ -66,14 +65,12 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
             normalizedSupporters.length > 0
               ? normalizedSupporters.map((supporter) => ({
                   name: supporter.name,
-                  title: supporter.title ?? "",
                   focus: supporter.focus ?? "",
                   imageSrc: supporter.image_src ?? "",
                 }))
               : [
                   {
                     name: "",
-                    title: "",
                     focus: "",
                     imageSrc: "",
                   },
@@ -83,7 +80,6 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
           supporters: [
             {
               name: "",
-              title: "",
               focus: "",
               imageSrc: "",
             },
@@ -149,7 +145,7 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
   };
 
   const appendSupporterWithState = () => {
-    appendSupporter({ name: "", title: "", focus: "", imageSrc: "" });
+    appendSupporter({ name: "", focus: "", imageSrc: "" });
     ensureStateLength(supporterFields.length + 1);
   };
 
@@ -257,7 +253,6 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
 
       const updatedSupporters = [] as {
         name: string;
-        title: string | null;
         focus: string | null;
         image_src: string;
       }[];
@@ -316,7 +311,6 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
 
         updatedSupporters.push({
           name: supporter.name,
-          title: supporter.title?.trim() ? supporter.title.trim() : null,
           focus: supporter.focus?.trim() ? supporter.focus.trim() : null,
           image_src: finalImageSrc,
         });
@@ -451,40 +445,24 @@ export function SupporterForm({ initialData }: SupporterFormProps) {
                       />
                     </div>
                     <div className="space-y-4">
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label
-                            htmlFor={`supporter-name-${index}`}
-                            className="mb-2 block text-sm font-medium text-neutral-700"
-                          >
-                            名前 <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            id={`supporter-name-${index}`}
-                            {...register(`supporters.${index}.name` as const)}
-                            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                            placeholder="North Star Ventures"
-                          />
-                          {errors.supporters?.[index]?.name && (
-                            <p className="mt-1 text-sm text-red-600">
-                              {errors.supporters[index]?.name?.message}
-                            </p>
-                          )}
-                        </div>
-                        <div>
-                          <label
-                            htmlFor={`supporter-title-${index}`}
-                            className="mb-2 block text-sm font-medium text-neutral-700"
-                          >
-                            タイトル
-                          </label>
-                          <input
-                            id={`supporter-title-${index}`}
-                            {...register(`supporters.${index}.title` as const)}
-                            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                            placeholder="Lead Investor"
-                          />
-                        </div>
+                      <div>
+                        <label
+                          htmlFor={`supporter-name-${index}`}
+                          className="mb-2 block text-sm font-medium text-neutral-700"
+                        >
+                          名前 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          id={`supporter-name-${index}`}
+                          {...register(`supporters.${index}.name` as const)}
+                          className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+                          placeholder="North Star Ventures"
+                        />
+                        {errors.supporters?.[index]?.name && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.supporters[index]?.name?.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label

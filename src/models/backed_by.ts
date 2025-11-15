@@ -1,6 +1,5 @@
 export type Supporter = {
   name: string;
-  title?: string;
   focus?: string;
   imageSrc?: string;
 };

@@ -6,11 +6,9 @@ type CareersSectionProps = {
   positions: Position[];
 };
 
-const SECTION_LABEL_POSITION =
-  "pointer-events-none absolute left-12 sm:left-44 md:left-52 lg:left-60 top-16 sm:top-24 md:top-28 lg:top-32";
-const SECTION_LABEL_SHARED_CLASSES =
-  "font-mono uppercase tracking-[0.25em] text-[0.6rem] sm:text-[0.65rem] sm:tracking-[0.3em] md:text-xs lg:text-base xl:text-lg";
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_HEADING_CLASS =
+  "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const VISIBLE_POSITIONS_COUNT = 3;
 
 export function CareersSection({ positions }: CareersSectionProps) {
@@ -23,18 +21,13 @@ export function CareersSection({ positions }: CareersSectionProps) {
       id="careers"
       className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background"
     >
-      <p
-        className={`${SECTION_LABEL_POSITION} ${SECTION_LABEL_SHARED_CLASSES} text-black/40`}
-      >
-        careers at atlas
-      </p>
       <div
-        className={`flex w-full justify-center px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
+        className={`flex w-full justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-center gap-14 md:gap-16 lg:gap-20">
           <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center lg:gap-16">
             <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
-              <h2 className="font-serif text-[1.5rem] leading-tight text-black sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]">
+              <h2 className={`${SECTION_HEADING_CLASS} text-black`}>
                 Atlasに、温度のある視点を持ち込んでください。
               </h2>
               <p className="max-w-xl text-xs leading-relaxed text-black/65 sm:text-sm md:text-base">

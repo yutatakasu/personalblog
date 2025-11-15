@@ -28,6 +28,7 @@ export async function getAllNews(): Promise<NewsItem[]> {
       link: item.link,
       content: normalizeNewsContent(item.content),
       summary: item.summary ?? undefined,
+      contactPerson: item.contact_person ?? undefined,
       contactEmail: item.contact_email ?? undefined,
     })) ?? []
   );
@@ -69,6 +70,7 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
       link: data.link,
       content: normalizedContent,
       summary: data.summary ?? undefined,
+      contactPerson: data.contact_person ?? undefined,
       contactEmail: data.contact_email ?? undefined,
     };
   } catch (normalizeError) {
@@ -84,6 +86,7 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
       link: data.link,
       content: [],
       summary: data.summary ?? undefined,
+      contactPerson: data.contact_person ?? undefined,
       contactEmail: data.contact_email ?? undefined,
     };
   }
@@ -218,7 +221,6 @@ export async function getAllInvestorGroups(): Promise<InvestorGroup[]> {
       category: item.category,
       supporters: normalizeSupporters(item.supporters).map((supporter) => ({
         name: supporter.name,
-        title: supporter.title ?? undefined,
         focus: supporter.focus ?? undefined,
         imageSrc: supporter.image_src ?? undefined,
       })),
