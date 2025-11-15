@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Footer } from "@/components/Footer";
 
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_HEADING_CLASS =
+  "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 
 export function ContactSection() {
   return (
@@ -29,7 +31,7 @@ export function ContactSection() {
         className={`relative z-10 flex w-full flex-1 justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
-          <h2 className="font-serif text-base leading-tight text-white sm:text-lg md:text-xl lg:text-[2.25rem] lg:leading-[1.1] xl:text-[2.75rem]">
+          <h2 className={`${SECTION_HEADING_CLASS} text-white`}>
             Company Information
           </h2>
           <dl className="border-t border-white/20 text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">

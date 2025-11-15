@@ -2,12 +2,39 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
-import { useState } from "react";
+import type { CSSProperties, HTMLAttributes } from "react";
+import { useEffect, useState } from "react";
 
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
+
+function useSupportsHover() {
+  const [supportsHover, setSupportsHover] = useState(true);
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    ) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    const handleChange = (event: MediaQueryListEvent) => {
+      setSupportsHover(event.matches);
+    };
+
+    setSupportsHover(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  return supportsHover;
+}
 
 type TeamCardProps = {
   member: TeamMember;
@@ -16,10 +43,51 @@ type TeamCardProps = {
 };
 
 function TeamCard({ member, className, style }: TeamCardProps) {
+  const supportsHover = useSupportsHover();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const hasDetail = Boolean(member.focus);
+
+  useEffect(() => {
+    if (supportsHover && isDetailOpen) {
+      setIsDetailOpen(false);
+    }
+  }, [supportsHover, isDetailOpen]);
+
+  const handleToggleDetail = () => {
+    if (supportsHover || !hasDetail) {
+      return;
+    }
+    setIsDetailOpen((previous) => !previous);
+  };
+
+  const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
+    !supportsHover && hasDetail
+      ? {
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
+      : undefined;
+
   return (
     <article
-      className={`flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""}`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
+        className ?? ""
+      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""}`}
       style={style}
+      onClick={handleToggleDetail}
+      onKeyDown={(event) => {
+        if (
+          supportsHover ||
+          !hasDetail ||
+          (event.key !== "Enter" && event.key !== " ")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setIsDetailOpen((previous) => !previous);
+      }}
+      {...(interactiveProps ?? {})}
     >
       <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
         <Image
@@ -36,6 +104,19 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       <p className="font-sans text-[0.6rem] text-neutral-500 sm:text-[0.65rem]">
         {member.title}
       </p>
+      {member.focus ? (
+        <p
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
+            supportsHover
+              ? "opacity-0 group-hover:opacity-100"
+              : isDetailOpen
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+        >
+          {member.focus}
+        </p>
+      ) : null}
     </article>
   );
 }
@@ -51,10 +132,50 @@ type SupporterCardProps = {
 
 function SupporterCard({ supporter, className }: SupporterCardProps) {
   const imageSrc = supporter.imageSrc ?? "/favicon.svg";
+  const supportsHover = useSupportsHover();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const hasDetail = Boolean(supporter.focus);
+
+  useEffect(() => {
+    if (supportsHover && isDetailOpen) {
+      setIsDetailOpen(false);
+    }
+  }, [supportsHover, isDetailOpen]);
+
+  const handleToggleDetail = () => {
+    if (supportsHover || !hasDetail) {
+      return;
+    }
+    setIsDetailOpen((previous) => !previous);
+  };
+
+  const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
+    !supportsHover && hasDetail
+      ? {
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
+      : undefined;
 
   return (
     <article
-      className={`flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""}`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
+        className ?? ""
+      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""}`}
+      onClick={handleToggleDetail}
+      onKeyDown={(event) => {
+        if (
+          supportsHover ||
+          !hasDetail ||
+          (event.key !== "Enter" && event.key !== " ")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setIsDetailOpen((previous) => !previous);
+      }}
+      {...(interactiveProps ?? {})}
     >
       <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
         <Image
@@ -68,9 +189,20 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       <p className="mt-1 font-serif text-xs font-medium text-neutral-900 sm:text-sm">
         {supporter.name}
       </p>
-      {supporter.title ? (
-        <p className="font-sans text-[0.6rem] text-neutral-500 sm:text-[0.65rem]">
-          {supporter.title}
+      <p className="font-sans text-[0.6rem] text-neutral-500 sm:text-[0.65rem]">
+        {supporter.category}
+      </p>
+      {supporter.focus ? (
+        <p
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
+            supportsHover
+              ? "opacity-0 group-hover:opacity-100"
+              : isDetailOpen
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+        >
+          {supporter.focus}
         </p>
       ) : null}
     </article>
@@ -78,6 +210,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 }
 
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
+const SECTION_HEADING_CLASS =
+  "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const DESKTOP_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
@@ -167,7 +301,7 @@ export function AboutSection({
         </div>
         <div className="relative z-10 flex w-full min-h-dvh items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-6 md:gap-8 lg:gap-10">
-            <h2 className="font-serif text-lg leading-tight sm:text-xl md:text-2xl lg:text-[3rem] lg:leading-[1.1] xl:text-[3.5rem]">
+            <h2 className={`${SECTION_HEADING_CLASS} text-center text-white`}>
               <span className="block">Memory as a Sovereignty</span>
               <span className="mt-1 block sm:mt-2 sm:whitespace-nowrap">
                 Atlas は MaaS の会社です
@@ -186,7 +320,9 @@ export function AboutSection({
       >
         <div className="flex w-full flex-col items-center justify-center px-6 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24 lg:px-10 lg:py-28">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
-            <h2 className="text-center font-serif text-2xl leading-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+            <h2
+              className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
+            >
               Our Team
             </h2>
 
@@ -247,8 +383,11 @@ export function AboutSection({
       >
         <div className="flex w-full flex-col items-center justify-center px-6 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24 lg:px-10 lg:py-28">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
-            <h2 className="text-center font-serif text-2xl leading-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-              Backed by people who understand joy.
+            <h2
+              className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
+            >
+              Backed by people who are excited about a world that is becoming
+              increasingly personalized.
             </h2>
 
             {/* モバイル表示 */}
@@ -286,7 +425,9 @@ export function AboutSection({
           className={`flex w-full justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
         >
           <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-            <h2 className="-mt-4 mb-8 font-serif text-base leading-snug text-neutral-900 sm:-mt-6 sm:mb-10 sm:text-lg md:-mt-8 md:mb-12 md:text-xl lg:-mt-10 lg:mb-16 lg:text-[2.75rem] lg:leading-[1.1] xl:text-[3.25rem]">
+            <h2
+              className={`-mt-4 mb-8 text-neutral-900 ${SECTION_HEADING_CLASS} sm:-mt-6 sm:mb-10 md:-mt-8 md:mb-12 lg:-mt-10 lg:mb-16`}
+            >
               プロダクトの進化とパートナーシップの最新情報をお届けします。
             </h2>
             <div className="space-y-2 sm:space-y-3 md:space-y-4">

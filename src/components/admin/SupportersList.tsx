@@ -10,7 +10,6 @@ import { normalizeSupporters } from "@/lib/supporters/normalize";
 
 type Supporter = {
   name: string;
-  title?: string;
   focus?: string;
   imageSrc?: string;
 };
@@ -66,7 +65,6 @@ export function SupportersList({
     category: group.category,
     supporters: normalizeSupporters(group.supporters).map((supporter) => ({
       name: supporter.name,
-      title: supporter.title ?? undefined,
       focus: supporter.focus ?? undefined,
       imageSrc: supporter.image_src ?? undefined,
     })),
@@ -126,11 +124,9 @@ export function SupportersList({
                           <p className="text-sm font-medium text-neutral-900">
                             {displaySupporter.name}
                           </p>
-                          {displaySupporter.title ? (
-                            <p className="text-xs text-neutral-600">
-                              {displaySupporter.title}
-                            </p>
-                          ) : null}
+                          <p className="text-xs text-neutral-500">
+                            {group.category}
+                          </p>
                           {displaySupporter.focus ? (
                             <p className="mt-1 text-xs text-neutral-500">
                               {displaySupporter.focus}

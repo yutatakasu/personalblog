@@ -221,7 +221,6 @@ export async function getAllInvestorGroups(): Promise<InvestorGroup[]> {
       category: item.category,
       supporters: normalizeSupporters(item.supporters).map((supporter) => ({
         name: supporter.name,
-        title: supporter.title ?? undefined,
         focus: supporter.focus ?? undefined,
         imageSrc: supporter.image_src ?? undefined,
       })),
