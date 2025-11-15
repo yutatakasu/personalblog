@@ -19,12 +19,6 @@ DROP POLICY IF EXISTS "Allow authenticated update on positions" ON positions;
 
 DROP POLICY IF EXISTS "Allow authenticated delete on positions" ON positions;
 
-DROP POLICY IF EXISTS "Allow authenticated insert on team_members" ON team_members;
-
-DROP POLICY IF EXISTS "Allow authenticated update on team_members" ON team_members;
-
-DROP POLICY IF EXISTS "Allow authenticated delete on team_members" ON team_members;
-
 DROP POLICY IF EXISTS "Allow authenticated insert on investor_groups" ON investor_groups;
 
 DROP POLICY IF EXISTS "Allow authenticated update on investor_groups" ON investor_groups;
@@ -74,6 +68,12 @@ WITH
 CREATE POLICY "Allow admin delete on positions" ON positions FOR DELETE TO authenticated USING (
     is_admin_user (auth.jwt () ->> 'email')
 );
+
+DROP POLICY IF EXISTS "Allow public read access on team_members" ON team_members;
+
+CREATE POLICY "Allow public read access on team_members" ON team_members
+  FOR SELECT
+  USING (true);
 
 -- Team Members テーブル
 CREATE POLICY "Allow admin insert on team_members" ON team_members FOR INSERT TO authenticated
