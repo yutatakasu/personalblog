@@ -2,8 +2,8 @@
 
 import { useLayoutEffect } from "react";
 
+import type { AtlasScrollRestorationState } from "@/lib/atlasScrollRestoration";
 import {
-  AtlasScrollRestorationState,
   clearAtlasRestoration,
   getSavedAtlasRestoration,
   saveAtlasRestoration,
@@ -20,11 +20,11 @@ export function ScrollToAtlas() {
 
     const navigationType =
       typeof performance !== "undefined"
-        ? (
+        ? ((
             performance.getEntriesByType("navigation")[0] as
               | PerformanceNavigationTiming
               | undefined
-          )?.type ?? "navigate"
+          )?.type ?? "navigate")
         : "navigate";
 
     const main = document.querySelector("main");

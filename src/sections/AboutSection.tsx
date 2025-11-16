@@ -92,7 +92,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
+      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
         <Image
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
@@ -113,8 +113,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {member.focus}
@@ -182,7 +182,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
+      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
         <Image
           src={imageSrc}
           alt={`${supporter.name} logo`}
@@ -203,8 +203,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -285,30 +285,29 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      }))
+      })),
   );
 
   return (
     <>
       <section
         id="about"
-        className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-background text-neutral-900"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-black"
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
-            <div className="relative w-full overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-[0_18px_40px_rgba(0,0,0,0.35)] sm:rounded-[2.2rem]">
-              <div className="relative aspect-[16/9] sm:aspect-[21/9] md:aspect-[18/7] lg:aspect-[20/7]">
-                <Image
-                  src="/members_far_from.jpg"
-                  alt="Atlas team"
-                  fill
-                  priority
-                  sizes="(min-width: 1280px) 960px, (min-width: 1024px) 880px, (min-width: 768px) 720px, 100vw"
-                  className="object-cover"
-                  quality={95}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
-              </div>
+            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_25px_60px_rgba(0,0,0,0.45)] sm:rounded-[2.2rem]">
+              <Image
+                src="/members_far_from.jpg"
+                alt="Atlas team"
+                priority
+                width={1152}
+                height={768}
+                sizes="(min-width: 1280px) 960px, (min-width: 1024px) 880px, (min-width: 768px) 720px, 100vw"
+                className="h-auto w-full object-cover"
+                quality={95}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
             </div>
           </div>
         </div>
@@ -344,8 +343,8 @@ export function AboutSection({
                     className="rounded-full border border-neutral-300 bg-background px-6 py-2 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {isTeamExpandedMobile
-                    ? "Show Less"
-                    : `Show All (${remainingMobileMembers})`}
+                      ? "Show Less"
+                      : `Show All (${remainingMobileMembers})`}
                   </button>
                 </div>
               ) : null}
