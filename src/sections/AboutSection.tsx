@@ -236,20 +236,20 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-2xl sm:p-3"
+      className="group flex items-center gap-3 rounded-lg border border-neutral-200 bg-background p-2.5 shadow-[0_3px_8px_rgba(0,0,0,0.06)] transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-xl sm:p-3 sm:shadow-[0_5px_14px_rgba(0,0,0,0.08)] lg:gap-5 lg:rounded-xl lg:p-4 lg:shadow-[0_8px_22px_rgba(0,0,0,0.1)] xl:p-5 xl:shadow-[0_10px_28px_rgba(0,0,0,0.12)]"
     >
       <NewsThumbnail
         src={thumbnailSrc}
         alt={item.thumbnailAlt}
         sizes="(min-width: 640px) 96px, 80px"
         fallbackAspectRatio={16 / 9}
-        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl"
+        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl md:w-28 lg:w-32 xl:w-36"
       />
       <div className="flex min-w-0 flex-col">
         <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
           {item.date}
         </span>
-        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg">
+        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg lg:text-xl">
           {item.title}
         </span>
       </div>
@@ -296,7 +296,7 @@ export function AboutSection({
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
-            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_10px_30px_rgba(0,0,0,0.25)] sm:rounded-[2.2rem]">
+            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
               <Image
                 src="/members_far_from.jpg"
                 alt="Atlas team"
@@ -445,7 +445,7 @@ export function AboutSection({
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
-            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_10px_30px_rgba(0,0,0,0.25)] sm:rounded-[2.2rem]">
+            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
               <Image
                 src="/members.jpg"
                 alt="Atlas team"
