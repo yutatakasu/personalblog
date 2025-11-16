@@ -51,7 +51,7 @@ export function ContactSection() {
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                代表
+                代表取締役
               </dt>
               <dd className="leading-relaxed">宮崎悠生</dd>
             </div>
@@ -59,7 +59,9 @@ export function ContactSection() {
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
                 事業内容
               </dt>
-              <dd className="leading-relaxed">AI技術を用いた事業開発</dd>
+              <dd className="leading-relaxed">
+                AIの長期記憶技術の研究開発/事業開発
+              </dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
@@ -78,7 +80,7 @@ export function ContactSection() {
                 所在地
               </dt>
               <dd className="leading-relaxed wrap-break-word">
-                〒1500043 東京都渋谷区道玄坂 1丁目10番8号渋谷道玄坂東急ビル2F-C
+                〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100
               </dd>
             </div>
           </dl>
