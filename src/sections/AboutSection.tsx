@@ -1,14 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import type { CSSProperties, HTMLAttributes } from "react";
 import { useEffect, useState } from "react";
 
-import { NewsThumbnail } from "@/components/NewsThumbnail";
-import { NEWS_CARD_HOVER_STYLES } from "@/lib/newsCardHover";
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
-import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
 
 function useSupportsHover() {
@@ -70,6 +66,11 @@ function TeamCard({ member, className, style }: TeamCardProps) {
           "aria-expanded": isDetailOpen,
         }
       : undefined;
+  const detailOpacityClass = supportsHover
+    ? "opacity-0 group-hover:opacity-100"
+    : isDetailOpen
+    ? "opacity-100"
+    : "opacity-0";
 
   return (
     <article
@@ -110,13 +111,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       </p>
       {member.focus ? (
         <p
-          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
-            supportsHover
-              ? "opacity-0 group-hover:opacity-100"
-              : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
-          }`}
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${detailOpacityClass}`}
         >
           {member.focus}
         </p>
@@ -161,6 +156,11 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
           "aria-expanded": isDetailOpen,
         }
       : undefined;
+  const detailOpacityClass = supportsHover
+    ? "opacity-0 group-hover:opacity-100"
+    : isDetailOpen
+    ? "opacity-100"
+    : "opacity-0";
 
   return (
     <article
@@ -200,13 +200,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       </p>
       {supporter.focus ? (
         <p
-          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
-            supportsHover
-              ? "opacity-0 group-hover:opacity-100"
-              : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
-          }`}
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${detailOpacityClass}`}
         >
           {supporter.focus}
         </p>
@@ -215,50 +209,16 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   );
 }
 
-const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
-const NEWS_PREVIEW_COUNT = 3;
 
 type AboutSectionProps = {
-  newsItems: NewsItem[];
   teamMembers: TeamMember[];
   investorGroups: InvestorGroup[];
 };
 
-type NewsPreviewCardProps = {
-  item: NewsItem;
-};
-
-function NewsPreviewCard({ item }: NewsPreviewCardProps) {
-  const thumbnailSrc = item.thumbnailSrc ?? "/favicon.svg";
-  return (
-    <Link
-      href={item.link}
-      prefetch={false}
-      className={`group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:p-3 lg:gap-5 lg:p-4 xl:p-5 ${NEWS_CARD_HOVER_STYLES}`}
-    >
-      <NewsThumbnail
-        src={thumbnailSrc}
-        alt={item.thumbnailAlt}
-        sizes="(min-width: 640px) 120px, 100px"
-        className="w-24 shrink-0 rounded-xl overflow-hidden sm:w-28 md:w-32"
-      />
-      <div className="flex min-w-0 flex-col">
-        <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
-          {item.date}
-        </span>
-        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg lg:text-xl">
-          {item.title}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
 export function AboutSection({
-  newsItems,
   teamMembers,
   investorGroups,
 }: AboutSectionProps) {
@@ -278,8 +238,6 @@ export function AboutSection({
     0,
     teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT
   );
-  const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
-  const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
   const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
     (group) =>
       group.supporters.map((supporter) => ({
@@ -291,7 +249,7 @@ export function AboutSection({
   return (
     <>
       <section
-        id="about"
+        id="atlas-photo"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-black"
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
@@ -314,7 +272,7 @@ export function AboutSection({
       </section>
 
       <section
-        id="about-team"
+        id="team"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-background text-neutral-900"
       >
         <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
@@ -367,7 +325,7 @@ export function AboutSection({
       </section>
 
       <section
-        id="about-backed"
+        id="team-supporters"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-background text-neutral-900"
       >
         <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
@@ -407,40 +365,7 @@ export function AboutSection({
       </section>
 
       <section
-        id="about-news"
-        className="relative snap-start snap-always flex min-h-screen min-h-dvh justify-center bg-background text-neutral-900"
-      >
-        <div
-          className={`flex w-full justify-center px-6 pb-20 sm:px-6 sm:pb-24 md:px-8 md:pb-28 lg:px-10 lg:pb-32 xl:pb-36 2xl:pb-40 ${SECTION_CONTENT_OFFSET}`}
-        >
-          <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 sm:gap-8 md:gap-10">
-            <h2
-              className={`-mt-4 mb-8 text-neutral-900 ${SECTION_HEADING_CLASS} sm:-mt-6 sm:mb-10 md:-mt-8 md:mb-12 lg:-mt-10 lg:mb-16`}
-            >
-              プロダクトの進化とパートナーシップの最新情報をお届けします。
-            </h2>
-            <div className="space-y-2 sm:space-y-3 md:space-y-4">
-              {previewNewsItems.map((news) => (
-                <NewsPreviewCard key={news.id} item={news} />
-              ))}
-            </div>
-            {hasAdditionalNews ? (
-              <div>
-                <Link
-                  href="/news"
-                  prefetch={false}
-                  className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5 sm:py-2 sm:text-sm"
-                >
-                  ニュース一覧へ
-                  <span aria-hidden>&gt;</span>
-                </Link>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </section>
-      <section
-        id="about-members-photo"
+        id="team-photo"
         className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-black"
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">

@@ -5,48 +5,50 @@ import { useEffect, useRef, useState } from "react";
 
 const sectionIds = [
   "atlas",
-  "products",
-  "about",
-  "about-team",
-  "about-backed",
-  "about-news",
-  "about-members-photo",
+  "atlas-photo",
+  "team",
+  "team-supporters",
+  "team-photo",
   "careers",
+  "news",
   "contact",
 ] as const;
 
 const sectionThemes: Record<string, "dark" | "light"> = {
   atlas: "light",
-  products: "light",
-  about: "dark",
-  "about-team": "light",
-  "about-backed": "light",
-  "about-news": "light",
-  "about-members-photo": "dark",
+  "atlas-photo": "dark",
+  news: "light",
+  team: "light",
+  "team-supporters": "light",
+  "team-photo": "dark",
   careers: "light",
   contact: "dark",
 };
 
 const normalizeSectionId = (sectionId: string) => {
-  if (sectionId.startsWith("about-")) {
-    return "about";
+  if (sectionId === "atlas-photo") {
+    return "atlas";
+  }
+  if (sectionId.startsWith("team-")) {
+    return "team";
   }
   return sectionId;
 };
 
 // セクションIDからモバイル表示用のラベルを取得
 const getSectionLabel = (sectionId: string): string => {
-  if (sectionId === "atlas") {
+  if (sectionId === "atlas" || sectionId === "atlas-photo") {
     return "Atlas";
   }
-  if (sectionId === "products") {
-    return "Products";
+  if (sectionId === "news") {
+    return "News";
   }
-  if (sectionId.startsWith("about-")) {
-    return "About";
-  }
-  if (sectionId === "about") {
-    return "About";
+  if (
+    sectionId === "team" ||
+    sectionId === "team-supporters" ||
+    sectionId === "team-photo"
+  ) {
+    return "Team";
   }
   if (sectionId === "careers") {
     return "Careers";
@@ -148,9 +150,9 @@ export function Header() {
 
   const navItems = [
     { id: "atlas", label: "Atlas", href: "#atlas" },
-    // { id: "products", label: "Products", href: "#products" },
-    { id: "about", label: "About", href: "#about" },
+    { id: "team", label: "Team", href: "#team" },
     { id: "careers", label: "Careers", href: "#careers" },
+    { id: "news", label: "News", href: "#news" },
     { id: "contact", label: "Contact", href: "#contact" },
   ];
   const isSectionDark = (section: string) => sectionThemes[section] === "dark";

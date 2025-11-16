@@ -53,9 +53,9 @@ Atlas 社の公式ホームページを開発し、ブランドアイデンテ�
   - デスクトップ：横並び表示
   - モバイル：ハンバーガーメニューに変更
   - リンク項目（要検討）：
-    - Home
-    - Products / Services
-    - About
+    - Atlas
+    - News
+    - Team
     - Careers
     - Contact
 - **ロゴ表示**
@@ -72,10 +72,10 @@ Atlas 社の公式ホームページを開発し、ブランドアイデンテ�
   - タイピングエフェクトやアニメーションの検討
   - 例：「We believe that your next favorite human... isn't.」（参考）
 - **セクション構成**（要検討）
-  - About Atlas
-  - Products / Services
-  - Features / Benefits
-  - News / Updates
+  - Atlas（Hero + image）
+  - News（最新ニュース / Update）
+  - Team（メンバー + supporters + team photo）
+  - Careers / Opportunities
   - Contact / CTA
 
 ### 3.3 通知バナー/ニュースセクション
@@ -163,6 +163,7 @@ Atlas 社の公式ホームページを開発し、ブランドアイデンテ�
 - 製品・サービス情報
 - 採用情報（Careers）
 - お問い合わせ情報
+- Team関連コンテンツ（メンバー紹介→支援者一覧→集合写真を含む流れ）
 
 ### 6.2 コンテンツ管理
 
