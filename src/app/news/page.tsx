@@ -2,8 +2,8 @@ import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getNewsItems } from "@/models/news";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { getNewsItems } from "@/models/news";
 
 export default async function NewsPage() {
   noStore();

@@ -23,21 +23,22 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-          const content: ReactNode = item.href && !item.current ? (
-            <Link
-              href={item.href}
-              className="transition-colors hover:text-neutral-900 hover:underline"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span
-              aria-current={item.current ? "page" : undefined}
-              className="text-neutral-800"
-            >
-              {item.label}
-            </span>
-          );
+          const content: ReactNode =
+            item.href && !item.current ? (
+              <Link
+                href={item.href}
+                className="transition-colors hover:text-neutral-900 hover:underline"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <span
+                aria-current={item.current ? "page" : undefined}
+                className="text-neutral-800"
+              >
+                {item.label}
+              </span>
+            );
 
           return (
             <li
@@ -57,4 +58,3 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
     </nav>
   );
 }
-
