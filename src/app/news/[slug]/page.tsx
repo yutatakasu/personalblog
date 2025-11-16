@@ -74,7 +74,6 @@ export default async function NewsDetailPage({
                 alt={item.thumbnailAlt}
                 sizes="100vw"
                 priority
-                fallbackAspectRatio={16 / 9}
                 className="w-full"
               />
             </div>
