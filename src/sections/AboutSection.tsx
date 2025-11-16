@@ -6,6 +6,7 @@ import type { CSSProperties, HTMLAttributes } from "react";
 import { useEffect, useState } from "react";
 
 import { NewsThumbnail } from "@/components/NewsThumbnail";
+import { NEWS_CARD_HOVER_STYLES } from "@/lib/newsCardHover";
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { NewsItem } from "@/models/news";
 import type { TeamMember } from "@/models/team";
@@ -236,14 +237,13 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-3 rounded-lg border border-neutral-200 bg-background p-2.5 shadow-[0_3px_8px_rgba(0,0,0,0.06)] transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-xl sm:p-3 sm:shadow-[0_5px_14px_rgba(0,0,0,0.08)] lg:gap-5 lg:rounded-xl lg:p-4 lg:shadow-[0_8px_22px_rgba(0,0,0,0.1)] xl:p-5 xl:shadow-[0_10px_28px_rgba(0,0,0,0.12)]"
+      className={`group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:p-3 lg:gap-5 lg:p-4 xl:p-5 ${NEWS_CARD_HOVER_STYLES}`}
     >
       <NewsThumbnail
         src={thumbnailSrc}
         alt={item.thumbnailAlt}
-        sizes="(min-width: 640px) 96px, 80px"
-        fallbackAspectRatio={16 / 9}
-        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl md:w-28 lg:w-32 xl:w-36"
+        sizes="(min-width: 640px) 120px, 100px"
+        className="w-24 shrink-0 rounded-xl overflow-hidden sm:w-28 md:w-32"
       />
       <div className="flex min-w-0 flex-col">
         <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
