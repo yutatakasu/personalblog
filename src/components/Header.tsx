@@ -10,6 +10,7 @@ const sectionIds = [
   "about-team",
   "about-backed",
   "about-news",
+  "about-members-photo",
   "careers",
   "contact",
 ] as const;
@@ -21,6 +22,7 @@ const sectionThemes: Record<string, "dark" | "light"> = {
   "about-team": "light",
   "about-backed": "light",
   "about-news": "light",
+  "about-members-photo": "dark",
   careers: "light",
   contact: "dark",
 };
