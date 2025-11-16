@@ -92,7 +92,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
+      <div className="relative h-24 w-24 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
         <Image
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
@@ -113,8 +113,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {member.focus}
@@ -182,7 +182,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
+      <div className="relative h-24 w-24 overflow-hidden rounded-2xl sm:h-28 sm:w-28 md:h-32 md:w-32">
         <Image
           src={imageSrc}
           alt={`${supporter.name} logo`}
@@ -203,8 +203,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -236,20 +236,20 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
     <Link
       href={item.link}
       prefetch={false}
-      className="group flex items-center gap-3 rounded-xl border border-neutral-200 bg-background p-2.5 transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-2xl sm:p-3"
+      className="group flex items-center gap-3 rounded-lg border border-neutral-200 bg-background p-2.5 shadow-[0_3px_8px_rgba(0,0,0,0.06)] transition hover:border-neutral-300 hover:bg-[#f7f5ef] focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:rounded-xl sm:p-3 sm:shadow-[0_5px_14px_rgba(0,0,0,0.08)] lg:gap-5 lg:rounded-xl lg:p-4 lg:shadow-[0_8px_22px_rgba(0,0,0,0.1)] xl:p-5 xl:shadow-[0_10px_28px_rgba(0,0,0,0.12)]"
     >
       <NewsThumbnail
         src={thumbnailSrc}
         alt={item.thumbnailAlt}
         sizes="(min-width: 640px) 96px, 80px"
         fallbackAspectRatio={16 / 9}
-        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl"
+        className="w-20 shrink-0 rounded-lg border border-neutral-200 bg-neutral-200 sm:w-24 sm:rounded-xl md:w-28 lg:w-32 xl:w-36"
       />
       <div className="flex min-w-0 flex-col">
         <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-neutral-400 sm:text-[0.6rem] sm:tracking-[0.35em] md:text-xs">
           {item.date}
         </span>
-        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg">
+        <span className="mt-0.5 font-serif text-sm leading-snug text-neutral-900 sm:mt-1 sm:text-base md:text-lg lg:text-xl">
           {item.title}
         </span>
       </div>
@@ -276,7 +276,7 @@ export function AboutSection({
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
   const remainingMobileMembers = Math.max(
     0,
-    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT,
+    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT
   );
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
@@ -285,7 +285,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      })),
+      }))
   );
 
   return (
@@ -296,7 +296,7 @@ export function AboutSection({
       >
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
-            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_25px_60px_rgba(0,0,0,0.45)] sm:rounded-[2.2rem]">
+            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
               <Image
                 src="/members_far_from.jpg"
                 alt="Atlas team"
@@ -327,7 +327,7 @@ export function AboutSection({
 
             {/* モバイル表示 */}
             <div className="w-full md:hidden">
-              <div className="grid grid-cols-3 justify-items-center gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-8">
+              <div className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-4 sm:gap-x-5 sm:gap-y-6">
                 {mobileVisibleMembers.map((member) => (
                   <TeamCard key={member.id} member={member} />
                 ))}
@@ -381,7 +381,7 @@ export function AboutSection({
 
             {/* モバイル表示 */}
             <div className="w-full md:hidden">
-              <div className="grid grid-cols-3 justify-items-center gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-8">
+              <div className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-4 sm:gap-x-5 sm:gap-y-6">
                 {categorizedSupporters.map((supporter) => (
                   <SupporterCard
                     key={`${supporter.category}-${supporter.name}`}
@@ -436,6 +436,28 @@ export function AboutSection({
                 </Link>
               </div>
             ) : null}
+          </div>
+        </div>
+      </section>
+      <section
+        id="about-members-photo"
+        className="relative snap-start snap-always flex min-h-screen min-h-dvh items-center justify-center bg-black"
+      >
+        <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
+            <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
+              <Image
+                src="/members.jpg"
+                alt="Atlas team"
+                priority
+                width={1152}
+                height={768}
+                sizes="(min-width: 1280px) 960px, (min-width: 1024px) 880px, (min-width: 768px) 720px, 100vw"
+                className="h-auto w-full object-cover"
+                quality={95}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
+            </div>
           </div>
         </div>
       </section>
