@@ -52,5 +52,3 @@ export function clearAtlasRestoration() {
 }
 
 export type { AtlasScrollRestorationState };
-
-
