@@ -159,9 +159,6 @@ export function Header() {
   const baseHeaderTextClass = isDarkBackground
     ? "text-white"
     : "text-neutral-900";
-  const inactiveLinkClass = isDarkBackground
-    ? "text-neutral-400 hover:text-neutral-200"
-    : "text-neutral-400 hover:text-neutral-600";
   const overlayActiveColor = isDarkBackground
     ? "text-white"
     : "text-neutral-900";
@@ -214,51 +211,28 @@ export function Header() {
     setIsMenuOpen(false);
   };
 
+  const MENU_OVERLAY_ID = "site-menu-overlay";
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMenuOpen]);
+
   return (
     <>
       <header className="w-full snap-none fixed top-0 left-0 right-0 z-100">
         {/* ナビゲーションバー */}
         <nav
-          className={`relative w-full px-4 py-4 transition-colors duration-300 ${baseHeaderTextClass}`}
+          className={`relative flex h-14 items-center justify-center px-4 md:h-16 md:px-8 lg:h-18 lg:px-10 transition-colors duration-300 ${baseHeaderTextClass}`}
         >
-          {/* デスクトップナビゲーション */}
-          <div className="hidden md:flex justify-center">
-            <ul className="flex items-center text-sm font-serif md:text-base">
-              {navItems.map((item, index) => {
-                const isActive = activeSection === item.id;
-                const activeSurfaceId = isActive ? surfaceSection : item.id;
-                const isActiveOnDark = isSectionDark(activeSurfaceId);
-                const activeColor = isActiveOnDark
-                  ? "text-white"
-                  : "text-neutral-950";
-                const linkClass = isActive
-                  ? `${activeColor} font-semibold`
-                  : `${inactiveLinkClass}`;
-                const commaClass = isSectionDark(surfaceSection)
-                  ? "text-white/60"
-                  : "text-neutral-400";
-                const isLast = index === navItems.length - 1;
-                return (
-                  <li key={item.href} className="flex items-center">
-                    <Link
-                      href={item.href}
-                      className={`px-2 transition-colors ${linkClass}`}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {item.label}
-                    </Link>
-                    {!isLast ? (
-                      <span className={`px-1 ${commaClass}`} aria-hidden>
-                        ,
-                      </span>
-                    ) : null}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          {/* タイムスタンプ（右側に絶対配置） */}
           {currentTime && (
             <div
               className={`hidden lg:block absolute right-3 pr-5 top-1/2 -translate-y-1/2 text-base font-mono ${
@@ -268,13 +242,11 @@ export function Header() {
               {currentTime}
             </div>
           )}
-
-          {/* モバイル: セクション名と menu */}
-          <div className="flex items-center justify-center gap-3 md:hidden text-base font-serif font-medium">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-3 text-base font-serif font-medium md:gap-4 md:text-lg">
             <button
               type="button"
               onClick={handleScrollToAtlas}
-              className={`${mobileNavTextClass} transition-colors duration-300 relative min-w-[80px] text-center`}
+              className={`transition-colors duration-300 relative min-w-[82px] text-center ${mobileNavTextClass} md:text-xl`}
               aria-label={`${displayLabel}セクションへ移動`}
             >
               <span
@@ -288,8 +260,10 @@ export function Header() {
             <button
               type="button"
               onClick={handleOpenMenu}
-              className={`${mobileNavTextClass} transition-colors duration-300`}
+              className={`transition-colors duration-300 ${mobileNavTextClass} text-base md:text-lg`}
               aria-label="メニューを開く"
+              aria-expanded={isMenuOpen}
+              aria-controls={MENU_OVERLAY_ID}
             >
               menu
             </button>
@@ -299,14 +273,19 @@ export function Header() {
 
       {/* メニューオーバーレイ */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50">
+        <div
+          className="fixed inset-0 z-50"
+          id={MENU_OVERLAY_ID}
+          role="dialog"
+          aria-modal="true"
+        >
           <div
             className={`absolute inset-0 backdrop-blur-xl ${overlayBackdropColor}`}
             onClick={() => setIsMenuOpen(false)}
             aria-hidden="true"
           />
 
-          <div className="relative flex h-full w-full flex-col items-center justify-between py-16">
+          <div className="relative flex h-full w-full flex-col items-center justify-between py-16 px-6 md:px-8">
             {currentTime && (
               <div
                 className={`text-xs font-sans uppercase tracking-[0.4em] ${overlayTimestampColor}`}
@@ -320,7 +299,7 @@ export function Header() {
                 className={`absolute top-14 h-24 w-24 rounded-full ${overlayGlowColor} blur-[60px]`}
                 aria-hidden
               />
-              <div className="relative flex flex-col items-center gap-8 text-2xl font-serif md:text-3xl">
+              <div className="relative flex w-full max-w-[28rem] flex-col items-center gap-8 text-2xl font-serif md:text-3xl">
                 <div
                   className={`absolute -inset-x-28 -top-20 -bottom-20 rounded-[200px] ${overlayGlowColor} blur-[70px]`}
                   aria-hidden

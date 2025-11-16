@@ -114,8 +114,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {member.focus}
@@ -204,8 +204,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-                ? "opacity-100"
-                : "opacity-0"
+              ? "opacity-100"
+              : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -217,7 +217,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 
 const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
-  "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
+  "font-serif text-[1.5rem] leading-tight sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const NEWS_PREVIEW_COUNT = 3;
 
@@ -276,7 +276,7 @@ export function AboutSection({
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
   const remainingMobileMembers = Math.max(
     0,
-    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT,
+    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT
   );
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
@@ -285,7 +285,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      })),
+      }))
   );
 
   return (
@@ -320,7 +320,7 @@ export function AboutSection({
         <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
             <h2
-              className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
+              className={`text-center text-neutral-700 ${SECTION_HEADING_CLASS}`}
             >
               Our Team
             </h2>
@@ -373,7 +373,7 @@ export function AboutSection({
         <div className="flex w-full flex-col items-center justify-center px-6 pt-12 pb-20 sm:px-6 sm:pt-14 sm:pb-24 md:px-8 md:pt-16 md:pb-28 lg:px-10 lg:pt-20 lg:pb-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10 md:gap-12 lg:gap-14">
             <h2
-              className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
+              className={`text-center text-neutral-700 ${SECTION_HEADING_CLASS}`}
             >
               Backed by people who are excited about a world that is becoming
               increasingly personalized.
