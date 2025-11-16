@@ -58,7 +58,7 @@ export default async function NewsPage() {
                       <span className="font-mono text-[0.45rem] uppercase tracking-[0.3em] text-neutral-400">
                         {news.date}
                       </span>
-                      <h2 className="font-serif text-base leading-snug text-neutral-900 sm:text-2xl">
+                      <h2 className="font-serif text-base leading-snug text-neutral-900 sm:text-2xl line-clamp-2">
                         {news.title}
                       </h2>
                       {news.summary ? (
