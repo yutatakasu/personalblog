@@ -19,9 +19,6 @@ export default async function NewsPage() {
             ]}
             className="mb-6"
           />
-          <p className="font-mono uppercase tracking-[0.3em] text-[0.65rem] text-neutral-400 sm:text-xs">
-            News
-          </p>
           <h1 className="mt-6 font-serif text-2xl leading-snug sm:text-3xl md:text-5xl md:leading-[1.1]">
             Atlas のアップデートとパートナーシップのお知らせ
           </h1>
