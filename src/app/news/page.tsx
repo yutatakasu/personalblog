@@ -1,8 +1,9 @@
 import { unstable_noStore as noStore } from "next/cache";
-import Image from "next/image";
 import Link from "next/link";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { NewsThumbnail } from "@/components/NewsThumbnail";
+import { NEWS_CARD_HOVER_STYLES } from "@/lib/newsCardHover";
 import { getNewsItems } from "@/models/news";
 
 export default async function NewsPage() {
@@ -27,7 +28,7 @@ export default async function NewsPage() {
               <article
                 key={news.id}
                 id={news.id}
-                className="overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 transition hover:border-neutral-300"
+                className={`overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 hover:border-neutral-300 ${NEWS_CARD_HOVER_STYLES}`}
               >
                 <Link
                   href={news.link}
@@ -35,21 +36,20 @@ export default async function NewsPage() {
                   prefetch={false}
                 >
                   <div className="grid gap-3 p-3 sm:grid-cols-[minmax(0,160px)_1fr] sm:gap-6 sm:p-6">
-                    <div className="relative h-28 w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:h-full">
+                    <div className="w-full overflow-hidden rounded-2xl">
                       {news.thumbnailSrc ? (
-                        <Image
+                        <NewsThumbnail
                           src={news.thumbnailSrc}
                           alt={
                             news.thumbnailAlt && news.thumbnailAlt.length > 0
                               ? news.thumbnailAlt
                               : `${news.title} thumbnail`
                           }
-                          fill
                           sizes="(max-width: 640px) 100vw, 160px"
-                          className="h-full w-full object-cover"
+                          className="h-full w-full"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
+                        <div className="flex aspect-[16/9] w-full items-center justify-center text-xs text-neutral-400">
                           画像なし
                         </div>
                       )}
@@ -58,7 +58,7 @@ export default async function NewsPage() {
                       <span className="font-mono text-[0.45rem] uppercase tracking-[0.3em] text-neutral-400">
                         {news.date}
                       </span>
-                      <h2 className="font-serif text-base leading-snug text-neutral-900 sm:text-2xl">
+                      <h2 className="font-serif text-base leading-snug text-neutral-900 sm:text-2xl line-clamp-2">
                         {news.title}
                       </h2>
                       {news.summary ? (
