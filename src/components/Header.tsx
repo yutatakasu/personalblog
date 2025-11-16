@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const sectionIds = [
   "atlas",
@@ -35,6 +35,9 @@ const normalizeSectionId = (sectionId: string) => {
   return sectionId;
 };
 
+const SECTION_FOCUS_RATIO = 0.35;
+const LABEL_TRANSITION_DURATION = 60;
+
 // セクションIDからモバイル表示用のラベルを取得
 const getSectionLabel = (sectionId: string): string => {
   if (sectionId === "atlas" || sectionId === "atlas-photo") {
@@ -67,6 +70,46 @@ export function Header() {
   const [displayLabel, setDisplayLabel] = useState<string>("Atlas");
   const [isLabelChanging, setIsLabelChanging] = useState(false);
   const displayLabelRef = useRef<string>("Atlas");
+  const labelTransitionTimeoutRef = useRef<number | null>(null);
+  const surfaceSectionRef = useRef<string>("atlas");
+  const sectionElementsRef = useRef<HTMLElement[]>([]);
+
+  const scheduleLabelUpdate = useCallback((nextLabel: string) => {
+    if (labelTransitionTimeoutRef.current !== null) {
+      window.clearTimeout(labelTransitionTimeoutRef.current);
+    }
+
+    setIsLabelChanging(true);
+    labelTransitionTimeoutRef.current = window.setTimeout(() => {
+      setDisplayLabel(nextLabel);
+      displayLabelRef.current = nextLabel;
+      setIsLabelChanging(false);
+      labelTransitionTimeoutRef.current = null;
+    }, LABEL_TRANSITION_DURATION);
+  }, []);
+
+  const applySectionState = useCallback(
+    (nextId: string) => {
+      const nextLabel = getSectionLabel(nextId);
+      const shouldUpdateLabel = nextLabel !== displayLabelRef.current;
+      const shouldUpdateSection = surfaceSectionRef.current !== nextId;
+
+      if (!shouldUpdateSection && !shouldUpdateLabel) {
+        return;
+      }
+
+      if (shouldUpdateSection) {
+        surfaceSectionRef.current = nextId;
+        setSurfaceSection(nextId);
+        setActiveSection(normalizeSectionId(nextId));
+      }
+
+      if (shouldUpdateLabel) {
+        scheduleLabelUpdate(nextLabel);
+      }
+    },
+    [scheduleLabelUpdate],
+  );
 
   useEffect(() => {
     const updateTime = () => {
@@ -100,51 +143,86 @@ export function Header() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    setActiveSection("atlas");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) {
-          const nextId = visible[0].target.id || "atlas";
-          const nextLabel = getSectionLabel(nextId);
-
-          // ラベルが変更される場合のみアニメーション
-          if (nextLabel !== displayLabelRef.current) {
-            setIsLabelChanging(true);
-            // フェードアウト後にラベルを更新
-            setTimeout(() => {
-              setDisplayLabel(nextLabel);
-              displayLabelRef.current = nextLabel;
-              setIsLabelChanging(false);
-            }, 150); // フェードアウトの半分の時間
-          }
-
-          setSurfaceSection(nextId);
-          setActiveSection(normalizeSectionId(nextId));
-        }
-      },
-      {
-        threshold: 0.4,
-        rootMargin: "-72px 0px -25% 0px",
-      },
-    );
-
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    for (const element of elements) {
-      observer.observe(element);
+    const main = document.querySelector("main");
+    if (!(main instanceof HTMLElement)) {
+      return;
     }
 
-    return () => {
-      for (const element of elements) {
-        observer.unobserve(element);
+    const resolveSectionElements = () => {
+      sectionElementsRef.current = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => el !== null);
+    };
+
+    const determineCurrentSection = () => {
+      if (sectionElementsRef.current.length === 0) {
+        return;
       }
-      observer.disconnect();
+
+      const mainRect = main.getBoundingClientRect();
+      const focusPosition =
+        main.scrollTop + main.clientHeight * SECTION_FOCUS_RATIO;
+      let nextId = sectionElementsRef.current[0]?.id ?? "atlas";
+
+      for (const section of sectionElementsRef.current) {
+        const sectionRect = section.getBoundingClientRect();
+        const relativeOffset = sectionRect.top - mainRect.top + main.scrollTop;
+        if (focusPosition >= relativeOffset) {
+          nextId = section.id;
+          continue;
+        }
+        break;
+      }
+
+      applySectionState(nextId);
+    };
+
+    let scrollFrame: number | null = null;
+    let hydrateRetryId: number | null = null;
+    const handleScroll = () => {
+      if (scrollFrame !== null) {
+        return;
+      }
+      scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = null;
+        determineCurrentSection();
+      });
+    };
+
+    const handleResize = () => {
+      resolveSectionElements();
+      determineCurrentSection();
+    };
+
+    resolveSectionElements();
+    determineCurrentSection();
+    if (sectionElementsRef.current.length === 0) {
+      hydrateRetryId = window.requestAnimationFrame(() => {
+        resolveSectionElements();
+        determineCurrentSection();
+      });
+    }
+
+    main.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      main.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      if (scrollFrame !== null) {
+        window.cancelAnimationFrame(scrollFrame);
+      }
+      if (hydrateRetryId !== null) {
+        window.cancelAnimationFrame(hydrateRetryId);
+      }
+    };
+  }, [applySectionState]);
+
+  useEffect(() => {
+    return () => {
+      if (labelTransitionTimeoutRef.current !== null) {
+        window.clearTimeout(labelTransitionTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -200,16 +278,7 @@ export function Header() {
       window.location.hash = "#atlas";
     }
 
-    const atlasLabel = "Atlas";
-    setIsLabelChanging(true);
-    setTimeout(() => {
-      setDisplayLabel(atlasLabel);
-      displayLabelRef.current = atlasLabel;
-      setIsLabelChanging(false);
-    }, 150);
-
-    setSurfaceSection("atlas");
-    setActiveSection("atlas");
+    applySectionState("atlas");
     setIsMenuOpen(false);
   };
 
@@ -244,7 +313,7 @@ export function Header() {
               {currentTime}
             </div>
           )}
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-3 text-base font-serif font-medium md:gap-4 md:text-lg">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-1.5 text-base font-serif font-medium md:gap-3 md:text-lg">
             <button
               type="button"
               onClick={handleScrollToAtlas}
@@ -252,8 +321,10 @@ export function Header() {
               aria-label={`${displayLabel}セクションへ移動`}
             >
               <span
-                className={`section-label inline-block transition-opacity duration-300 ease-in-out ${
-                  isLabelChanging ? "opacity-0" : "opacity-100"
+                className={`section-label inline-block transform transition-all duration-90 ease-out ${
+                  isLabelChanging
+                    ? "opacity-0 translate-y-px blur-[0.3px] scale-[0.997]"
+                    : "opacity-100 translate-y-0 blur-0 scale-100"
                 }`}
               >
                 ({displayLabel})
