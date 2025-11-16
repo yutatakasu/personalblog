@@ -360,7 +360,7 @@ export function AboutSection({
 
             {/* デスクトップ表示 */}
             <div className="hidden w-full md:block">
-              <div className="grid grid-cols-6 justify-items-center gap-x-6 gap-y-8 lg:gap-x-8 lg:gap-y-10">
+              <div className="grid grid-cols-5 justify-items-center gap-x-6 gap-y-8 lg:gap-x-8 lg:gap-y-10">
                 {desktopVisibleMembers.map((member) => (
                   <TeamCard
                     key={member.id}
