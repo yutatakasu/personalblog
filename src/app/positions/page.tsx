@@ -37,9 +37,6 @@ export default async function PositionsPage() {
         </div>
         <section id="open-roles" className="space-y-10">
           <div className="space-y-5">
-            <p className="font-mono uppercase tracking-[0.35em] text-[0.65rem] text-black/45 sm:text-xs">
-              Atlas Careers
-            </p>
             <h1 className="font-serif text-3xl sm:text-4xl md:text-[2.75rem]">
               Open Positions at Atlas
             </h1>
