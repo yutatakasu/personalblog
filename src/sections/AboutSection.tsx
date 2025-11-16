@@ -113,8 +113,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {member.focus}
@@ -203,8 +203,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
             supportsHover
               ? "opacity-0 group-hover:opacity-100"
               : isDetailOpen
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           {supporter.focus}
@@ -276,7 +276,7 @@ export function AboutSection({
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
   const remainingMobileMembers = Math.max(
     0,
-    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT
+    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT,
   );
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
@@ -285,7 +285,7 @@ export function AboutSection({
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      }))
+      })),
   );
 
   return (
