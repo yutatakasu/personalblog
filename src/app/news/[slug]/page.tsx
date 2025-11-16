@@ -95,7 +95,9 @@ export default async function NewsDetailPage({
                     </header>
                   ) : null}
                   {block.text.trim().length > 0 ? (
-                    <p className="text-base leading-relaxed">{block.text}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-line">
+                      {block.text}
+                    </p>
                   ) : null}
                   {block.images && block.images.length > 0 ? (
                     <div className="space-y-6">
