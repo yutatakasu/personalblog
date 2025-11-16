@@ -10,6 +10,7 @@ import { AboutSection } from "@/sections/AboutSection";
 import { AtlasHero } from "@/sections/AtlasHero";
 import { CareersSection } from "@/sections/CareersSection";
 import { ContactSection } from "@/sections/ContactSection";
+import { NewsSection } from "@/sections/NewsSection";
 // import { ProductsSection } from "@/sections/ProductsSection";
 
 export default async function Home() {
@@ -26,11 +27,11 @@ export default async function Home() {
         <AtlasHero />
         {/* <ProductsSection /> */}
         <AboutSection
-          newsItems={newsItems}
           teamMembers={teamMembers}
           investorGroups={investorGroups}
         />
         <CareersSection positions={positions} />
+        <NewsSection newsItems={newsItems} />
         <ContactSection />
       </main>
     </div>
