@@ -128,6 +128,46 @@ const normalizeText = (text: unknown): string =>
 const normalizeTitle = (title: unknown): string =>
   typeof title === "string" ? title : "";
 
+const sanitizeNewsDateString = (value: string): string => {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  return trimmed
+    .replace(/[./]/g, "-")
+    .replace(/年|月/g, "-")
+    .replace(/日/g, "")
+    .replace(/--+/g, "-")
+    .replace(/^-/, "");
+};
+
+const newsDateToTimestamp = (value: string): number => {
+  const normalized = sanitizeNewsDateString(value);
+  if (normalized.length === 0) {
+    return 0;
+  }
+
+  const normalizedTimestamp = Date.parse(normalized);
+  if (!Number.isNaN(normalizedTimestamp)) {
+    return normalizedTimestamp;
+  }
+
+  const fallbackTimestamp = Date.parse(value);
+  return Number.isNaN(fallbackTimestamp) ? 0 : fallbackTimestamp;
+};
+
+export const sortNewsItemsByDateDesc = <T extends { date: string }>(
+  items: T[],
+): T[] =>
+  [...items].sort(
+    (a, b) => newsDateToTimestamp(b.date) - newsDateToTimestamp(a.date),
+  );
+
 const normalizeImagesArray = (
   imagesCandidate: unknown,
   fallbackImage?: unknown,
@@ -359,20 +399,21 @@ export async function getNewsItems(): Promise<NewsItem[]> {
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    return defaultNewsItems;
+    return sortNewsItemsByDateDesc(defaultNewsItems);
   }
 
   try {
     const { getAllNews } = await import("@/lib/supabase/queries");
     const items = await getAllNews();
     // Supabaseからデータが取得できた場合はそれを使用、空の場合はデフォルトデータを返す
-    return items.length > 0 ? items : defaultNewsItems;
+    const resolvedItems = items.length > 0 ? items : defaultNewsItems;
+    return sortNewsItemsByDateDesc(resolvedItems);
   } catch (error) {
     console.error(
       "Failed to fetch news from Supabase, using default data:",
       error,
     );
-    return defaultNewsItems;
+    return sortNewsItemsByDateDesc(defaultNewsItems);
   }
 }
 

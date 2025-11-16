@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NewsList } from "@/components/admin/NewsList";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
+import { sortNewsItemsByDateDesc } from "@/models/news";
 
 export default async function AdminNewsPage() {
   const supabase = await createServerSupabaseClient();
@@ -12,6 +13,8 @@ export default async function AdminNewsPage() {
   if (error) {
     console.error("Error fetching news:", error);
   }
+
+  const sortedNewsItems = sortNewsItemsByDateDesc(newsItems ?? []);
 
   return (
     <div className="space-y-6">
@@ -30,7 +33,7 @@ export default async function AdminNewsPage() {
         </Link>
       </div>
 
-      <NewsList newsItems={newsItems || []} />
+      <NewsList newsItems={sortedNewsItems} />
     </div>
   );
 }
