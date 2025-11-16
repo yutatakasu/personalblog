@@ -69,8 +69,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
   const detailOpacityClass = supportsHover
     ? "opacity-0 group-hover:opacity-100"
     : isDetailOpen
-    ? "opacity-100"
-    : "opacity-0";
+      ? "opacity-100"
+      : "opacity-0";
 
   return (
     <article
@@ -159,8 +159,8 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   const detailOpacityClass = supportsHover
     ? "opacity-0 group-hover:opacity-100"
     : isDetailOpen
-    ? "opacity-100"
-    : "opacity-0";
+      ? "opacity-100"
+      : "opacity-0";
 
   return (
     <article
@@ -236,14 +236,14 @@ export function AboutSection({
     teamMembers.length > MOBILE_TEAM_VISIBLE_COUNT;
   const remainingMobileMembers = Math.max(
     0,
-    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT
+    teamMembers.length - MOBILE_TEAM_VISIBLE_COUNT,
   );
   const categorizedSupporters: CategorizedSupporter[] = investorGroups.flatMap(
     (group) =>
       group.supporters.map((supporter) => ({
         ...supporter,
         category: group.category,
-      }))
+      })),
   );
 
   return (

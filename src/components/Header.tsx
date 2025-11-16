@@ -308,9 +308,6 @@ export function Header() {
                 />
                 <ul className="relative flex flex-col items-center gap-6 text-center">
                   {navItems.map((item) => {
-                    if (item.id === "atlas") {
-                      return null;
-                    }
                     const isActive = activeSection === item.id;
                     return (
                       <li key={item.href}>
