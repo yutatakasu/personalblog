@@ -297,18 +297,17 @@ export function AboutSection({
         <div className="flex w-full items-center justify-center px-6 pt-24 pb-32 sm:px-6 sm:pt-28 sm:pb-36 md:px-8 md:pt-32 md:pb-40 lg:px-10 lg:pt-36 lg:pb-44 xl:pt-40 xl:pb-48">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center">
             <div className="relative w-full overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-[0_18px_40px_rgba(0,0,0,0.35)] sm:rounded-[2.2rem]">
-              <div className="relative aspect-[16/9]">
-                <Image
-                  src="/members_far_from.jpg"
-                  alt="Atlas team"
-                  fill
-                  priority
-                  sizes="(min-width: 1280px) 960px, (min-width: 1024px) 880px, (min-width: 768px) 720px, 100vw"
-                  className="object-cover"
-                  quality={95}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
-              </div>
+              <Image
+                src="/members_far_from.jpg"
+                alt="Atlas team"
+                priority
+                width={1152}
+                height={768}
+                sizes="(min-width: 1280px) 960px, (min-width: 1024px) 880px, (min-width: 768px) 720px, 100vw"
+                className="h-auto w-full object-cover"
+                quality={95}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
             </div>
           </div>
         </div>
