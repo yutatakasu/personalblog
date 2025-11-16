@@ -68,7 +68,7 @@ export default async function NewsDetailPage({
             )}
           </header>
           {item.thumbnailSrc && (
-            <div className="mt-10 overflow-hidden border border-neutral-200 bg-neutral-100">
+            <div className="mt-10 overflow-hidden rounded-[2rem]">
               <NewsThumbnail
                 src={item.thumbnailSrc}
                 alt={item.thumbnailAlt}
@@ -103,7 +103,7 @@ export default async function NewsDetailPage({
                       {block.images.map((image) => (
                         <div
                           key={`${image.src}-${image.alt}`}
-                          className="overflow-hidden border border-neutral-200 bg-neutral-100"
+                          className="overflow-hidden rounded-3xl"
                         >
                           <div className="relative h-64 w-full sm:h-80">
                             <Image

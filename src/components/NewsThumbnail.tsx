@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 
 type NewsThumbnailProps = {
   src: string;
@@ -10,8 +9,10 @@ type NewsThumbnailProps = {
   priority?: boolean;
   className?: string;
   imageClassName?: string;
-  fallbackAspectRatio?: number;
+  aspectRatio?: number;
 };
+
+const DEFAULT_ASPECT_RATIO = 16 / 9;
 
 export function NewsThumbnail({
   src,
@@ -20,28 +21,12 @@ export function NewsThumbnail({
   priority = false,
   className,
   imageClassName,
-  fallbackAspectRatio,
+  aspectRatio = DEFAULT_ASPECT_RATIO,
 }: NewsThumbnailProps) {
-  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
-  const prevSrcRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (prevSrcRef.current === src) {
-      return;
-    }
-
-    prevSrcRef.current = src;
-    setAspectRatio(null);
-  }, [src]);
-
-  const computedAspectRatio = aspectRatio ?? fallbackAspectRatio;
-
   return (
     <div
       className={`relative overflow-hidden ${className ?? ""}`}
-      style={
-        computedAspectRatio ? { aspectRatio: computedAspectRatio } : undefined
-      }
+      style={aspectRatio ? { aspectRatio } : undefined}
     >
       <Image
         src={src}
@@ -49,12 +34,7 @@ export function NewsThumbnail({
         fill
         sizes={sizes}
         priority={priority}
-        className={`h-full w-full object-contain ${imageClassName ?? ""}`}
-        onLoadingComplete={(result) => {
-          if (result.naturalHeight > 0) {
-            setAspectRatio(result.naturalWidth / result.naturalHeight);
-          }
-        }}
+        className={`h-full w-full object-cover ${imageClassName ?? ""}`}
       />
     </div>
   );
