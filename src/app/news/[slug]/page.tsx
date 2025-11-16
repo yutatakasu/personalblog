@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { NewsThumbnail } from "@/components/NewsThumbnail";
 import { getNewsItemById } from "@/models/news";
 
@@ -47,18 +48,14 @@ export default async function NewsDetailPage({
     <main className="min-h-svh bg-white text-neutral-900">
       <section className="px-6 py-16 sm:px-8 sm:py-20 md:px-12 md:py-24 lg:px-0 lg:py-28">
         <div className="mx-auto w-full max-w-3xl px-0 lg:px-12">
-          <nav
-            aria-label="パンくずリスト"
-            className="text-left text-sm text-neutral-500"
-          >
-            <Link href="/news" className="underline-offset-4 hover:underline">
-              News
-            </Link>
-            <span className="mx-2">/</span>
-            <span aria-current="page" className="text-neutral-700">
-              {item.title}
-            </span>
-          </nav>
+          <Breadcrumb
+            items={[
+              { label: "Atlas", href: "/" },
+              { label: "News", href: "/news" },
+              { label: item.id, current: true },
+            ]}
+            className="mb-6"
+          />
           <header className="mt-8 space-y-4 text-left">
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">
               {item.date}

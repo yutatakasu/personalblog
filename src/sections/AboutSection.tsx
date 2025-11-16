@@ -92,7 +92,7 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
+      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
         <Image
           src={member.imageSrc}
           alt={member.imageAlt ?? `${member.name} portrait`}
@@ -182,7 +182,7 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       }}
       {...(interactiveProps ?? {})}
     >
-      <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-20 sm:w-20 md:h-24 md:w-24">
+      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:h-24 sm:w-24 md:h-28 md:w-28">
         <Image
           src={imageSrc}
           alt={`${supporter.name} logo`}

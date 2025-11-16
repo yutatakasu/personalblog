@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { SmoothScrollLink } from "@/components/SmoothScrollLink";
 import { getPositions } from "@/models/positions";
 
@@ -24,14 +25,15 @@ export default async function PositionsPage() {
   return (
     <div className="min-h-screen bg-white text-black">
       <main className="mx-auto flex w-full max-w-5xl flex-col px-6 pb-24 pt-28 sm:px-10 sm:pt-36">
-        <div className="mb-10">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-mono uppercase tracking-[0.35em] text-black/45 transition hover:text-black/80"
-          >
-            <span aria-hidden>←</span>
-            Back to Main
-          </Link>
+        <div className="mb-8">
+          <Breadcrumb
+            items={[
+              { label: "Atlas", href: "/" },
+              { label: "Careers", href: "/#careers" },
+              { label: "Open Positions", current: true },
+            ]}
+            className="mb-0"
+          />
         </div>
         <section id="open-roles" className="space-y-10">
           <div className="space-y-5">
