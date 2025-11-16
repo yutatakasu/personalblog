@@ -36,7 +36,7 @@ const normalizeSectionId = (sectionId: string) => {
 };
 
 const SECTION_FOCUS_RATIO = 0.35;
-const LABEL_TRANSITION_DURATION = 60;
+const LABEL_TRANSITION_DURATION = 100;
 
 // セクションIDからモバイル表示用のラベルを取得
 const getSectionLabel = (sectionId: string): string => {
@@ -80,9 +80,9 @@ export function Header() {
     }
 
     setIsLabelChanging(true);
+    setDisplayLabel(nextLabel);
+    displayLabelRef.current = nextLabel;
     labelTransitionTimeoutRef.current = window.setTimeout(() => {
-      setDisplayLabel(nextLabel);
-      displayLabelRef.current = nextLabel;
       setIsLabelChanging(false);
       labelTransitionTimeoutRef.current = null;
     }, LABEL_TRANSITION_DURATION);
@@ -313,18 +313,18 @@ export function Header() {
               {currentTime}
             </div>
           )}
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-1.5 text-base font-serif font-medium md:gap-3 md:text-lg">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-0 text-base font-serif font-medium md:gap-px md:text-lg">
             <button
               type="button"
               onClick={handleScrollToAtlas}
-              className={`transition-colors duration-300 relative min-w-[82px] text-center ${mobileNavTextClass} md:text-xl`}
+              className={`transition-colors duration-300 relative w-[60px] text-center ${mobileNavTextClass} md:w-[80px] md:text-xl`}
               aria-label={`${displayLabel}セクションへ移動`}
             >
               <span
-                className={`section-label inline-block transform transition-all duration-90 ease-out ${
+                className={`section-label inline-block transform transition-all duration-120 ease-out ${
                   isLabelChanging
-                    ? "opacity-0 translate-y-px blur-[0.3px] scale-[0.997]"
-                    : "opacity-100 translate-y-0 blur-0 scale-100"
+                    ? "opacity-80 translate-y-[0.5px] scale-[0.995]"
+                    : "opacity-100 translate-y-0 scale-100"
                 }`}
               >
                 ({displayLabel})
@@ -333,7 +333,7 @@ export function Header() {
             <button
               type="button"
               onClick={handleOpenMenu}
-              className={`transition-colors duration-300 ${mobileNavTextClass} text-base md:text-lg`}
+              className={`transition-colors duration-300 w-[60px] text-center ${mobileNavTextClass} text-base md:w-[80px] md:text-lg`}
               aria-label="メニューを開く"
               aria-expanded={isMenuOpen}
               aria-controls={MENU_OVERLAY_ID}
