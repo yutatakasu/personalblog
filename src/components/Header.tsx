@@ -294,7 +294,7 @@ export function Header() {
         <nav
           className={`relative flex h-14 items-center justify-center px-4 md:h-16 md:px-8 lg:h-18 lg:px-10 transition-colors duration-300 ${baseHeaderTextClass}`}
         >
-          <div className="hidden lg:flex absolute right-3 pr-5 top-1/2 -translate-y-1/2 items-center gap-2">
+          <div className="absolute right-3 top-1/2 flex items-center gap-2 -translate-y-1/2">
             <button
               type="button"
               onClick={() => {
