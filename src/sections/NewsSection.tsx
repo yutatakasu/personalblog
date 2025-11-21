@@ -14,8 +14,7 @@ const NEWS_PREVIEW_COUNT = 3;
 
 const translations = {
   en: {
-    heading:
-      "Stay updated on product evolution and partnership news.",
+    heading: "Stay updated on product evolution and partnership news.",
     viewAll: "View all news",
   },
   ja: {
