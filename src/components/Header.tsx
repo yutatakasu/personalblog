@@ -120,7 +120,7 @@ export function Header() {
         scheduleLabelUpdate(nextLabel);
       }
     },
-    [scheduleLabelUpdate]
+    [scheduleLabelUpdate],
   );
 
   // メニューが開いている時はbodyのスクロールを無効化
@@ -310,8 +310,8 @@ export function Header() {
                     ? "text-white"
                     : "text-neutral-900"
                   : isDarkBackground
-                  ? "text-white/50 hover:text-white/70"
-                  : "text-neutral-500 hover:text-neutral-700"
+                    ? "text-white/50 hover:text-white/70"
+                    : "text-neutral-500 hover:text-neutral-700"
               }`}
             >
               EN
@@ -339,8 +339,8 @@ export function Header() {
                     ? "text-white"
                     : "text-neutral-900"
                   : isDarkBackground
-                  ? "text-white/50 hover:text-white/70"
-                  : "text-neutral-500 hover:text-neutral-700"
+                    ? "text-white/50 hover:text-white/70"
+                    : "text-neutral-500 hover:text-neutral-700"
               }`}
             >
               JP
