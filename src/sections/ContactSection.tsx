@@ -19,13 +19,15 @@ const translations = {
     ceo: "CEO",
     ceoValue: "Yuki Miyazaki",
     business: "Business",
-    businessValue: "Research and development of AI long-term memory technology / Business development",
+    businessValue:
+      "Research and development of AI long-term memory technology / Business development",
     employees: "Employees",
     employeesValue: "Approximately 15",
     capital: "Capital",
     capitalValue: "¥1,000,000",
     location: "Location",
-    locationValue: "〒153-0042 4-5-12 Aobadai, Meguro-ku, Tokyo a place by wa 100",
+    locationValue:
+      "〒153-0042 4-5-12 Aobadai, Meguro-ku, Tokyo a place by wa 100",
     email: "Email:",
     imageAlt: "Sky surrounded by greenery",
   },
@@ -44,7 +46,8 @@ const translations = {
     capital: "資本金",
     capitalValue: "1,000,000円",
     location: "所在地",
-    locationValue: "〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100",
+    locationValue:
+      "〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100",
     email: "メール：",
     imageAlt: "緑に囲まれた空",
   },
@@ -78,9 +81,7 @@ export function ContactSection() {
         className={`relative z-10 flex w-full flex-1 justify-center px-6 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-10 lg:pb-28 xl:pb-32 2xl:pb-36 ${SECTION_CONTENT_OFFSET}`}
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
-          <h2 className={`${SECTION_HEADING_CLASS} text-white`}>
-            {t.heading}
-          </h2>
+          <h2 className={`${SECTION_HEADING_CLASS} text-white`}>{t.heading}</h2>
           <dl className="border-t border-white/20 text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
