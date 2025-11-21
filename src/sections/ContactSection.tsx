@@ -27,7 +27,6 @@ const translations = {
     location: "Location",
     locationValue: "〒153-0042 4-5-12 Aobadai, Meguro-ku, Tokyo a place by wa 100",
     email: "Email:",
-    hours: "Business Hours: Weekdays 10:00 - 18:00",
     imageAlt: "Sky surrounded by greenery",
   },
   ja: {
@@ -47,7 +46,6 @@ const translations = {
     location: "所在地",
     locationValue: "〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100",
     email: "メール：",
-    hours: "営業時間: 平日 10:00 - 18:00",
     imageAlt: "緑に囲まれた空",
   },
 } as const;
@@ -141,7 +139,6 @@ export function ContactSection() {
                 info@atlas-official.net
               </a>
             </p>
-            <p>{t.hours}</p>
           </div>
         </div>
       </div>
