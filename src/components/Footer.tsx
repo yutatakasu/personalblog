@@ -1,12 +1,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "@/providers/LanguageProvider";
 
 type FooterProps = {
   className?: string;
 };
 
+const translations = {
+  en: {
+    privacyPolicy: "Atlas privacy & policy",
+    privacyPolicyTitle: "Privacy & Policy",
+    heading:
+      "We ensure complete transparency in data handling so you can use Atlas products with confidence.",
+    point1:
+      "Personal information is used solely for service provision and communication purposes, and will not be shared with third parties without appropriate consent.",
+    point2:
+      "Collected data is encrypted and stored with access permissions restricted to the minimum necessary.",
+    point3:
+      "Logs and analytics information are anonymized before use to help improve user experience.",
+    point4: "If you have any questions, please contact us at",
+    point4Suffix: "",
+    close: "Close",
+    scrollToTop: "Scroll to top",
+    allRightsReserved: "All rights reserved.",
+  },
+  ja: {
+    privacyPolicy: "Atlas privacy & policy",
+    privacyPolicyTitle: "Privacy & Policy",
+    heading:
+      "私たちは、Atlas のプロダクトを安心して利用いただくために、データの取り扱いを徹底して透明化します。",
+    point1:
+      "個人情報は、サービス提供とコミュニケーションの目的のみに利用し、第三者へは適切な同意なく提供しません。",
+    point2:
+      "取得したデータは暗号化して保存し、アクセス権限を最小限に制限します。",
+    point3:
+      "ログや分析情報は匿名化した上で活用し、ユーザー体験の改善に役立てます。",
+    point4: "ご不明点があれば",
+    point4Suffix: " までお問い合わせください。",
+    close: "閉じる",
+    scrollToTop: "トップへスクロール",
+    allRightsReserved: "All rights reserved.",
+  },
+} as const;
+
 export function Footer({ className = "" }: FooterProps) {
+  const { locale } = useLocale();
+  const t = translations[locale];
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   useEffect(() => {
@@ -62,7 +102,7 @@ export function Footer({ className = "" }: FooterProps) {
           className="group relative inline-flex items-center gap-2 text-xs md:text-sm transition-colors hover:text-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-white/60"
           aria-label="Atlas privacy and policy menu"
         >
-          <span>Atlas privacy &amp; policy</span>
+          <span>{t.privacyPolicy}</span>
           <span
             aria-hidden
             className="translate-x-0 text-[0.7rem] text-white/70 transition-transform group-hover:translate-x-0.5 group-hover:text-white"
@@ -75,9 +115,9 @@ export function Footer({ className = "" }: FooterProps) {
           type="button"
           onClick={handleScrollTop}
           className="group relative inline-flex items-center gap-2 text-xs md:text-sm transition-colors hover:text-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-white/60"
-          aria-label="Scroll to top"
+          aria-label={t.scrollToTop}
         >
-          <span>All rights reserved.</span>
+          <span>{t.allRightsReserved}</span>
           <span
             aria-hidden
             className="translate-x-0 text-[0.7rem] text-white/70 transition-transform group-hover:-translate-x-0.5 group-hover:text-white"
@@ -103,34 +143,24 @@ export function Footer({ className = "" }: FooterProps) {
                 aria-hidden
               />
               <p className="font-mono uppercase tracking-[0.4em] text-xs text-white/50">
-                Privacy &amp; Policy
+                {t.privacyPolicyTitle}
               </p>
               <h2 className="mt-6 font-serif text-3xl md:text-4xl">
-                私たちは、Atlas のプロダクトを安心して利用いただくために、
-                データの取り扱いを徹底して透明化します。
+                {t.heading}
               </h2>
               <div className="mt-8 space-y-5 text-left font-sans text-sm leading-relaxed text-white/85 md:text-base">
+                <p>- {t.point1}</p>
+                <p>- {t.point2}</p>
+                <p>- {t.point3}</p>
                 <p>
-                  -
-                  個人情報は、サービス提供とコミュニケーションの目的のみに利用し、第三者へは適切な同意なく提供しません。
-                </p>
-                <p>
-                  -
-                  取得したデータは暗号化して保存し、アクセス権限を最小限に制限します。
-                </p>
-                <p>
-                  -
-                  ログや分析情報は匿名化した上で活用し、ユーザー体験の改善に役立てます。
-                </p>
-                <p>
-                  - ご不明点があれば{" "}
+                  - {t.point4}{" "}
                   <a
                     href="mailto:info@atlas-official.net"
                     className="underline decoration-white/40 underline-offset-4 hover:text-white"
                   >
                     info@atlas-official.net
-                  </a>{" "}
-                  までお問い合わせください。
+                  </a>
+                  {t.point4Suffix}
                 </p>
               </div>
             </div>
@@ -140,7 +170,7 @@ export function Footer({ className = "" }: FooterProps) {
               onClick={() => setIsPrivacyOpen(false)}
               className="px-6 py-3 font-sans text-sm uppercase tracking-[0.3em] text-white/70 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
             >
-              Close
+              {t.close}
             </button>
           </div>
         </div>
