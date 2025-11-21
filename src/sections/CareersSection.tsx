@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
 import type { Position } from "@/models/positions";
+import { useLocale } from "@/providers/LanguageProvider";
 
 type CareersSectionProps = {
   positions: Position[];
@@ -11,7 +14,34 @@ const SECTION_HEADING_CLASS =
   "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
 const VISIBLE_POSITIONS_COUNT = 3;
 
+const translations = {
+  en: {
+    heading: "Bring your unique perspective to Atlas.",
+    description:
+      "We value creating space for people to take on challenges while refining our systems.",
+    openPositions: "Open positions",
+    openRoles: "Open roles",
+    closed: "Closed",
+    apply: "Apply +",
+    noPositions: "There are currently no open positions.",
+    viewAll: "View all positions",
+  },
+  ja: {
+    heading: "Atlasに、温度のある視点を持ち込んでください。",
+    description:
+      "仕組みを研ぎ澄ましながらも、人が安心して挑戦できる余白を残したい——そんな想いを大切にしています。",
+    openPositions: "Open positions",
+    openRoles: "Open roles",
+    closed: "Closed",
+    apply: "Apply +",
+    noPositions: "現在募集中のポジションはありません。",
+    viewAll: "すべての募集を見る",
+  },
+} as const;
+
 export function CareersSection({ positions }: CareersSectionProps) {
+  const { locale } = useLocale();
+  const t = translations[locale];
   const visiblePositions = positions.slice(0, VISIBLE_POSITIONS_COUNT);
   const hasMorePositions = positions.length > VISIBLE_POSITIONS_COUNT;
   const hasAnyPositions = positions.length > 0;
@@ -28,18 +58,17 @@ export function CareersSection({ positions }: CareersSectionProps) {
           <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center lg:gap-16">
             <div className="flex flex-col gap-6 sm:gap-7 md:gap-8">
               <h2 className={`${SECTION_HEADING_CLASS} text-black`}>
-                Atlasに、温度のある視点を持ち込んでください。
+                {t.heading}
               </h2>
               <p className="max-w-xl text-xs leading-relaxed text-black/65 sm:text-sm md:text-base">
-                仕組みを研ぎ澄ましながらも、人が安心して挑戦できる余白を残したい——
-                そんな想いを大切にしています。
+                {t.description}
               </p>
               <div className="flex flex-col gap-3 text-xs sm:flex-row sm:items-center sm:gap-4 sm:text-sm md:gap-5">
                 <Link
                   href="/positions#open-roles"
                   className="inline-flex items-center gap-2 rounded-full border border-black/20 px-4 py-2 text-black/80 transition hover:border-black/40 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  Open positions
+                  {t.openPositions}
                   <span aria-hidden>→</span>
                 </Link>
                 <Link
@@ -54,13 +83,13 @@ export function CareersSection({ positions }: CareersSectionProps) {
             <div className="flex flex-col gap-5">
               <div>
                 <div className="flex items-baseline justify-between text-[0.55rem] uppercase tracking-[0.35em] text-black/40 sm:text-[0.6rem] sm:tracking-[0.4em] md:text-[0.65rem]">
-                  <span className="font-mono">Open roles</span>
+                  <span className="font-mono">{t.openRoles}</span>
                   {hasAnyPositions ? (
                     <span className="font-mono text-black/30">
                       {positions.length.toString().padStart(2, "0")}
                     </span>
                   ) : (
-                    <span className="font-mono text-black/30">Closed</span>
+                    <span className="font-mono text-black/30">{t.closed}</span>
                   )}
                 </div>
                 <div className="mt-3 h-px bg-black/10" />
@@ -80,7 +109,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
                               {role.location}
                             </span>
                             <span className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-black/40 transition group-hover:text-black sm:text-[0.65rem]">
-                              Apply +
+                              {t.apply}
                             </span>
                           </Link>
                         </li>
@@ -88,7 +117,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
                     </ul>
                   ) : (
                     <p className="py-6 text-sm text-black/45 sm:text-base">
-                      現在募集中のポジションはありません。
+                      {t.noPositions}
                     </p>
                   )}
                 </div>
@@ -99,7 +128,7 @@ export function CareersSection({ positions }: CareersSectionProps) {
                     href="/positions"
                     className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-black/55 transition hover:text-black sm:text-sm sm:tracking-[0.35em]"
                   >
-                    すべての募集を見る
+                    {t.viewAll}
                     <span aria-hidden>→</span>
                   </Link>
                 </div>

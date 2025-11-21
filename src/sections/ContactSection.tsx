@@ -1,12 +1,61 @@
+"use client";
+
 import Image from "next/image";
 
 import { Footer } from "@/components/Footer";
+import { useLocale } from "@/providers/LanguageProvider";
 
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
 
+const translations = {
+  en: {
+    heading: "Company Information",
+    companyName: "Company Name",
+    companyNameValue: "Atlas Inc. (Japanese: アトラス)",
+    founded: "Founded",
+    foundedValue: "December 2023",
+    ceo: "CEO",
+    ceoValue: "Yuki Miyazaki",
+    business: "Business",
+    businessValue: "Research and development of AI long-term memory technology / Business development",
+    employees: "Employees",
+    employeesValue: "Approximately 15",
+    capital: "Capital",
+    capitalValue: "¥1,000,000",
+    location: "Location",
+    locationValue: "〒153-0042 4-5-12 Aobadai, Meguro-ku, Tokyo a place by wa 100",
+    email: "Email:",
+    hours: "Business Hours: Weekdays 10:00 - 18:00",
+    imageAlt: "Sky surrounded by greenery",
+  },
+  ja: {
+    heading: "会社情報",
+    companyName: "会社名",
+    companyNameValue: "Atlas株式会社（英字表記：Atlas Inc. / 読み：アトラス）",
+    founded: "創業",
+    foundedValue: "2023年12月",
+    ceo: "代表取締役",
+    ceoValue: "宮崎悠生",
+    business: "事業内容",
+    businessValue: "AIの長期記憶技術の研究開発/事業開発",
+    employees: "従業員数",
+    employeesValue: "約15名",
+    capital: "資本金",
+    capitalValue: "1,000,000円",
+    location: "所在地",
+    locationValue: "〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100",
+    email: "メール：",
+    hours: "営業時間: 平日 10:00 - 18:00",
+    imageAlt: "緑に囲まれた空",
+  },
+} as const;
+
 export function ContactSection() {
+  const { locale } = useLocale();
+  const t = translations[locale];
+
   return (
     <section
       id="contact"
@@ -15,7 +64,7 @@ export function ContactSection() {
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src="/trees_and_sky.jpg"
-          alt="緑に囲まれた空"
+          alt={t.imageAlt}
           fill
           priority
           sizes="100vw"
@@ -32,61 +81,59 @@ export function ContactSection() {
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col justify-center gap-6 text-left sm:gap-8 md:gap-10">
           <h2 className={`${SECTION_HEADING_CLASS} text-white`}>
-            Company Information
+            {t.heading}
           </h2>
           <dl className="border-t border-white/20 text-xs font-medium sm:text-[0.9rem] md:text-sm lg:text-base">
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                会社名
+                {t.companyName}
               </dt>
               <dd className="leading-relaxed wrap-break-word">
-                Atlas株式会社（英字表記：Atlas Inc. / 読み：アトラス）
+                {t.companyNameValue}
               </dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                創業
+                {t.founded}
               </dt>
-              <dd className="leading-relaxed">2023年12月</dd>
+              <dd className="leading-relaxed">{t.foundedValue}</dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                代表取締役
+                {t.ceo}
               </dt>
-              <dd className="leading-relaxed">宮崎悠生</dd>
+              <dd className="leading-relaxed">{t.ceoValue}</dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                事業内容
+                {t.business}
               </dt>
-              <dd className="leading-relaxed">
-                AIの長期記憶技術の研究開発/事業開発
-              </dd>
+              <dd className="leading-relaxed">{t.businessValue}</dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                従業員数
+                {t.employees}
               </dt>
-              <dd className="leading-relaxed">約15名</dd>
+              <dd className="leading-relaxed">{t.employeesValue}</dd>
             </div>
             <div className="grid gap-3 border-b border-white/20 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                資本金
+                {t.capital}
               </dt>
-              <dd className="leading-relaxed">1,000,000円</dd>
+              <dd className="leading-relaxed">{t.capitalValue}</dd>
             </div>
             <div className="grid gap-3 py-3 sm:gap-4 sm:py-4 md:gap-4 md:py-5 lg:py-4 md:grid-cols-[180px_1fr]">
               <dt className="font-semibold uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.25em]">
-                所在地
+                {t.location}
               </dt>
               <dd className="leading-relaxed wrap-break-word">
-                〒153-0042 東京都目黒区青葉台４丁目５−１２ a place by wa 100
+                {t.locationValue}
               </dd>
             </div>
           </dl>
           <div className="space-y-2.5 text-xs font-medium text-white/85 sm:space-y-3 md:space-y-3.5 md:text-sm lg:text-base">
             <p>
-              メール：
+              {t.email}
               <a
                 href="mailto:info@atlas-official.net"
                 className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-3 hover:decoration-white sm:underline-offset-4"
@@ -94,7 +141,7 @@ export function ContactSection() {
                 info@atlas-official.net
               </a>
             </p>
-            <p>営業時間: 平日 10:00 - 18:00</p>
+            <p>{t.hours}</p>
           </div>
         </div>
       </div>

@@ -1,13 +1,28 @@
+"use client";
+
 import Link from "next/link";
 
 import { NewsThumbnail } from "@/components/NewsThumbnail";
 import { NEWS_CARD_HOVER_STYLES } from "@/lib/newsCardHover";
 import type { NewsItem } from "@/models/news";
+import { useLocale } from "@/providers/LanguageProvider";
 
 const SECTION_CONTENT_OFFSET = "pt-24 sm:pt-32 md:pt-36 lg:pt-40";
 const SECTION_HEADING_CLASS =
   "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
 const NEWS_PREVIEW_COUNT = 3;
+
+const translations = {
+  en: {
+    heading:
+      "Stay updated on product evolution and partnership news.",
+    viewAll: "View all news",
+  },
+  ja: {
+    heading: "プロダクトの進化とパートナーシップの最新情報をお届けします。",
+    viewAll: "ニュース一覧へ",
+  },
+} as const;
 
 type NewsSectionProps = {
   newsItems: NewsItem[];
@@ -44,6 +59,8 @@ function NewsPreviewCard({ item }: NewsPreviewCardProps) {
 }
 
 export function NewsSection({ newsItems }: NewsSectionProps) {
+  const { locale } = useLocale();
+  const t = translations[locale];
   const previewNewsItems = newsItems.slice(0, NEWS_PREVIEW_COUNT);
   const hasAdditionalNews = newsItems.length > NEWS_PREVIEW_COUNT;
 
@@ -59,7 +76,7 @@ export function NewsSection({ newsItems }: NewsSectionProps) {
           <h2
             className={`-mt-4 mb-8 text-neutral-900 ${SECTION_HEADING_CLASS} sm:-mt-6 sm:mb-10 md:-mt-8 md:mb-12 lg:-mt-10 lg:mb-16`}
           >
-            プロダクトの進化とパートナーシップの最新情報をお届けします。
+            {t.heading}
           </h2>
           <div className="space-y-2 sm:space-y-3 md:space-y-4">
             {previewNewsItems.map((news) => (
@@ -73,7 +90,7 @@ export function NewsSection({ newsItems }: NewsSectionProps) {
                 prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5 sm:py-2 sm:text-sm"
               >
-                ニュース一覧へ
+                {t.viewAll}
                 <span aria-hidden>&gt;</span>
               </Link>
             </div>
