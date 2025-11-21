@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/providers/LanguageProvider";
 
 const sectionIds = [
   "atlas",
@@ -38,6 +39,17 @@ const normalizeSectionId = (sectionId: string) => {
 const SECTION_FOCUS_RATIO = 0.35;
 const LABEL_TRANSITION_DURATION = 100;
 
+const languageSwitchLabels = {
+  en: {
+    switchToJapanese: "Switch to Japanese",
+    switchToEnglish: "Switch to English",
+  },
+  ja: {
+    switchToJapanese: "日本語に切り替え",
+    switchToEnglish: "英語に切り替え",
+  },
+} as const;
+
 // セクションIDからモバイル表示用のラベルを取得
 const getSectionLabel = (sectionId: string): string => {
   if (sectionId === "atlas" || sectionId === "atlas-photo") {
@@ -63,8 +75,8 @@ const getSectionLabel = (sectionId: string): string => {
 };
 
 export function Header() {
+  const { locale, toggleLocale } = useLocale();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState<string>("");
   const [surfaceSection, setSurfaceSection] = useState<string>("atlas");
   const [activeSection, setActiveSection] = useState<string>("atlas");
   const [displayLabel, setDisplayLabel] = useState<string>("Atlas");
@@ -108,27 +120,8 @@ export function Header() {
         scheduleLabelUpdate(nextLabel);
       }
     },
-    [scheduleLabelUpdate],
+    [scheduleLabelUpdate]
   );
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const formattedTime = now.toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
-      setCurrentTime(formattedTime);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // メニューが開いている時はbodyのスクロールを無効化
   useEffect(() => {
@@ -245,9 +238,6 @@ export function Header() {
   const overlayInactiveColor = isDarkBackground
     ? "text-white/65 hover:text-white/85"
     : "text-neutral-500 hover:text-neutral-800";
-  const overlayTimestampColor = isDarkBackground
-    ? "text-white/70"
-    : "text-neutral-500";
   const overlayCloseColor = isDarkBackground
     ? "text-white"
     : "text-neutral-800";
@@ -304,21 +294,64 @@ export function Header() {
         <nav
           className={`relative flex h-14 items-center justify-center px-4 md:h-16 md:px-8 lg:h-18 lg:px-10 transition-colors duration-300 ${baseHeaderTextClass}`}
         >
-          {currentTime && (
-            <div
-              className={`hidden lg:block absolute right-3 pr-5 top-1/2 -translate-y-1/2 text-base font-mono ${
-                isDarkBackground ? "text-neutral-200" : "text-neutral-500"
+          <div className="hidden lg:flex absolute right-3 pr-5 top-1/2 -translate-y-1/2 items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                if (locale !== "en") {
+                  toggleLocale();
+                }
+              }}
+              aria-pressed={locale === "en"}
+              aria-label={languageSwitchLabels[locale].switchToEnglish}
+              className={`text-sm font-medium transition-colors ${
+                locale === "en"
+                  ? isDarkBackground
+                    ? "text-white"
+                    : "text-neutral-900"
+                  : isDarkBackground
+                  ? "text-white/50 hover:text-white/70"
+                  : "text-neutral-500 hover:text-neutral-700"
               }`}
             >
-              {currentTime}
-            </div>
-          )}
+              EN
+            </button>
+            <span
+              className={`text-xs ${
+                isDarkBackground ? "text-white/40" : "text-neutral-400"
+              }`}
+              aria-hidden
+            >
+              /
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                if (locale !== "ja") {
+                  toggleLocale();
+                }
+              }}
+              aria-pressed={locale === "ja"}
+              aria-label={languageSwitchLabels[locale].switchToJapanese}
+              className={`text-sm font-medium transition-colors ${
+                locale === "ja"
+                  ? isDarkBackground
+                    ? "text-white"
+                    : "text-neutral-900"
+                  : isDarkBackground
+                  ? "text-white/50 hover:text-white/70"
+                  : "text-neutral-500 hover:text-neutral-700"
+              }`}
+            >
+              JP
+            </button>
+          </div>
           <div className="mx-auto flex w-full max-w-5xl items-center justify-center gap-0 text-base font-serif font-medium md:gap-px md:text-lg">
             <button
               type="button"
               onClick={handleScrollToAtlas}
               className={`transition-colors duration-300 relative w-[60px] text-center ${mobileNavTextClass} md:w-[80px] md:text-xl`}
-              aria-label={`${displayLabel}セクションへ移動`}
+              aria-label={`Scroll to ${displayLabel} section`}
             >
               <span
                 className={`section-label inline-block transform transition-all duration-120 ease-out ${
@@ -334,7 +367,7 @@ export function Header() {
               type="button"
               onClick={handleOpenMenu}
               className={`transition-colors duration-300 w-[60px] text-center ${mobileNavTextClass} text-base md:w-[80px] md:text-lg`}
-              aria-label="メニューを開く"
+              aria-label="Open menu"
               aria-expanded={isMenuOpen}
               aria-controls={MENU_OVERLAY_ID}
             >
@@ -359,14 +392,6 @@ export function Header() {
           />
 
           <div className="relative flex h-full w-full flex-col items-center justify-between py-16 px-6 md:px-8">
-            {currentTime && (
-              <div
-                className={`text-xs font-sans uppercase tracking-[0.4em] ${overlayTimestampColor}`}
-              >
-                {currentTime}
-              </div>
-            )}
-
             <div className="relative flex w-full flex-1 flex-col items-center justify-center">
               <div
                 className={`absolute top-14 h-24 w-24 rounded-full ${overlayGlowColor} blur-[60px]`}
@@ -410,7 +435,7 @@ export function Header() {
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
                 className={`relative text-sm font-sans font-medium underline ${overlayCloseColor}`}
-                aria-label="メニューを閉じる"
+                aria-label="Close menu"
               >
                 Close
               </button>

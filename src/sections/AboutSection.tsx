@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import type { InvestorGroup, Supporter } from "@/models/backed_by";
 import type { TeamMember } from "@/models/team";
+import { useLocale } from "@/providers/LanguageProvider";
 
 function useSupportsHover() {
   const [supportsHover, setSupportsHover] = useState(true);
@@ -213,6 +214,25 @@ const SECTION_HEADING_CLASS =
   "font-serif text-[1.1rem] leading-tight sm:text-[1.6rem] md:text-[1.95rem] lg:text-[2.4rem] lg:leading-[1.1]";
 const MOBILE_TEAM_VISIBLE_COUNT = 6;
 
+const translations = {
+  en: {
+    ourTeam: "Our Team",
+    backedBy:
+      "Backed by people who are excited about a world that is becoming increasingly personalized.",
+    showLess: "Show Less",
+    showAll: (count: number) => `Show All (${count})`,
+    teamAlt: "Atlas team",
+  },
+  ja: {
+    ourTeam: "私たちのチーム",
+    backedBy:
+      "ますますパーソナライズされていく世界に興奮している人々に支えられています。",
+    showLess: "折りたたむ",
+    showAll: (count: number) => `すべて表示 (${count})`,
+    teamAlt: "Atlasチーム",
+  },
+} as const;
+
 type AboutSectionProps = {
   teamMembers: TeamMember[];
   investorGroups: InvestorGroup[];
@@ -222,6 +242,8 @@ export function AboutSection({
   teamMembers,
   investorGroups,
 }: AboutSectionProps) {
+  const { locale } = useLocale();
+  const t = translations[locale];
   const [isTeamExpandedMobile, setIsTeamExpandedMobile] = useState(false);
   const mobileVisibleMembers = isTeamExpandedMobile
     ? teamMembers
@@ -257,7 +279,7 @@ export function AboutSection({
             <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
               <Image
                 src="/members_far_from.jpg"
-                alt="Atlas team"
+                alt={t.teamAlt}
                 priority
                 width={1152}
                 height={768}
@@ -280,7 +302,7 @@ export function AboutSection({
             <h2
               className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
             >
-              Our Team
+              {t.ourTeam}
             </h2>
 
             {/* モバイル表示 */}
@@ -301,8 +323,8 @@ export function AboutSection({
                     className="rounded-full border border-neutral-300 bg-background px-6 py-2 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {isTeamExpandedMobile
-                      ? "Show Less"
-                      : `Show All (${remainingMobileMembers})`}
+                      ? t.showLess
+                      : t.showAll(remainingMobileMembers)}
                   </button>
                 </div>
               ) : null}
@@ -333,8 +355,7 @@ export function AboutSection({
             <h2
               className={`text-center text-neutral-900 ${SECTION_HEADING_CLASS}`}
             >
-              Backed by people who are excited about a world that is becoming
-              increasingly personalized.
+              {t.backedBy}
             </h2>
 
             {/* モバイル表示 */}
@@ -373,7 +394,7 @@ export function AboutSection({
             <div className="relative w-full overflow-hidden rounded-3xl bg-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] sm:rounded-[2.2rem] sm:shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
               <Image
                 src="/members.jpg"
-                alt="Atlas team"
+                alt={t.teamAlt}
                 priority
                 width={1152}
                 height={768}
