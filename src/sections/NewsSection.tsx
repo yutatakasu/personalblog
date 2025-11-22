@@ -14,11 +14,11 @@ const NEWS_PREVIEW_COUNT = 3;
 
 const translations = {
   en: {
-    heading: "Our News",
+    heading: "Stay updated on product evolution and partnership news.",
     viewAll: "View all news",
   },
   ja: {
-    heading: "Our News",
+    heading: "プロダクトの進化とパートナーシップの最新情報をお届けします。",
     viewAll: "ニュース一覧へ",
   },
 } as const;

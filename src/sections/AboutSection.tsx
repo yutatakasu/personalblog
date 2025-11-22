@@ -62,10 +62,10 @@ function TeamCard({ member, className, style }: TeamCardProps) {
   const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
     !supportsHover && hasDetail
       ? {
-        role: "button",
-        tabIndex: 0,
-        "aria-expanded": isDetailOpen,
-      }
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
       : undefined;
   const detailOpacityClass = supportsHover
     ? "opacity-0 group-hover:opacity-100"
@@ -75,9 +75,11 @@ function TeamCard({ member, className, style }: TeamCardProps) {
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
-        } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
-        }`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
+        className ?? ""
+      } ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      }`}
       style={style}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
@@ -150,10 +152,10 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
     !supportsHover && hasDetail
       ? {
-        role: "button",
-        tabIndex: 0,
-        "aria-expanded": isDetailOpen,
-      }
+          role: "button",
+          tabIndex: 0,
+          "aria-expanded": isDetailOpen,
+        }
       : undefined;
   const detailOpacityClass = supportsHover
     ? "opacity-0 group-hover:opacity-100"
@@ -163,9 +165,11 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
-        } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
-        }`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
+        className ?? ""
+      } ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      }`}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -214,18 +218,18 @@ const translations = {
   en: {
     ourTeam: "Our Team",
     backedBy:
-      "Supported by...",
+      "Backed by people who are excited about a world that is becoming increasingly personalized.",
     showLess: "Show Less",
     showAll: (count: number) => `Show All (${count})`,
     teamAlt: "Atlas team",
   },
   ja: {
-    ourTeam: "Our Team",
+    ourTeam: "私たちのチーム",
     backedBy:
-      "Supported by...",
+      "ますますパーソナライズされていく世界を楽しみにしている人々に支えられています。",
     showLess: "折りたたむ",
     showAll: (count: number) => `すべて表示 (${count})`,
-    teamAlt: "Atlas Team",
+    teamAlt: "Atlasチーム",
   },
 } as const;
 
