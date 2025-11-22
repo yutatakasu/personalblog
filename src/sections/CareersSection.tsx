@@ -16,9 +16,9 @@ const VISIBLE_POSITIONS_COUNT = 3;
 
 const translations = {
   en: {
-    heading: "Bring your unique perspective to Atlas.",
+    heading: "Join Us.",
     description:
-      "We value creating space for people to take on challenges while refining our systems.",
+      "Everyone carries a unique history and a one-of-a-kind memory of the world. A collection of that under a bold vision shall provide a better future for all.",
     openPositions: "Open positions",
     openRoles: "Open roles",
     closed: "Closed",
@@ -27,9 +27,9 @@ const translations = {
     viewAll: "View all positions",
   },
   ja: {
-    heading: "Atlasに、温度のある視点を持ち込んでください。",
+    heading: "Join Us.",
     description:
-      "仕組みを研ぎ澄ましながらも、人が安心して挑戦できる余白を残したい——そんな想いを大切にしています。",
+    "一人ひとりの経験と記憶を持ち寄り、ひとつの大胆なビジョンのもとで未来を作っていく。この道のりを共にする仲間を探しています。",
     openPositions: "Open positions",
     openRoles: "Open roles",
     closed: "Closed",
