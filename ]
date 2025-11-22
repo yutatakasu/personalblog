@@ -65,19 +65,17 @@ function TeamCard({ member, className, style }: TeamCardProps) {
   const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
     !supportsHover && hasDetail
       ? {
-          role: "button",
-          tabIndex: 0,
-          "aria-expanded": isDetailOpen,
-        }
+        role: "button",
+        tabIndex: 0,
+        "aria-expanded": isDetailOpen,
+      }
       : undefined;
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
-        className ?? ""
-      } ${
-        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
-      }`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
+        } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+        }`}
       style={style}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
@@ -110,13 +108,12 @@ function TeamCard({ member, className, style }: TeamCardProps) {
       </p>
       {member.focus ? (
         <p
-          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
-            supportsHover
-              ? "opacity-0 group-hover:opacity-100"
-              : isDetailOpen
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${supportsHover
+            ? "opacity-0 group-hover:opacity-100"
+            : isDetailOpen
               ? "opacity-100"
               : "opacity-0"
-          }`}
+            }`}
         >
           {member.focus}
         </p>
@@ -156,19 +153,17 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
   const interactiveProps: HTMLAttributes<HTMLElement> | undefined =
     !supportsHover && hasDetail
       ? {
-          role: "button",
-          tabIndex: 0,
-          "aria-expanded": isDetailOpen,
-        }
+        role: "button",
+        tabIndex: 0,
+        "aria-expanded": isDetailOpen,
+      }
       : undefined;
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
-        className ?? ""
-      } ${
-        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
-      }`}
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
+        } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+        }`}
       onClick={handleToggleDetail}
       onKeyDown={(event) => {
         if (
@@ -200,13 +195,12 @@ function SupporterCard({ supporter, className }: SupporterCardProps) {
       </p>
       {supporter.focus ? (
         <p
-          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${
-            supportsHover
-              ? "opacity-0 group-hover:opacity-100"
-              : isDetailOpen
+          className={`mt-2 max-w-[200px] text-[0.65rem] leading-relaxed text-neutral-500 transition-opacity duration-200 ease-out sm:max-w-[240px] sm:text-sm ${supportsHover
+            ? "opacity-0 group-hover:opacity-100"
+            : isDetailOpen
               ? "opacity-100"
               : "opacity-0"
-          }`}
+            }`}
         >
           {supporter.focus}
         </p>
@@ -417,7 +411,7 @@ export function AboutSection({
             <h2
               className={`-mt-4 mb-8 text-neutral-900 ${SECTION_HEADING_CLASS} sm:-mt-6 sm:mb-10 md:-mt-8 md:mb-12 lg:-mt-10 lg:mb-16`}
             >
-              プロダクトの進化とパートナーシップの最新情報をお届けします。
+              Our News
             </h2>
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {previewNewsItems.map((news) => (
