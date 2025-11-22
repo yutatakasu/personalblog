@@ -75,8 +75,10 @@ function TeamCard({ member, className, style }: TeamCardProps) {
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
-      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
+        className ?? ""
+      } ${
+        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
       }`}
       style={style}
       onClick={handleToggleDetail}
@@ -215,16 +217,14 @@ const MOBILE_TEAM_VISIBLE_COUNT = 6;
 const translations = {
   en: {
     ourTeam: "Our Team",
-    backedBy:
-      "Supported by...",
+    backedBy: "Supported by...",
     showLess: "Show Less",
     showAll: (count: number) => `Show All (${count})`,
     teamAlt: "Atlas team",
   },
   ja: {
     ourTeam: "Our Team",
-    backedBy:
-      "Supported by...",
+    backedBy: "Supported by...",
     showLess: "折りたたむ",
     showAll: (count: number) => `すべて表示 (${count})`,
     teamAlt: "Atlas Team",
