@@ -75,10 +75,8 @@ function TeamCard({ member, className, style }: TeamCardProps) {
 
   return (
     <article
-      className={`group flex w-full flex-col items-center gap-1.5 text-center ${
-        className ?? ""
-      } ${
-        !supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
+      className={`group flex w-full flex-col items-center gap-1.5 text-center ${className ?? ""
+      } ${!supportsHover && hasDetail ? "cursor-pointer touch-manipulation" : ""
       }`}
       style={style}
       onClick={handleToggleDetail}
@@ -218,18 +216,18 @@ const translations = {
   en: {
     ourTeam: "Our Team",
     backedBy:
-      "Backed by people who are excited about a world that is becoming increasingly personalized.",
+      "Supported by...",
     showLess: "Show Less",
     showAll: (count: number) => `Show All (${count})`,
     teamAlt: "Atlas team",
   },
   ja: {
-    ourTeam: "私たちのチーム",
+    ourTeam: "Our Team",
     backedBy:
-      "ますますパーソナライズされていく世界を楽しみにしている人々に支えられています。",
+      "Supported by...",
     showLess: "折りたたむ",
     showAll: (count: number) => `すべて表示 (${count})`,
-    teamAlt: "Atlasチーム",
+    teamAlt: "Atlas Team",
   },
 } as const;
 
