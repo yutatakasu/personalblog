@@ -29,7 +29,7 @@ const translations = {
   ja: {
     heading: "Join Us.",
     description:
-    "一人ひとりの経験と記憶を持ち寄り、ひとつの大胆なビジョンのもとで未来を作っていく。この道のりを共にする仲間を探しています。",
+      "一人ひとりの経験と記憶を持ち寄り、ひとつの大胆なビジョンのもとで未来を作っていく。この道のりを共にする仲間を探しています。",
     openPositions: "Open positions",
     openRoles: "Open roles",
     closed: "Closed",
