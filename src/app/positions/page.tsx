@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { ContactLink } from "@/components/ContactLink";
 import { SmoothScrollLink } from "@/components/SmoothScrollLink";
 import { getPositions } from "@/models/positions";
 
@@ -45,13 +46,13 @@ export default async function PositionsPage() {
               にどんな温度を足してくれるかを聞かせてください。
             </p>
             <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
-              <Link
-                href="mailto:info@atlas-official.net"
+              <ContactLink
+                entryId="careers-general"
                 className="inline-flex items-center gap-2 text-black/50 transition hover:text-black/80"
               >
-                info@atlas-official.net
+                採用全般に関するお問い合わせ
                 <span aria-hidden>→</span>
-              </Link>
+              </ContactLink>
             </div>
           </div>
 
@@ -98,13 +99,17 @@ export default async function PositionsPage() {
                     {position.location} ・ {workStyleLabel[position.workStyle]}
                   </p>
                 </div>
-                <Link
-                  href={`mailto:${position.applyEmail ?? "info@atlas-official.net"}`}
+                <ContactLink
+                  entryId="position-apply"
+                  context={{
+                    positionId: position.id,
+                    titleForSubject: position.title,
+                  }}
                   className="inline-flex items-center gap-2 text-sm font-medium text-black/70 underline underline-offset-4 transition hover:text-black"
                 >
                   Apply / Talk
                   <span aria-hidden>→</span>
-                </Link>
+                </ContactLink>
               </header>
 
               <p className="mt-6 text-xs text-black/55 sm:text-sm">

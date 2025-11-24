@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "@/providers/LanguageProvider";
+import { ContactLink } from "@/components/ContactLink";
 
 type FooterProps = {
   className?: string;
@@ -154,12 +155,12 @@ export function Footer({ className = "" }: FooterProps) {
                 <p>- {t.point3}</p>
                 <p>
                   - {t.point4}{" "}
-                  <a
-                    href="mailto:info@atlas-official.net"
+                  <ContactLink
+                    entryId="privacy-inquiry"
                     className="underline decoration-white/40 underline-offset-4 hover:text-white"
                   >
-                    info@atlas-official.net
-                  </a>
+                    Atlas へのお問い合わせフォームを開く
+                  </ContactLink>
                   {t.point4Suffix}
                 </p>
               </div>

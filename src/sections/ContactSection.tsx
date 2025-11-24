@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import { Footer } from "@/components/Footer";
+import { ContactLink } from "@/components/ContactLink";
 import { useLocale } from "@/providers/LanguageProvider";
 
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";
@@ -133,12 +134,12 @@ export function ContactSection() {
           <div className="space-y-2.5 text-xs font-medium text-white/85 sm:space-y-3 md:space-y-3.5 md:text-sm lg:text-base">
             <p>
               {t.email}
-              <a
-                href="mailto:info@atlas-official.net"
+              <ContactLink
+                entryId="company-general"
                 className="ml-1 underline decoration-white/60 decoration-dotted underline-offset-3 hover:decoration-white sm:underline-offset-4"
               >
-                info@atlas-official.net
-              </a>
+                Atlas へのお問い合わせフォームを開く
+              </ContactLink>
             </p>
           </div>
         </div>
