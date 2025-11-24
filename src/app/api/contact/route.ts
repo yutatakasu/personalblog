@@ -136,9 +136,13 @@ export async function POST(request: NextRequest) {
   const rateLimitEvaluation = evaluateContactRateLimit(identifier);
 
   if (!rateLimitEvaluation.allowed) {
+    const blockedUntil =
+      "blockedUntil" in rateLimitEvaluation
+        ? rateLimitEvaluation.blockedUntil
+        : Date.now();
     const retryAfterSeconds = Math.max(
       1,
-      Math.floor((rateLimitEvaluation.blockedUntil - Date.now()) / 1000),
+      Math.floor((blockedUntil - Date.now()) / 1000),
     );
 
     return NextResponse.json(
