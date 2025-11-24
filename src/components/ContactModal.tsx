@@ -193,137 +193,150 @@ export function ContactModal({
                   : "Your message has been sent. We will review it and get back to you."}
               </div>
             )}
-            <form
-              className="space-y-5 sm:space-y-6"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <div className="space-y-2">
-                {isSubjectEditable ? (
-                  <>
-                    <label
-                      htmlFor="contact-subject"
-                      className="block text-xs font-medium tracking-wider text-white/70 uppercase"
-                    >
-                      {locale === "ja" ? "件名" : "Subject"}
-                      <span className="ml-1 text-red-400">*</span>
-                    </label>
-                    <input
-                      id="contact-subject"
-                      type="text"
-                      {...form.register("subject")}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
-                      placeholder={
-                        locale === "ja"
-                          ? "例）PoC のご相談について"
-                          : "e.g. Inquiry about PoC"
-                      }
-                    />
-                    {form.formState.errors.subject && (
-                      <p className="text-[11px] text-red-300">
-                        {form.formState.errors.subject.message}
+
+            {!submitSuccess ? (
+              <form
+                className="space-y-5 sm:space-y-6"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <div className="space-y-2">
+                  {isSubjectEditable ? (
+                    <>
+                      <label
+                        htmlFor="contact-subject"
+                        className="block text-xs font-medium tracking-wider text-white/70 uppercase"
+                      >
+                        {locale === "ja" ? "件名" : "Subject"}
+                        <span className="ml-1 text-red-400">*</span>
+                      </label>
+                      <input
+                        id="contact-subject"
+                        type="text"
+                        {...form.register("subject")}
+                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
+                        placeholder={
+                          locale === "ja"
+                            ? "例）PoC のご相談について"
+                            : "e.g. Inquiry about PoC"
+                        }
+                      />
+                      {form.formState.errors.subject && (
+                        <p className="text-[11px] text-red-300">
+                          {form.formState.errors.subject.message}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="block text-xs font-medium tracking-wider text-white/50 uppercase">
+                        {locale === "ja" ? "件名" : "Subject"}
                       </p>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <p className="block text-xs font-medium tracking-wider text-white/50 uppercase">
-                      {locale === "ja" ? "件名" : "Subject"}
+                      <p className="rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 text-sm text-white/60">
+                        {autoSubject}
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="contact-name"
+                    className="block text-xs font-medium tracking-wider text-white/70 uppercase"
+                  >
+                    {locale === "ja" ? "お名前" : "Name"}
+                    <span className="ml-1 text-red-400">*</span>
+                  </label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    autoComplete="name"
+                    {...form.register("name")}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
+                  />
+                  {form.formState.errors.name && (
+                    <p className="text-[11px] text-red-300">
+                      {form.formState.errors.name.message}
                     </p>
-                    <p className="rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 text-sm text-white/60">
-                      {autoSubject}
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="contact-email"
+                    className="block text-xs font-medium tracking-wider text-white/70 uppercase"
+                  >
+                    {locale === "ja" ? "メールアドレス" : "Email"}
+                    <span className="ml-1 text-red-400">*</span>
+                  </label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    autoComplete="email"
+                    {...form.register("email")}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
+                  />
+                  {form.formState.errors.email && (
+                    <p className="text-[11px] text-red-300">
+                      {form.formState.errors.email.message}
                     </p>
-                  </>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="contact-name"
-                  className="block text-xs font-medium tracking-wider text-white/70 uppercase"
-                >
-                  {locale === "ja" ? "お名前" : "Name"}
-                  <span className="ml-1 text-red-400">*</span>
-                </label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  autoComplete="name"
-                  {...form.register("name")}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
-                />
-                {form.formState.errors.name && (
-                  <p className="text-[11px] text-red-300">
-                    {form.formState.errors.name.message}
-                  </p>
-                )}
-              </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="contact-message"
+                    className="block text-xs font-medium tracking-wider text-white/70 uppercase"
+                  >
+                    {locale === "ja" ? "お問い合わせ内容" : "Message"}
+                    <span className="ml-1 text-red-400">*</span>
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    rows={5}
+                    {...form.register("message")}
+                    className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
+                  />
+                  {form.formState.errors.message && (
+                    <p className="text-[11px] text-red-300">
+                      {form.formState.errors.message.message}
+                    </p>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="contact-email"
-                  className="block text-xs font-medium tracking-wider text-white/70 uppercase"
-                >
-                  {locale === "ja" ? "メールアドレス" : "Email"}
-                  <span className="ml-1 text-red-400">*</span>
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  autoComplete="email"
-                  {...form.register("email")}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
-                />
-                {form.formState.errors.email && (
-                  <p className="text-[11px] text-red-300">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="contact-message"
-                  className="block text-xs font-medium tracking-wider text-white/70 uppercase"
-                >
-                  {locale === "ja" ? "お問い合わせ内容" : "Message"}
-                  <span className="ml-1 text-red-400">*</span>
-                </label>
-                <textarea
-                  id="contact-message"
-                  rows={5}
-                  {...form.register("message")}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:outline-none focus:ring-0 transition-colors"
-                />
-                {form.formState.errors.message && (
-                  <p className="text-[11px] text-red-300">
-                    {form.formState.errors.message.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-8">
+                <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-8">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="text-xs tracking-wider text-white/40 hover:text-white transition-colors uppercase"
+                  >
+                    {locale === "ja" ? "キャンセル" : "Cancel"}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-xs font-bold tracking-[0.2em] text-black transition-all hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-50 uppercase"
+                  >
+                    {isSubmitting
+                      ? locale === "ja"
+                        ? "送信中..."
+                        : "Sending..."
+                      : locale === "ja"
+                        ? "送信する"
+                        : "Send"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="flex justify-end pt-6">
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="text-xs tracking-wider text-white/40 hover:text-white transition-colors uppercase"
+                  className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-2 text-xs font-semibold tracking-[0.18em] text-white/80 transition hover:border-white hover:text-white uppercase"
                 >
-                  {locale === "ja" ? "キャンセル" : "Cancel"}
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-xs font-bold tracking-[0.2em] text-black transition-all hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-50 uppercase"
-                >
-                  {isSubmitting
-                    ? locale === "ja"
-                      ? "送信中..."
-                      : "Sending..."
-                    : locale === "ja"
-                      ? "送信する"
-                      : "Send"}
+                  {locale === "ja" ? "閉じる" : "Close"}
                 </button>
               </div>
-            </form>
+            )}
           </div>
         </div>
       </div>
