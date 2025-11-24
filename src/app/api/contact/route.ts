@@ -1,18 +1,20 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import {
-  CONTACT_ENTRY_IDS,
-  CONTACT_ENTRIES,
-  type ContactContext,
-  type ContactEntryId,
-  buildContactSubject,
-} from "@/models/contact";
 import { sendContactEmail } from "@/lib/email/send-contact-email";
+import { notifySlackContactMessage } from "@/lib/notifications/slack-contact";
 import {
   evaluateContactRateLimit,
   getContactRateLimitIdentifier,
 } from "@/lib/security/contact-rate-limit";
+import { supabase } from "@/lib/supabase/server";
+import {
+  buildContactSubject,
+  CONTACT_ENTRIES,
+  CONTACT_ENTRY_IDS,
+  type ContactContext,
+  type ContactEntryId,
+} from "@/models/contact";
 import { getNewsItemById } from "@/models/news";
 import { getPositionById } from "@/models/positions";
 
@@ -46,9 +48,7 @@ const ContactRequestSchema = z.object({
     .string()
     .max(120, "件名は120文字以内で入力してください")
     .optional()
-    .transform((value) =>
-      typeof value === "string" ? value.trim() : value,
-    ),
+    .transform((value) => (typeof value === "string" ? value.trim() : value)),
 });
 
 type ContactRequest = z.infer<typeof ContactRequestSchema>;
@@ -126,7 +126,9 @@ async function resolveContactTarget(
     };
   }
 
-  throw new Error(`Unsupported contact entry kind: ${config.kind satisfies never}`);
+  throw new Error(
+    `Unsupported contact entry kind: ${config.kind satisfies never}`,
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -210,11 +212,42 @@ export async function POST(request: NextRequest) {
       lines.push(`- positionId: ${body.context.positionId}`);
     }
 
-    await sendContactEmail({
-      to: target.to,
-      subject: target.subject,
-      text: lines.join("\n"),
-    });
+    const [insertResult] = await Promise.all([
+      supabase.from("contact_messages").insert({
+        entry_id: body.entryId,
+        subject: target.subject,
+        user_subject: body.userSubject ?? null,
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        context: body.context ?? null,
+        user_agent: request.headers.get("user-agent") ?? null,
+        remote_addr:
+          request.headers.get("x-forwarded-for") ??
+          request.headers.get("x-real-ip") ??
+          request.headers.get("cf-connecting-ip") ??
+          null,
+      }),
+      sendContactEmail({
+        to: target.to,
+        subject: target.subject,
+        text: lines.join("\n"),
+      }),
+      notifySlackContactMessage({
+        entryId: body.entryId,
+        subject: target.subject,
+        name: body.name,
+        email: body.email,
+        message: body.message,
+      }),
+    ]);
+
+    if (insertResult.error) {
+      console.error(
+        "Failed to insert contact message into Supabase:",
+        insertResult.error,
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
@@ -229,5 +262,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

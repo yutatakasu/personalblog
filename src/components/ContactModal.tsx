@@ -1,16 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import {
+  buildContactSubject,
   CONTACT_ENTRIES,
   CONTACT_ENTRY_IDS,
   type ContactContext,
   type ContactEntryId,
-  buildContactSubject,
 } from "@/models/contact";
 import { useLocale } from "@/providers/LanguageProvider";
 
@@ -115,7 +115,7 @@ export function ContactModal({
           entryId,
           context,
           userSubject: isSubjectEditable
-            ? values.subject?.trim() ?? ""
+            ? (values.subject?.trim() ?? "")
             : undefined,
           name: values.name.trim(),
           email: values.email.trim(),
@@ -153,8 +153,8 @@ export function ContactModal({
 
   const heading =
     locale === "ja"
-      ? activeEntry?.label ?? "お問い合わせ"
-      : activeEntry?.label ?? "Contact Atlas";
+      ? (activeEntry?.label ?? "お問い合わせ")
+      : (activeEntry?.label ?? "Contact Atlas");
 
   return (
     <div className="fixed inset-0 z-140 animate-in fade-in duration-300">
@@ -330,5 +330,3 @@ export function ContactModal({
     </div>
   );
 }
-
-

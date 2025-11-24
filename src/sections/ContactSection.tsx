@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 
-import { Footer } from "@/components/Footer";
 import { ContactLink } from "@/components/ContactLink";
+import { Footer } from "@/components/Footer";
 import { useLocale } from "@/providers/LanguageProvider";
 
 const SECTION_CONTENT_OFFSET = "pt-32 sm:pt-40 md:pt-44 lg:pt-48";

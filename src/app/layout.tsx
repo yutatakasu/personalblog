@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { LanguageProvider } from "@/providers/LanguageProvider";
 import { ContactModalProvider } from "@/providers/ContactModalProvider";
+import { LanguageProvider } from "@/providers/LanguageProvider";
 
 export const metadata: Metadata = {
   title: "Atlas, Inc",

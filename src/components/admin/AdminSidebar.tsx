@@ -4,6 +4,7 @@ import {
   Briefcase,
   Command,
   Handshake,
+  Inbox,
   LayoutDashboard,
   LogOut,
   Newspaper,
@@ -100,6 +101,16 @@ const navSections: { title: string; items: NavItem[] }[] = [
         href: "/admin/supporters",
         label: "サポーター",
         icon: Handshake,
+      },
+    ],
+  },
+  {
+    title: "コミュニケーション",
+    items: [
+      {
+        href: "/admin/contact-messages",
+        label: "お問い合わせ",
+        icon: Inbox,
       },
     ],
   },

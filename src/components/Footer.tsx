@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale } from "@/providers/LanguageProvider";
 import { ContactLink } from "@/components/ContactLink";
+import { useLocale } from "@/providers/LanguageProvider";
 
 type FooterProps = {
   className?: string;

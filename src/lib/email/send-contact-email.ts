@@ -34,6 +34,6 @@ export async function sendContactEmail({
   // ここに実際のメール送信実装を追加する
   // 例: Resend / nodemailer / SendGrid など
   throw new Error(
-    `CONTACT_EMAIL_PROVIDER=${provider} の実装がまだ追加されていません。sendContactEmail を更新してください。`
+    `CONTACT_EMAIL_PROVIDER=${provider} の実装がまだ追加されていません。sendContactEmail を更新してください。`,
   );
 }

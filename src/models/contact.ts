@@ -94,7 +94,7 @@ export type BuildContactTargetParams = {
 
 export const buildContactSubject = (
   template: string,
-  titleForSubject?: string
+  titleForSubject?: string,
 ): string => {
   if (!template.includes("{title}")) {
     return template;

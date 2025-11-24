@@ -46,7 +46,7 @@ export function getContactRateLimitIdentifier(request: NextRequest): string {
 
 export function evaluateContactRateLimit(
   identifier: string,
-  now = Date.now()
+  now = Date.now(),
 ): ContactRateLimitEvaluation {
   cleanupRateLimitStore(now);
 

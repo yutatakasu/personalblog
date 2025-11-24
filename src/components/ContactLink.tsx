@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode, MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 
 import type { ContactContext, ContactEntryId } from "@/models/contact";
 import { useContactModal } from "@/providers/ContactModalProvider";
@@ -26,14 +26,8 @@ export function ContactLink({
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={className}
-    >
+    <button type="button" onClick={handleClick} className={className}>
       {children}
     </button>
   );
 }
-
-

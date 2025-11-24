@@ -2,15 +2,15 @@
 
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useMemo,
   useState,
-  type ReactNode,
 } from "react";
 
-import type { ContactContext, ContactEntryId } from "@/models/contact";
 import { ContactModal } from "@/components/ContactModal";
+import type { ContactContext, ContactEntryId } from "@/models/contact";
 
 type OpenContactModalParams = {
   entryId: ContactEntryId;
@@ -75,5 +75,3 @@ export function useContactModal(): ContactModalContextValue {
 
   return context;
 }
-
-

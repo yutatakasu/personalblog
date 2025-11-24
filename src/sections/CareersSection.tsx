@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import type { Position } from "@/models/positions";
 import { ContactLink } from "@/components/ContactLink";
+import type { Position } from "@/models/positions";
 import { useLocale } from "@/providers/LanguageProvider";
 
 type CareersSectionProps = {
