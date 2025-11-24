@@ -10,14 +10,14 @@ const SLACK_WEBHOOK_ENV_KEY =
   "https://hooks.slack.com/triggers/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";
 
 export async function notifySlackContactMessage(
-  payload: SlackContactPayload
+  payload: SlackContactPayload,
 ): Promise<void> {
   const webhookUrl = process.env[SLACK_WEBHOOK_ENV_KEY];
 
   if (!webhookUrl) {
     // Slack 連携が未設定の場合は何もしない
     console.info(
-      "[SlackContact] Webhook URL is not configured; skipping Slack notification."
+      "[SlackContact] Webhook URL is not configured; skipping Slack notification.",
     );
     return;
   }
@@ -54,13 +54,13 @@ export async function notifySlackContactMessage(
       console.error(
         "[SlackContact] Failed to send Slack notification",
         response.status,
-        response.statusText
+        response.statusText,
       );
     }
   } catch (error) {
     console.error(
       "[SlackContact] Error while sending Slack notification",
-      error
+      error,
     );
   }
 }
