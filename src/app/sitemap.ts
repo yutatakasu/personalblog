@@ -2,11 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { getNewsItems } from "@/models/news";
 
-const BASE_URL =
-  (process.env.NEXT_PUBLIC_BASE_URL ?? "https://atlas-hp-dev.vercel.app").replace(
-    /\/+$/u,
-    "",
-  );
+const BASE_URL = (
+  process.env.NEXT_PUBLIC_BASE_URL ?? "https://atlas-hp-dev.vercel.app"
+).replace(/\/+$/u, "");
 
 const STATIC_PATHS = ["/", "/news", "/positions"];
 
@@ -49,4 +47,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticEntries, ...newsEntries];
 }
-

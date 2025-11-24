@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { ContactLink } from "@/components/ContactLink";
 import type { Position } from "@/models/positions";
 import { useLocale } from "@/providers/LanguageProvider";
 
@@ -71,13 +72,13 @@ export function CareersSection({ positions }: CareersSectionProps) {
                   {t.openPositions}
                   <span aria-hidden>→</span>
                 </Link>
-                <Link
-                  href="mailto:info@atlas-official.net"
+                <ContactLink
+                  entryId="careers-general"
                   className="inline-flex items-center gap-1.5 text-black/50 transition hover:text-black sm:gap-2"
                 >
-                  info@atlas-official.net
+                  採用に関するお問い合わせ
                   <span aria-hidden>→</span>
-                </Link>
+                </ContactLink>
               </div>
             </div>
             <div className="flex flex-col gap-5">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { ContactLink } from "@/components/ContactLink";
 import { NewsThumbnail } from "@/components/NewsThumbnail";
 import { getNewsItemById } from "@/models/news";
 
@@ -130,16 +131,18 @@ export default async function NewsDetailPage({
                   ◆本件に関するお問い合わせ
                 </p>
                 <p>Atlas株式会社</p>
-                {item.contactPerson ? <p>担当：{item.contactPerson}</p> : null}
-                {item.contactEmail ? (
+                {item.contactPerson ? (
                   <p>
-                    Mail：
-                    <a
-                      href={`mailto:${item.contactEmail}`}
-                      className="ml-1 underline transition hover:text-neutral-900"
+                    <ContactLink
+                      entryId="news-article"
+                      context={{
+                        newsId: item.id,
+                        titleForSubject: item.title,
+                      }}
+                      className="inline-flex items-center underline underline-offset-4 decoration-neutral-400 hover:decoration-neutral-800"
                     >
-                      {item.contactEmail}
-                    </a>
+                      担当：{item.contactPerson}
+                    </ContactLink>
                   </p>
                 ) : null}
               </div>

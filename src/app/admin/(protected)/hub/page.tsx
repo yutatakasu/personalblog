@@ -39,6 +39,12 @@ const METRIC_CONFIGS: MetricConfig[] = [
     href: "/admin/supporters",
     table: "investor_groups",
   },
+  {
+    label: "お問い合わせ",
+    description: "サイトから届いたお問い合わせメッセージ",
+    href: "/admin/contact-messages",
+    table: "contact_messages",
+  },
 ];
 
 async function fetchMetricCount(table: string) {

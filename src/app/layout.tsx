@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ContactModalProvider } from "@/providers/ContactModalProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
 
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <ContactModalProvider>{children}</ContactModalProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
