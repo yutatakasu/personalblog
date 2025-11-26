@@ -165,6 +165,8 @@ export function ContactModal({
       />
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-6">
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation for modal card click */}
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: stopPropagation for modal card click */}
           <div
             className="relative w-full max-w-xl transform overflow-hidden rounded-[2rem] border border-white/10 bg-[#111]/90 px-6 py-8 text-left shadow-[0_0_80px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all animate-in zoom-in-95 duration-300 sm:px-10 sm:py-10"
             onClick={(e) => e.stopPropagation()}
