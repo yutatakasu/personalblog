@@ -103,57 +103,66 @@ export default function ServicePrivacyPage() {
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第5条（個人情報の第三者への提供）
             </h2>
-            <p className="mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
-              当社は、以下の特定の場合を除き、事前にユーザーの同意なく個人情報を第三者へ提供することはいたしません。ただし、個人情報保護法等の法令に基づく場合はこの限りではありません。
-            </p>
-            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+            <ol className="list-decimal space-y-6 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
               <li className="pl-1">
-                人命、身体、または財産保護のため、かつ同意取得が困難な場合
-              </li>
-              <li className="pl-1">
-                公衆衛生の向上や児童の健全な育成に特に必要で、同意が得にくい場合
-              </li>
-              <li className="pl-1">
-                国や地方公共団体、その委託先が法令に定める業務を遂行するために協力が求められる場合（同意が業務の支障となる場合）
-              </li>
-              <li className="pl-1">
-                予め以下の事項を通知または公示し、かつ個人情報保護委員会への届出がなされている場合
-                <ul className="mt-2 space-y-2 pl-4">
+                当社は、以下の特定の場合を除き、事前にユーザーの同意なく個人情報を第三者へ提供することはいたしません。ただし、個人情報保護法等の法令に基づく場合はこの限りではありません。
+                <ul className="mt-3 space-y-2 pl-4">
                   <li className="relative pl-4">
                     <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
-                    利用目的に第三者への提供を含むこと
+                    人命、身体、または財産保護のため、かつ同意取得が困難な場合
                   </li>
                   <li className="relative pl-4">
                     <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
-                    提供される情報の項目
+                    公衆衛生の向上や児童の健全な育成に特に必要で、同意が得にくい場合
                   </li>
                   <li className="relative pl-4">
                     <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
-                    第三者への提供方法
+                    国や地方公共団体、その委託先が法令に定める業務を遂行するために協力が求められる場合（同意が業務の支障となる場合）
                   </li>
                   <li className="relative pl-4">
                     <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
-                    本人の要求により提供停止が可能なこと
-                  </li>
-                  <li className="relative pl-4">
-                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
-                    問い合わせ方法について
+                    予め以下の事項を通知または公示し、かつ個人情報保護委員会への届出がなされている場合
+                    <ul className="mt-2 space-y-1.5 pl-4">
+                      <li className="relative pl-4">
+                        <span className="absolute left-0 top-2 h-0.5 w-0.5 rounded-full bg-black/20" />
+                        利用目的に第三者への提供を含むこと
+                      </li>
+                      <li className="relative pl-4">
+                        <span className="absolute left-0 top-2 h-0.5 w-0.5 rounded-full bg-black/20" />
+                        提供される情報の項目
+                      </li>
+                      <li className="relative pl-4">
+                        <span className="absolute left-0 top-2 h-0.5 w-0.5 rounded-full bg-black/20" />
+                        第三者への提供方法
+                      </li>
+                      <li className="relative pl-4">
+                        <span className="absolute left-0 top-2 h-0.5 w-0.5 rounded-full bg-black/20" />
+                        本人の要求により提供停止が可能なこと
+                      </li>
+                      <li className="relative pl-4">
+                        <span className="absolute left-0 top-2 h-0.5 w-0.5 rounded-full bg-black/20" />
+                        問い合わせ方法について
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>
-            </ol>
-            <p className="mt-6 mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
-              また、以下の場合においては、情報提供先は第三者とみなされません。
-            </p>
-            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
               <li className="pl-1">
-                本サービスの目的達成に必要な範囲内で個人情報の一部または全部を委託する場合
-              </li>
-              <li className="pl-1">
-                合併や事業承継により、個人情報が移転される場合
-              </li>
-              <li className="pl-1">
-                特定の者との間で共同利用する場合で、その旨および共同利用する情報の内容、利用目的、共同利用者の範囲、管理責任者の情報が事前に通知される、または容易に確認できる状態にある場合
+                また、以下の場合においては、情報提供先は第三者とみなされません。
+                <ul className="mt-3 space-y-2 pl-4">
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    本サービスの目的達成に必要な範囲内で個人情報の一部または全部を委託する場合
+                  </li>
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    合併や事業承継により、個人情報が移転される場合
+                  </li>
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    特定の者との間で共同利用する場合で、その旨および共同利用する情報の内容、利用目的、共同利用者の範囲、管理責任者の情報が事前に通知される、または容易に確認できる状態にある場合
+                  </li>
+                </ul>
               </li>
             </ol>
           </section>
