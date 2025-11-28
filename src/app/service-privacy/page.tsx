@@ -66,24 +66,20 @@ export default function ServicePrivacyPage() {
             <p className="mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
               当社がユーザーの個人情報を収集・利用する理由は、以下の目的を達成するためです。
             </p>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 本サービスにおけるECエージェント機能の最適化および改善のため
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 行動分析モデルの学習データとして活用し、ユーザー体験の向上およびパーソナライズを図るため
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 アクセス傾向の分析により、サービスの運用改善・不具合検出を行うため
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 本サービスの品質向上および技術的改善、パフォーマンス向上のための統計分析の実施
               </li>
-            </ul>
+            </ol>
             <p className="mt-4 text-sm leading-relaxed text-black/70 sm:text-base">
               なお、収集する情報は個人情報および個人関連情報には該当せず、ユーザー識別は匿名化されたハッシュ情報によって行われます。
             </p>
@@ -93,16 +89,14 @@ export default function ServicePrivacyPage() {
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第4条（利用目的の変更）
             </h2>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 当社は、現行の利用目的と合理的な関連性が認められる場合に限り、個人情報の利用目的を変更することができます。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 変更が行われた際は、所定の方法にてユーザーにお知らせするか、もしくは当社ウェブサイト上に速やかに公示いたします。
               </li>
-            </ul>
+            </ol>
           </section>
 
           <section className="space-y-4">
@@ -112,21 +106,17 @@ export default function ServicePrivacyPage() {
             <p className="mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
               当社は、以下の特定の場合を除き、事前にユーザーの同意なく個人情報を第三者へ提供することはいたしません。ただし、個人情報保護法等の法令に基づく場合はこの限りではありません。
             </p>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 人命、身体、または財産保護のため、かつ同意取得が困難な場合
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 公衆衛生の向上や児童の健全な育成に特に必要で、同意が得にくい場合
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 国や地方公共団体、その委託先が法令に定める業務を遂行するために協力が求められる場合（同意が業務の支障となる場合）
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 予め以下の事項を通知または公示し、かつ個人情報保護委員会への届出がなされている場合
                 <ul className="mt-2 space-y-2 pl-4">
                   <li className="relative pl-4">
@@ -151,24 +141,21 @@ export default function ServicePrivacyPage() {
                   </li>
                 </ul>
               </li>
-            </ul>
+            </ol>
             <p className="mt-6 mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
               また、以下の場合においては、情報提供先は第三者とみなされません。
             </p>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 本サービスの目的達成に必要な範囲内で個人情報の一部または全部を委託する場合
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 合併や事業承継により、個人情報が移転される場合
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 特定の者との間で共同利用する場合で、その旨および共同利用する情報の内容、利用目的、共同利用者の範囲、管理責任者の情報が事前に通知される、または容易に確認できる状態にある場合
               </li>
-            </ul>
+            </ol>
           </section>
 
           <section className="space-y-4">
@@ -178,20 +165,13 @@ export default function ServicePrivacyPage() {
             <p className="mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
               当社は、ユーザーから個人情報の開示請求を受けた際、速やかに対応いたします。ただし、以下に該当する場合は、全部または一部の情報開示を差し控えることがあり、その旨を速やかにご連絡いたします。なお、1件あたり1,000円の手数料を申し受けます。
             </p>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 本人または第三者の生命、身体、財産その他の権利が損なわれる恐れがある場合
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
-                当社の業務運営に著しい支障をきたす場合
-              </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
-                その他法令に反する場合
-              </li>
-            </ul>
+              <li className="pl-1">当社の業務運営に著しい支障をきたす場合</li>
+              <li className="pl-1">その他法令に反する場合</li>
+            </ol>
             <p className="mt-4 text-sm leading-relaxed text-black/70 sm:text-base">
               履歴や特性といった個人情報以外の情報については、原則として開示いたしません。
             </p>
@@ -201,60 +181,51 @@ export default function ServicePrivacyPage() {
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第7条（情報の修正および削除）
             </h2>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 ユーザーは、当社が保有する自己の情報に誤りが認められる場合、定められた手続きに基づいて、情報の修正、追加または削除（以下「修正等」といいます）を求めることができます。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 当社は、修正等の請求内容が正当であると判断した場合、速やかに対応いたします。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 修正等の実施または不実施の決定については、決定後速やかにユーザーへご通知いたします。
               </li>
-            </ul>
+            </ol>
           </section>
 
           <section className="space-y-4">
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第8条（利用停止および削除の措置）
             </h2>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 本人より、個人情報が当初の利用目的を超えて使用されている、もしくは不正な手段で取得されたとの申し出があった場合、当社は速やかに必要な調査を行います。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 調査の結果、利用停止または削除が必要と判断された場合は、迅速に対応いたします。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 利用停止等の措置を講じた場合、または講じないと判断した場合は、その決定内容を速やかにユーザーにご連絡いたします。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 利用停止等の措置に過大な費用がかかる、または実施が困難な場合には、ユーザーの権利を守るための代替措置を講じることとします。
               </li>
-            </ul>
+            </ol>
           </section>
 
           <section className="space-y-4">
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第9条（プライバシーポリシーの改定）
             </h2>
-            <ul className="space-y-3 text-sm leading-relaxed text-black/70 sm:text-base">
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+              <li className="pl-1">
                 本ポリシーの内容は、法令やその他別途定める事項に反しない限り、事前の通知なしに改定されることがあります。
               </li>
-              <li className="relative pl-5">
-                <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-black/50" />
+              <li className="pl-1">
                 改定後のポリシーは、当社ウェブサイト上に掲載された時点で効力を生じます。
               </li>
-            </ul>
+            </ol>
           </section>
         </article>
       </main>
