@@ -171,19 +171,28 @@ export default function ServicePrivacyPage() {
             <h2 className="font-serif text-xl text-black sm:text-2xl">
               第6条（個人情報の開示）
             </h2>
-            <p className="mb-4 text-sm leading-relaxed text-black/70 sm:text-base">
-              当社は、ユーザーから個人情報の開示請求を受けた際、速やかに対応いたします。ただし、以下に該当する場合は、全部または一部の情報開示を差し控えることがあり、その旨を速やかにご連絡いたします。なお、1件あたり1,000円の手数料を申し受けます。
-            </p>
-            <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
+            <ol className="list-decimal space-y-6 pl-5 text-sm leading-relaxed text-black/70 sm:text-base">
               <li className="pl-1">
-                本人または第三者の生命、身体、財産その他の権利が損なわれる恐れがある場合
+                当社は、ユーザーから個人情報の開示請求を受けた際、速やかに対応いたします。ただし、以下に該当する場合は、全部または一部の情報開示を差し控えることがあり、その旨を速やかにご連絡いたします。なお、1件あたり1,000円の手数料を申し受けます。
+                <ul className="mt-3 space-y-2 pl-4">
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    本人または第三者の生命、身体、財産その他の権利が損なわれる恐れがある場合
+                  </li>
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    当社の業務運営に著しい支障をきたす場合
+                  </li>
+                  <li className="relative pl-4">
+                    <span className="absolute left-0 top-2 h-1 w-1 rounded-full bg-black/30" />
+                    その他法令に反する場合
+                  </li>
+                </ul>
               </li>
-              <li className="pl-1">当社の業務運営に著しい支障をきたす場合</li>
-              <li className="pl-1">その他法令に反する場合</li>
+              <li className="pl-1">
+                履歴や特性といった個人情報以外の情報については、原則として開示いたしません。
+              </li>
             </ol>
-            <p className="mt-4 text-sm leading-relaxed text-black/70 sm:text-base">
-              履歴や特性といった個人情報以外の情報については、原則として開示いたしません。
-            </p>
           </section>
 
           <section className="space-y-4">
