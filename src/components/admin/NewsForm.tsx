@@ -65,6 +65,8 @@ const newsSchema = z.object({
       (value) => !value || value.length === 0 || emailRegex.test(value),
       "正しいメールアドレスを入力してください",
     ),
+  category: z.string().optional(),
+  status: z.enum(["draft", "published"]).default("draft"),
 });
 
 type NewsFormData = z.input<typeof newsSchema>;
@@ -82,6 +84,8 @@ type NewsFormProps = {
     summary?: string | null;
     contact_person?: string | null;
     contact_email?: string | null;
+    category?: string | null;
+    status?: string | null;
   };
 };
 
@@ -160,6 +164,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           summary: initialData.summary ?? "",
           contactPerson: initialData.contact_person ?? "",
           contactEmail: initialData.contact_email ?? "",
+          category: initialData.category ?? "",
+          status: (initialData.status as "draft" | "published") ?? "draft",
         }
       : {
           id: "",
@@ -171,6 +177,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
           summary: "",
           contactPerson: "",
           contactEmail: "",
+          category: "",
+          status: "draft" as const,
         },
   });
 
@@ -666,7 +674,7 @@ export function NewsForm({ initialData }: NewsFormProps) {
           ? contactPersonRaw
           : null;
 
-      const finalLink = `/news/${normalizedId}`;
+      const finalLink = `/posts/${normalizedId}`;
       const newsData = {
         id: normalizedId,
         title: normalizedTitle,
@@ -679,6 +687,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
         summary: data.summary?.trim() ? data.summary.trim() : null,
         contact_person: contactPersonValue,
         contact_email: contactEmailValue,
+        category: data.category?.trim() ? data.category.trim() : null,
+        status: data.status,
       };
 
       if (initialData) {
@@ -744,8 +754,8 @@ export function NewsForm({ initialData }: NewsFormProps) {
         <p className="mt-1 text-xs text-neutral-500">
           公開URL:{" "}
           {normalizedIdForDisplay
-            ? `/news/${normalizedIdForDisplay}`
-            : "/news/<id>"}
+            ? `/posts/${normalizedIdForDisplay}`
+            : "/posts/<id>"}
         </p>
       </div>
 
@@ -783,6 +793,49 @@ export function NewsForm({ initialData }: NewsFormProps) {
         {errors.subtitle && (
           <p className="mt-1 text-sm text-red-600">{errors.subtitle.message}</p>
         )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label
+            htmlFor="category"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
+            カテゴリー
+          </label>
+          <input
+            id="category"
+            {...register("category")}
+            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+            placeholder="技術、日記、レビューなど"
+          />
+          {errors.category && (
+            <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="status"
+            className="mb-2 block text-sm font-medium text-neutral-700"
+          >
+            ステータス <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="status"
+            {...register("status")}
+            className="w-full rounded-lg border border-neutral-300 px-4 py-2 text-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          >
+            <option value="draft">下書き</option>
+            <option value="published">公開</option>
+          </select>
+          {errors.status && (
+            <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
+          )}
+          <p className="mt-1 text-xs text-neutral-500">
+            「公開」にするとブログに表示されます
+          </p>
+        </div>
       </div>
 
       <div>

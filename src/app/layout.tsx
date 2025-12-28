@@ -1,19 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ContactModalProvider } from "@/providers/ContactModalProvider";
-import { LanguageProvider } from "@/providers/LanguageProvider";
 
 export const metadata: Metadata = {
-  title: "Atlas, Inc",
-  description: "We Are Atlas",
-  icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
+  title: "My Blog",
+  description: "Personal blog",
 };
 
 export default function RootLayout({
@@ -22,11 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
-        <LanguageProvider>
-          <ContactModalProvider>{children}</ContactModalProvider>
-        </LanguageProvider>
+    <html lang="ja">
+      <body className="antialiased bg-white text-neutral-900">
+        {children}
       </body>
     </html>
   );

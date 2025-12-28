@@ -1,158 +1,139 @@
-# Atlas HP – 開発ガイド
+# Personal Blog
 
-社内向け Atlas ホームページの開発フローをまとめたドキュメントです。新しく参画したメンバーでも迷わないよう、環境構築からリリースまでの手順を記載しています。
+個人ブログのCMSとウェブサイトです。
 
----
+## 技術スタック
 
-## 1. 事前準備
-
-| ツール     | バージョン目安 | 備考                              |
-| ---------- | -------------- | --------------------------------- |
-| Node.js    | 20.x           | `asdf` や `nvm` でインストール    |
-| pnpm       | 8.x 以上       | `npm i -g pnpm`                   |
-| Git        | 2.x 以上       | GitHub へアクセスできる状態にする |
-| Vercel CLI | 任意           | Preview への手動デプロイに利用    |
-
-Supabase CLI も devDependencies に含まれているので、リポジトリ内で `pnpm exec supabase` が使えます。
+- **Framework**: Next.js 16 + React 19 + TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth (Google OAuth)
+- **Storage**: Supabase Storage
 
 ---
 
-## 2. リポジトリのセットアップ
+## セットアップ
+
+### 1. 依存パッケージのインストール
 
 ```bash
-git clone <REPO_URL>
-cd atlas-hp
-pnpm install             # 依存パッケージの導入
+pnpm install
 ```
 
-`pnpm install` のタイミングで Supabase CLI の実体も展開されます。失敗する場合は `pnpm rebuild supabase` を試してください。
+### 2. Supabaseプロジェクトの作成
 
----
+1. [Supabase](https://supabase.com/) でアカウントを作成
+2. 新しいプロジェクトを作成
+3. プロジェクトの Settings > API から以下を取得:
+   - Project URL
+   - anon public key
 
-## 3. Supabase プロジェクト
+### 3. 環境変数の設定
 
-プロジェクトは以下の 2 つに分かれています。
-
-| 用途          | Supabase              | Next.js            | Vercel scope              |
-| ------------- | --------------------- | ------------------ | ------------------------- |
-| 開発・Preview | **dev プロジェクト**  | ローカル / Preview | `Development` / `Preview` |
-| 本番          | **prod プロジェクト** | Production         | `Production`              |
-
-### 3-1. 必要な SQL
-
-Supabase Dashboard の SQL Editor で次のファイルを実行して構成を揃えます。
-
-1. `supabase/sql/supabase-schema.sql` – テーブル定義 & RLS
-2. `supabase/sql/admin-users.sql` – 管理者判定関数とテーブル
-3. `supabase/sql/storage-news-photos.sql`
-4. `supabase/sql/storage-team-photos.sql`
-5. `supabase/sql/storage-supporters-photos.sql`
-
-### 3-2. 管理者アカウントの登録
-
-```sql
-insert into admin_users (email)
-values ('your.email@example.com')
-on conflict (email) do nothing;
-
-select is_admin_user('your.email@example.com');  -- true になることを確認
-```
-
----
-
-## 4. 環境変数
-
-### 4-1. ローカル開発 (`.env.local`)
+`.env.local` ファイルを作成:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=<dev Supabase の URL>
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<dev Supabase の Anon key>
-
-# 必要に応じて
-# NEXT_PUBLIC_SUPABASE_NEWS_BUCKET=news-photos
-# NEXT_PUBLIC_SUPABASE_TEAM_BUCKET=team-photos
-# NEXT_PUBLIC_SUPABASE_SUPPORTERS_BUCKET=supporters-photos
-# NEXT_PUBLIC_SUPABASE_TEAM_FOLDER=dev
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-`.env.local` は `.gitignore` 済みです。Vercel CLI を使って同期する場合は `vercel env pull .env.local --environment=preview` を利用します。
+### 4. データベースのセットアップ
 
-### 4-2. Vercel 側
+Supabase Dashboard の SQL Editor で以下のファイルを順番に実行:
 
-| scope                 | `NEXT_PUBLIC_SUPABASE_URL` | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
-| --------------------- | -------------------------- | ------------------------------- |
-| Development / Preview | dev プロジェクトを指定     | dev プロジェクトを指定          |
-| Production            | prod プロジェクトを指定    | prod プロジェクトを指定         |
+1. **`supabase/sql/supabase-schema.sql`** - ブログ記事テーブルの作成
+2. **`supabase/sql/admin-users.sql`** - 管理者認証の設定
+3. **`supabase/sql/storage-news-photos.sql`** - 画像ストレージの設定
 
----
+### 5. 管理者アカウントの登録
 
-## 5. Supabase Auth の URL 設定（dev プロジェクト）
+SQL Editor で実行:
 
-Preview とローカルで同じ dev Supabase を共有する場合は、環境に応じて **Site URL を切り替える運用** が必要です。
+```sql
+INSERT INTO admin_users (email)
+VALUES ('your.email@gmail.com')
+ON CONFLICT (email) DO NOTHING;
 
-| 作業モード     | Site URL                                                   | Redirect URLs                                                                                                    |
-| -------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| ローカル開発中 | `http://localhost:3000`                                    | `http://localhost:3000/admin/auth/callback`                                                                      |
-| Preview 確認時 | `https://atlas-hp-dev.vercel.app`（固定 Preview ドメイン） | `https://atlas-hp-dev.vercel.app/admin/auth/callback`<br>`https://atlas-hp-git-*.vercel.app/admin/auth/callback` |
+-- 登録確認
+SELECT is_admin_user('your.email@gmail.com');  -- true が返ればOK
+```
 
-ローカルで十分動作確認したら、Preview を見る前に Site URL を Preview 用ドメインへ戻します。逆にローカル作業へ戻る際は再び `localhost` に切り替えます。
+### 6. Google認証の設定
 
-> ワイルドカード付き Preview ドメインとローカルを完全に共存させることはできないため、この切り替え運用が必要です。
+1. Supabase Dashboard > Authentication > Providers > Google を有効化
+2. [Google Cloud Console](https://console.cloud.google.com/) でOAuth 2.0クライアントIDを作成
+3. Authorized redirect URIs に追加:
+   - `https://your-project.supabase.co/auth/v1/callback`
+4. Client ID と Client Secret を Supabase に設定
 
----
+### 7. Site URLの設定
 
-## 6. 開発フロー
+Supabase Dashboard > Authentication > URL Configuration:
 
-1. **ブランチ作成**
-
-   - `main` から `feature/<ticket>` を切る
-
-2. **ローカル開発**
-
-   - Supabase の Site URL を `http://localhost:3000` に設定
-   - `pnpm dev` で起動し、`http://localhost:3000` で動作確認
-   - 管理画面のログインが dev Supabase を参照することを確認 (`is_admin_user` が true)
-
-3. **Preview で QA**
-
-   - Supabase Site URL を Preview ドメインに変更
-   - ブランチを GitHub に push（または `pnpm exec vercel`）して Preview デプロイ
-   - Preview の `/admin/*` で動作確認
-
-4. **リリース**
-
-   - Pull Request をレビューし `main` にマージ
-   - Vercel が Production デプロイを実行
-   - 必要に応じて prod Supabase にマイグレーションを適用 (`pnpm exec supabase db push --profile prod`)
-
-5. **後片付け**
-   - ローカル作業へ戻る場合は dev Supabase の Site URL を `http://localhost:3000` に戻す
+- **Site URL**: `http://localhost:3000` (開発時) または本番ドメイン
+- **Redirect URLs**:
+  - `http://localhost:3000/admin/auth/callback`
+  - `https://your-domain.com/admin/auth/callback` (本番用)
 
 ---
 
-## 7. よく使うコマンド
+## 開発
 
 ```bash
-pnpm dev                      # ローカル開発サーバー
-pnpm build                    # プロダクションビルド確認
-pnpm run supabase -- --help   # Supabase CLI のコマンド一覧
-pnpm exec supabase db diff    # スキーマ差分作成（要 profile）
-pnpm exec supabase db push    # スキーマ適用（要 profile）
-pnpm exec vercel              # Preview デプロイ
-pnpm exec vercel --prod       # Production デプロイ
+pnpm dev
+```
+
+http://localhost:3000 でブログを確認
+http://localhost:3000/admin で管理画面にアクセス
+
+---
+
+## 機能
+
+### ブログ記事
+
+- カテゴリー分類
+- 下書き/公開ステータス
+- サムネイル画像
+- リッチコンテンツ（複数段落、画像）
+
+### 管理画面 (`/admin`)
+
+- Google認証によるログイン
+- 記事の作成・編集・削除
+- 画像のアップロード
+
+---
+
+## ディレクトリ構成
+
+```
+src/
+├── app/
+│   ├── page.tsx              # ブログトップページ
+│   ├── posts/[id]/page.tsx   # 記事詳細ページ
+│   └── admin/                # 管理画面
+├── components/
+│   └── admin/                # 管理画面コンポーネント
+├── lib/
+│   └── supabase/             # Supabaseクライアント
+└── models/
+    └── news.ts               # 記事の型定義
 ```
 
 ---
 
-## 8. トラブルシューティング
+## デプロイ
 
-| 症状                                       | 確認項目                                                                    |
-| ------------------------------------------ | --------------------------------------------------------------------------- |
-| ログイン後に別ドメインへ飛ぶ               | Supabase の Site URL が正しい環境に設定されているか                         |
-| 「管理者として登録されていない」           | `admin_users` にメールが登録されているか / `is_admin_user` が true を返すか |
-| 画像アップロードでバケットが無いと言われる | `storage-*.sql` を dev / prod それぞれのプロジェクトで実行済みか            |
-| Preview が本番 DB を参照する               | Vercel Preview scope の環境変数が dev Supabase を向いているか               |
+### Vercel
 
----
+1. GitHubリポジトリをVercelに接続
+2. 環境変数を設定:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. デプロイ
 
-詳細なセットアップ手順や RLS 方針は `docs/supabase-setup.md` および `docs/admin-setup.md` を参照してください。問題が解決しない場合は Slack の `#atlas-hp` チャンネルで相談してください。\*\*\* End Patch
+### Supabase本番設定
+
+1. Site URLを本番ドメインに変更
+2. Redirect URLsに本番ドメインを追加

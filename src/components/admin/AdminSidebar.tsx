@@ -1,14 +1,10 @@
 "use client";
 
 import {
-  Briefcase,
   Command,
-  Handshake,
-  Inbox,
   LayoutDashboard,
   LogOut,
   Newspaper,
-  Users,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,7 +70,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
     items: [
       {
         href: "/admin/hub",
-        label: "ハブ",
+        label: "ダッシュボード",
         icon: LayoutDashboard,
       },
     ],
@@ -84,33 +80,8 @@ const navSections: { title: string; items: NavItem[] }[] = [
     items: [
       {
         href: "/admin/news",
-        label: "ニュース",
+        label: "ブログ記事",
         icon: Newspaper,
-      },
-      {
-        href: "/admin/positions",
-        label: "募集情報",
-        icon: Briefcase,
-      },
-      {
-        href: "/admin/team",
-        label: "チームメンバー",
-        icon: Users,
-      },
-      {
-        href: "/admin/supporters",
-        label: "サポーター",
-        icon: Handshake,
-      },
-    ],
-  },
-  {
-    title: "コミュニケーション",
-    items: [
-      {
-        href: "/admin/contact-messages",
-        label: "お問い合わせ",
-        icon: Inbox,
       },
     ],
   },
@@ -271,7 +242,7 @@ export function AdminSidebar({
           </div>
           {collapsed ? null : (
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-neutral-900">Atlas</p>
+              <p className="text-sm font-semibold text-neutral-900">Blog</p>
               <p className="text-xs text-neutral-500">Admin</p>
             </div>
           )}

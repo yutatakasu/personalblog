@@ -16,34 +16,10 @@ type MetricConfig = Omit<Metric, "count"> & { table: string };
 
 const METRIC_CONFIGS: MetricConfig[] = [
   {
-    label: "ニュース",
-    description: "最新のお知らせと更新情報",
+    label: "ブログ記事",
+    description: "公開中のブログ記事",
     href: "/admin/news",
     table: "news",
-  },
-  {
-    label: "採用ポジション",
-    description: "公開中の募集ポジション",
-    href: "/admin/positions",
-    table: "positions",
-  },
-  {
-    label: "チームメンバー",
-    description: "紹介セクションのメンバー管理",
-    href: "/admin/team",
-    table: "team_members",
-  },
-  {
-    label: "サポーター",
-    description: "サポーターリスト",
-    href: "/admin/supporters",
-    table: "investor_groups",
-  },
-  {
-    label: "お問い合わせ",
-    description: "サイトから届いたお問い合わせメッセージ",
-    href: "/admin/contact-messages",
-    table: "contact_messages",
   },
 ];
 
@@ -97,15 +73,15 @@ export default function AdminHubPage() {
     <div className="flex flex-col gap-6">
       <div className="space-y-3">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
-          Atlas Admin
+          Blog Admin
         </p>
-        <h1 className="text-3xl font-semibold text-neutral-900">ハブ</h1>
+        <h1 className="text-3xl font-semibold text-neutral-900">ダッシュボード</h1>
         <p className="max-w-2xl text-sm text-neutral-600">
-          サイトの主要コンテンツを一元管理できます。サマリーカードから各セクションに移動し、更新作業を開始してください。
+          ブログ記事を管理できます。サマリーカードから記事一覧に移動し、更新作業を開始してください。
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
           <div
             key={metric.label}
@@ -114,7 +90,7 @@ export default function AdminHubPage() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
-                  セクション
+                  コンテンツ
                 </p>
                 <h3 className="mt-3 text-xl font-semibold text-neutral-900">
                   {metric.label}
@@ -142,29 +118,23 @@ export default function AdminHubPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+      <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-neutral-200 bg-white/80 p-6 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
             クイックアクション
           </p>
           <h2 className="mt-3 text-2xl font-semibold text-neutral-900">
-            コンテンツ管理をすぐに開始
+            新しい記事を作成
           </h2>
           <p className="mt-3 max-w-2xl text-sm text-neutral-600">
-            ニュース、採用情報、チームメンバー、サポーターを最新の状態に保ちましょう。サイドバーまたは以下のアクションから各セクションに移動できます。
+            ブログ記事を作成して、あなたの考えを共有しましょう。
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
               href="/admin/news/new"
               className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
             >
-              ニュースを追加
-            </Link>
-            <Link
-              href="/admin/positions/new"
-              className="inline-flex items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
-            >
-              募集情報を追加
+              記事を作成
             </Link>
           </div>
         </div>
@@ -173,7 +143,7 @@ export default function AdminHubPage() {
             サマリー
           </p>
           <h3 className="mt-3 text-lg font-semibold text-neutral-900">
-            現在の登録状況
+            現在の状況
           </h3>
           <ul className="mt-4 space-y-3">
             {metrics.map((metric) => (

@@ -16,6 +16,8 @@ type ContentBlockCandidate = {
   images?: unknown;
 };
 
+export type PostStatus = "draft" | "published";
+
 export type NewsItem = {
   id: string;
   title: string;
@@ -28,6 +30,8 @@ export type NewsItem = {
   summary?: string;
   contactPerson?: string;
   contactEmail?: string;
+  category?: string;
+  status: PostStatus;
 };
 
 type LegacyParagraphBlock = {
@@ -274,118 +278,23 @@ export const normalizeNewsContent = (raw: unknown): ContentBlock[] => {
  */
 export const defaultNewsItems: NewsItem[] = [
   {
-    id: "atlas-os-v2-release",
-    title: "Atlas OS v2 を正式リリース",
-    subtitle: "長期記憶に最適化した新機能を追加",
-    date: "2025.09.12",
-    thumbnailSrc: "/members_far_from.jpg",
-    thumbnailAlt: "Atlas OS v2 product interface preview",
-    link: "/news/atlas-os-v2-release",
+    id: "sample-post",
+    title: "サンプル記事",
+    subtitle: "ブログの最初の記事です",
+    date: "2025.01.01",
+    thumbnailSrc: "",
+    thumbnailAlt: "サンプル画像",
+    link: "/posts/sample-post",
     content: [
       {
-        title: "アップデート概要",
-        text: "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
-        images: [],
-      },
-      {
-        title: "Atlas が提供する価値",
-        text: "Atlas は Memory as a Service の提供を通じて、企業の意思決定を加速させるプラットフォームを構築しています。",
+        title: "はじめに",
+        text: "これはサンプルの記事です。管理画面から記事を作成してください。",
         images: [],
       },
     ],
-    summary:
-      "長期記憶に最適化したオーケストレーション機能と、監査可能なイベントタイムラインを追加しました。",
-    contactEmail: "press@atlas.inc",
-  },
-  {
-    id: "mitsui-collaboration",
-    title: "三井物産と記憶連携ソリューションを共同開発",
-    date: "2025.08.02",
-    thumbnailSrc: "/members.jpg",
-    thumbnailAlt: "Atlas と三井物産の共同プロジェクトイメージ",
-    link: "/news/mitsui-collaboration",
-    content: [
-      {
-        title: "共同プロジェクトの概要",
-        text: "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
-        images: [],
-      },
-    ],
-    summary:
-      "グローバルなオペレーションチームで AI エージェントを安全にスケールさせるための共同プロジェクトを開始。",
-    contactEmail: "press@atlas.inc",
-  },
-  {
-    id: "series-a-funding",
-    title: "Series A ラウンドで 18 億円を調達",
-    date: "2025.06.18",
-    thumbnailSrc: "/trees_and_sky.jpg",
-    thumbnailAlt: "Series A funding announcement",
-    link: "/news/series-a-funding",
-    content: [
-      {
-        title: "資金調達の目的",
-        text: "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
-        images: [],
-      },
-    ],
-    summary:
-      "国内外のトップ投資家から資金調達し、Memory as a Service の研究開発と市場展開を加速します。",
-    contactEmail: "investor-relations@atlas.inc",
-  },
-  {
-    id: "memory-layer-roadmap",
-    title: "Memory Layer Roadmap 2026 を公開",
-    date: "2025.05.22",
-    thumbnailSrc: "/members_far_from.jpg",
-    thumbnailAlt: "Atlas team reviewing roadmap diagrams",
-    link: "/news/memory-layer-roadmap",
-    content: [
-      {
-        title: "ロードマップ公開の背景",
-        text: "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
-        images: [],
-      },
-    ],
-    summary:
-      "Atlas OS の長期ロードマップを共有し、API ファーストな拡張性と監査可能なオペレーション指針を発表しました。",
-    contactEmail: "press@atlas.inc",
-  },
-  {
-    id: "kyoto-research-lab",
-    title: "京都リサーチラボを新設",
-    date: "2025.04.05",
-    thumbnailSrc: "/members.jpg",
-    thumbnailAlt: "Researchers collaborating in the Kyoto lab",
-    link: "/news/kyoto-research-lab",
-    content: [
-      {
-        title: "京都ラボ設立の狙い",
-        text: "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
-        images: [],
-      },
-    ],
-    summary:
-      "エッジ推論と低遅延同期の研究拠点として京都リサーチラボを開設し、産学連携を強化します。",
-    contactEmail: "press@atlas.inc",
-  },
-  {
-    id: "ai-governance-forum",
-    title: "AI ガバナンスフォーラム 2025 へ登壇",
-    date: "2025.03.14",
-    thumbnailSrc: "/trees_and_sky.jpg",
-    thumbnailAlt: "Conference hall for AI governance forum",
-    link: "/news/ai-governance-forum",
-    content: [
-      {
-        title: "フォーラム登壇の内容",
-        text: "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
-        images: [],
-      },
-    ],
-    summary:
-      "世界各国の政策リーダーと共にメモリーレイヤーのトレーサビリティ基準について提言しました。",
-    contactEmail: "press@atlas.inc",
+    summary: "これはサンプルの記事です。",
+    category: "general",
+    status: "published",
   },
 ];
 

@@ -15,6 +15,8 @@ type NewsItem = {
   link: string;
   summary?: string;
   contact_email?: string | null;
+  category?: string | null;
+  status?: string | null;
 };
 
 export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
@@ -22,7 +24,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("このニュース記事を削除してもよろしいですか？")) {
+    if (!confirm("この記事を削除してもよろしいですか？")) {
       return;
     }
 
@@ -47,7 +49,7 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
   if (newsItems.length === 0) {
     return (
       <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center">
-        <p className="text-neutral-600">ニュース記事がありません</p>
+        <p className="text-neutral-600">ブログ記事がありません</p>
         <Link
           href="/admin/news/new"
           className="mt-4 inline-block text-sm text-neutral-900 underline"
@@ -82,10 +84,29 @@ export function NewsList({ newsItems }: { newsItems: NewsItem[] }) {
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-serif text-lg text-neutral-900">
-                      {item.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-neutral-600">{item.date}</p>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-serif text-lg text-neutral-900">
+                        {item.title}
+                      </h3>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                          item.status === "published"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {item.status === "published" ? "公開" : "下書き"}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-neutral-600">
+                      <span>{item.date}</span>
+                      {item.category && (
+                        <>
+                          <span className="text-neutral-300">•</span>
+                          <span className="text-neutral-500">{item.category}</span>
+                        </>
+                      )}
+                    </div>
                     {item.summary && (
                       <p className="mt-2 text-sm text-neutral-500 line-clamp-2">
                         {item.summary}

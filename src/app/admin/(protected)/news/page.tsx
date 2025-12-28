@@ -20,9 +20,9 @@ export default async function AdminNewsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl text-neutral-900">ニュース管理</h1>
+          <h1 className="font-serif text-3xl text-neutral-900">ブログ記事</h1>
           <p className="mt-2 text-sm text-neutral-600">
-            ニュース記事の追加・編集・削除ができます
+            ブログ記事の追加・編集・削除ができます
           </p>
         </div>
         <Link
